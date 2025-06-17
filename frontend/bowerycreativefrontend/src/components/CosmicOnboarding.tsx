@@ -199,19 +199,19 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Welcome to Your Creative Journey! 🚀</h2>
-              <p className="text-gray-400">Let's start with the basics</p>
+            <div className="text-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4">Welcome to Your Creative Journey! 🚀</h2>
+              <p className="text-gray-400 text-sm sm:text-base">Let's start with the basics</p>
             </div>
             
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300">First Name *</label>
                 <input
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="John"
                 />
                 {errors.firstName && <p className="text-red-400 text-xs">{errors.firstName}</p>}
@@ -223,7 +223,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="Doe"
                 />
                 {errors.lastName && <p className="text-red-400 text-xs">{errors.lastName}</p>}
@@ -282,7 +282,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="john@example.com"
                 />
                 {errors.email && <p className="text-red-400 text-xs">{errors.email}</p>}
@@ -294,7 +294,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="(555) 123-4567"
                 />
                 {errors.phone && <p className="text-red-400 text-xs">{errors.phone}</p>}
@@ -319,7 +319,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="text"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="New York"
                 />
               </div>
@@ -330,7 +330,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="text"
                   value={formData.state}
                   onChange={(e) => handleInputChange('state', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="NY"
                 />
               </div>
@@ -341,7 +341,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="text"
                   value={formData.zipCode}
                   onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="10001"
                 />
               </div>
@@ -372,7 +372,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   type="url"
                   value={formData.website}
                   onChange={(e) => handleInputChange('website', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                  className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                   placeholder="https://yourpractice.com"
                 />
               </div>
@@ -386,7 +386,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                     type="text"
                     value={formData.instagram}
                     onChange={(e) => handleInputChange('instagram', e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                     placeholder="@yourpractice"
                   />
                 </div>
@@ -399,7 +399,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                     type="text"
                     value={formData.facebook}
                     onChange={(e) => handleInputChange('facebook', e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                     placeholder="facebook.com/yourpractice"
                   />
                 </div>
@@ -412,7 +412,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                     type="text"
                     value={formData.twitter}
                     onChange={(e) => handleInputChange('twitter', e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                     placeholder="@yourpractice"
                   />
                 </div>
@@ -425,7 +425,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                     type="text"
                     value={formData.linkedin}
                     onChange={(e) => handleInputChange('linkedin', e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all text-sm sm:text-base"
                     placeholder="linkedin.com/company/yourpractice"
                   />
                 </div>
@@ -450,14 +450,14 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Your Marketing Goals 🎯</h2>
-              <p className="text-gray-400">What would you like to achieve?</p>
+            <div className="text-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4">Your Marketing Goals 🎯</h2>
+              <p className="text-gray-400 text-sm sm:text-base">What would you like to achieve?</p>
             </div>
             
             <div className="space-y-4">
               <label className="text-sm font-medium text-gray-300">Select all that apply:</label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 {[
                   'Increase Patient Volume',
                   'Build Brand Awareness',
@@ -468,7 +468,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   'SEO Optimization',
                   'Paid Advertising'
                 ].map((goal) => (
-                  <label key={goal} className="flex items-center gap-3 p-3 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all">
+                  <label key={goal} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all">
                     <input
                       type="checkbox"
                       checked={formData.marketingGoals.includes(goal)}
@@ -481,7 +481,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                       }}
                       className="w-4 h-4 text-yellow-400 bg-white/10 border-white/20 rounded focus:ring-yellow-400"
                     />
-                    <span className="text-sm">{goal}</span>
+                    <span className="text-xs sm:text-sm">{goal}</span>
                   </label>
                 ))}
               </div>
@@ -596,7 +596,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto"
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
@@ -606,7 +606,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="relative w-full max-w-2xl bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] rounded-2xl overflow-hidden shadow-2xl"
+        className="relative w-full max-w-xs sm:max-w-md md:max-w-2xl my-auto bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] rounded-lg sm:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
       >
         {/* Cosmic background effects */}
         <div className="absolute inset-0 overflow-hidden">
@@ -616,34 +616,34 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
         </div>
         
         {/* Content */}
-        <div className="relative z-10 p-8">
+        <div className="relative z-10 p-4 sm:p-6 md:p-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 sm:gap-4">
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
+                <div className="w-8 h-8 sm:w-10 md:w-12 sm:h-10 md:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 sm:w-5 md:w-6 sm:h-5 md:h-6 text-white" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-ping opacity-30" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Bowery Creative</h1>
-                <p className="text-sm text-gray-400">Ignite Your Practice</p>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold">Bowery Creative</h1>
+                <p className="text-xs sm:text-sm text-gray-400">Ignite Your Practice</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              className="p-1 sm:p-2 hover:bg-white/10 rounded-lg transition-colors"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           </div>
           
           {/* Progress bar */}
-          <div className="mb-8">
+          <div className="mb-4 sm:mb-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-400">Step {currentStep} of {totalSteps}</span>
-              <span className="text-sm text-gray-400">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+              <span className="text-xs sm:text-sm text-gray-400">Step {currentStep} of {totalSteps}</span>
+              <span className="text-xs sm:text-sm text-gray-400">{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
             </div>
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
               <motion.div
@@ -661,33 +661,34 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
           </AnimatePresence>
           
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex items-center justify-between mt-4 sm:mt-6 gap-2">
             <button
               onClick={handlePrevious}
               disabled={currentStep === 1}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all ${
+              className={`flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 md:px-6 sm:py-2.5 md:py-3 rounded-lg transition-all text-sm sm:text-base ${
                 currentStep === 1
                   ? 'bg-white/5 text-gray-500 cursor-not-allowed'
                   : 'bg-white/10 hover:bg-white/20 text-white'
               }`}
             >
-              <ChevronLeft className="w-5 h-5" />
-              Previous
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Previous</span>
+              <span className="sm:hidden">Back</span>
             </button>
             
             {currentStep < totalSteps ? (
               <button
                 onClick={handleNext}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold rounded-lg transition-all transform hover:scale-105"
+                className="flex items-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 md:px-6 sm:py-2.5 md:py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-semibold rounded-lg transition-all transform hover:scale-105 text-sm sm:text-base"
               >
                 Next
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             ) : (
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-lg transition-all transform hover:scale-105 cosmic-glow"
+                className="flex items-center gap-1 sm:gap-2 px-4 py-2 sm:px-6 md:px-8 sm:py-3 md:py-4 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold rounded-lg transition-all transform hover:scale-105 cosmic-glow text-sm sm:text-base"
               >
                 {isSubmitting ? (
                   <>
@@ -696,8 +697,9 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                   </>
                 ) : (
                   <>
-                    <Rocket className="w-5 h-5" />
-                    Launch Payment Portal
+                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Launch Payment Portal</span>
+                    <span className="sm:hidden">Launch</span>
                   </>
                 )}
               </button>
