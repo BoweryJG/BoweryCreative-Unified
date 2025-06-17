@@ -6,7 +6,7 @@ import {
   Instagram, Facebook, Twitter, Linkedin,
   Check, AlertCircle
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+// import { useAuth } from '../contexts/AuthContext'; // Not needed anymore
 
 interface CosmicOnboardingProps {
   onClose: () => void;
