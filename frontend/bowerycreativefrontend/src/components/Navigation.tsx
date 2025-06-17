@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard, Rocket } from 'lucide-react';
+import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard, Rocket, ChevronDown, Package, Users } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { CosmicOnboarding } from './CosmicOnboarding';
+import { CosmicOnboardingAutonomous } from './CosmicOnboardingAutonomous';
 
 const navItems = [
   { label: 'Capabilities', href: '#capabilities' },
@@ -18,6 +19,9 @@ export const Navigation: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isAutonomousOnboardingOpen, setIsAutonomousOnboardingOpen] = useState(false);
+  const [showStartDropdown, setShowStartDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
@@ -27,6 +31,17 @@ export const Navigation: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowStartDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
@@ -106,15 +121,59 @@ export const Navigation: React.FC = () => {
                   </a>
                 </>
               )}
-              <motion.button 
-                onClick={() => setIsOnboardingOpen(true)}
-                className="btn-primary cosmic-glow flex items-center gap-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Rocket className="w-4 h-4" />
-                Start Project
-              </motion.button>
+              <div className="relative" ref={dropdownRef}>
+                <motion.button 
+                  onClick={() => setShowStartDropdown(!showStartDropdown)}
+                  className="btn-primary cosmic-glow flex items-center gap-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Rocket className="w-4 h-4" />
+                  Start Project
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showStartDropdown ? 'rotate-180' : ''}`} />
+                </motion.button>
+                
+                <AnimatePresence>
+                  {showStartDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute right-0 mt-2 w-64 bg-[#1a1a2e] border border-white/20 rounded-lg shadow-xl overflow-hidden"
+                    >
+                      <button
+                        onClick={() => {
+                          setIsOnboardingOpen(true);
+                          setShowStartDropdown(false);
+                        }}
+                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
+                      >
+                        <Users className="w-5 h-5 text-yellow-400" />
+                        <div>
+                          <p className="font-semibold">I Have an Access Code</p>
+                          <p className="text-xs text-gray-400">For existing clients</p>
+                        </div>
+                      </button>
+                      
+                      <div className="border-t border-white/10"></div>
+                      
+                      <button
+                        onClick={() => {
+                          setIsAutonomousOnboardingOpen(true);
+                          setShowStartDropdown(false);
+                        }}
+                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
+                      >
+                        <Package className="w-5 h-5 text-orange-400" />
+                        <div>
+                          <p className="font-semibold">Browse Packages</p>
+                          <p className="text-xs text-gray-400">Start fresh with our plans</p>
+                        </div>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
 
             {/* Mobile Menu Toggle */}
@@ -193,6 +252,37 @@ export const Navigation: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
+                className="mt-8"
+              >
+                <p className="text-center text-sm text-racing-silver mb-4">Start Your Project</p>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      setIsOnboardingOpen(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="btn-primary cosmic-glow flex items-center gap-2 justify-center"
+                  >
+                    <Users className="w-4 h-4" />
+                    I Have an Access Code
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsAutonomousOnboardingOpen(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="btn-ghost flex items-center gap-2 justify-center"
+                  >
+                    <Package className="w-4 h-4" />
+                    Browse Packages
+                  </button>
+                </div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
                 className="mt-8 flex gap-6"
               >
                 <Code2 className="w-6 h-6 text-racing-silver" />
@@ -219,6 +309,13 @@ export const Navigation: React.FC = () => {
       <AnimatePresence>
         {isOnboardingOpen && (
           <CosmicOnboarding onClose={() => setIsOnboardingOpen(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Autonomous Onboarding Modal */}
+      <AnimatePresence>
+        {isAutonomousOnboardingOpen && (
+          <CosmicOnboardingAutonomous onClose={() => setIsAutonomousOnboardingOpen(false)} />
         )}
       </AnimatePresence>
     </>
