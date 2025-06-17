@@ -58,38 +58,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [clientData, setClientData] = useState<ClientData | null>(null);
   const [hasAccess, setHasAccess] = useState(false);
 
-  // Handle OAuth callback immediately on component mount
-  React.useLayoutEffect(() => {
-    const hash = window.location.hash;
-    if (hash && hash.includes('access_token')) {
-      console.log('OAuth callback detected IMMEDIATELY, processing tokens...');
-      try {
-        // Parse tokens from URL hash
-        const hashParams = new URLSearchParams(hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
-        
-        if (accessToken && refreshToken) {
-          console.log('Setting session with tokens IMMEDIATELY...');
-          // Set the session using the tokens
-          supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          }).then(({ data, error }) => {
-            console.log('Session set result IMMEDIATE:', { data, error });
-            if (error) {
-              console.error('Failed to set session IMMEDIATE:', error);
-            }
-          });
-        }
-      } catch (err) {
-        console.error('OAuth processing error IMMEDIATE:', err);
-      }
-      
-      // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  }, []);
 
   useEffect(() => {
     // Check current session
