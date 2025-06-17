@@ -1,0 +1,31 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0A0A0A"/>
+  
+  <!-- Gradient overlay -->
+  <rect width="1200" height="630" fill="url(#gradient)" opacity="0.5"/>
+  
+  <!-- Logo circle -->
+  <circle cx="600" cy="200" r="80" stroke="#F5D247" stroke-width="4" fill="none" opacity="0.8"/>
+  <circle cx="600" cy="200" r="60" fill="#F5D247" opacity="0.1"/>
+  
+  <!-- B letter -->
+  <text x="600" y="230" font-family="Inter, sans-serif" font-size="72" font-weight="600" text-anchor="middle" fill="#F5D247">B</text>
+  
+  <!-- Title -->
+  <text x="600" y="340" font-family="Inter, sans-serif" font-size="64" font-weight="700" text-anchor="middle" fill="#F5F5F5">BOWERY</text>
+  <text x="600" y="390" font-family="Inter, sans-serif" font-size="24" font-weight="300" text-anchor="middle" fill="#F5D247" letter-spacing="0.1em">PAYMENT PORTAL</text>
+  
+  <!-- Tagline -->
+  <text x="600" y="470" font-family="Inter, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#8B8B8B">Secure subscription management for creative campaigns</text>
+  
+  <!-- Bottom branding -->
+  <text x="600" y="580" font-family="Inter, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#6B6B6B">bowerycreativeagency.com</text>
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1A1A1A"/>
+      <stop offset="1" stop-color="#2A2A2A"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bowery Creative - Vibrant Design</title>
+    <style>
+      body { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        line-height: 1.6; 
+        color: #1a202c; 
+        margin: 0; 
+        padding: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .email-wrapper {
+        background: linear-gradient(135deg, #e73c7e 0%, #23a6d5 50%, #23d5ab 100%);
+        padding: 40px 20px;
+        min-height: 100vh;
+      }
+      .container { 
+        max-width: 600px; 
+        margin: 0 auto; 
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(231, 60, 126, 0.3);
+      }
+      .header { 
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        color: #1a202c; 
+        padding: 60px 40px; 
+        text-align: center;
+        position: relative;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 900;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .header p {
+        margin: 15px 0 0 0;
+        color: #4a5568;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .content { 
+        background: white;
+        padding: 50px 40px;
+      }
+      .content h2 {
+        color: #1a202c;
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 25px 0;
+      }
+      .content p {
+        color: #4a5568;
+        font-size: 17px;
+        margin: 0 0 25px 0;
+      }
+      .button-container {
+        text-align: center;
+        margin: 45px 0;
+      }
+      .button { 
+        display: inline-block; 
+        padding: 22px 50px; 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white; 
+        text-decoration: none; 
+        border-radius: 60px; 
+        font-weight: 800;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+      }
+      .button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6);
+      }
+      .features {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        border-radius: 20px;
+        padding: 40px;
+        margin: 40px 0;
+      }
+      .features h3 {
+        color: #1a202c;
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0 0 25px 0;
+        text-align: center;
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
+      .feature-item {
+        background: white;
+        padding: 25px 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+      }
+      .feature-item:hover {
+        transform: translateY(-5px);
+      }
+      .feature-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+        display: block;
+      }
+      .feature-text {
+        color: #4a5568;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .contact-info {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+      }
+      .contact-info h3 {
+        margin: 0 0 20px 0;
+        font-size: 26px;
+        font-weight: 800;
+      }
+      .contact-info p {
+        color: rgba(255,255,255,0.95);
+        margin: 15px 0;
+        font-size: 18px;
+      }
+      .contact-info a {
+        color: #ffd89b;
+        text-decoration: none;
+        font-weight: 700;
+        padding: 12px 25px;
+        background: rgba(255, 216, 155, 0.2);
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 5px;
+      }
+      .contact-info a:hover {
+        background: rgba(255, 216, 155, 0.3);
+        transform: translateY(-2px);
+      }
+      .footer { 
+        background: #1a202c;
+        color: #a0aec0; 
+        text-align: center; 
+        padding: 35px 40px;
+        font-size: 15px;
+      }
+      .footer p {
+        margin: 10px 0;
+      }
+      .security-notice {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 30px 0;
+        text-align: center;
+      }
+      .security-notice p {
+        margin: 0;
+        color: #1a202c;
+        font-size: 16px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-wrapper">
+      <div class="container">
+        <div class="header">
+          <h1>Welcome to Bowery Creative!</h1>
+          <p>🎨 Creative Excellence Redefined 🚀</p>
+        </div>
+        
+        <div class="content">
+          <h2>Hello Dr. Greg Pedro! 🎉</h2>
+          <p>Welcome to the <strong>most exciting</strong> part of your creative journey! We're beyond excited to partner with you and bring your vision to life.</p>
+          
+          <p>Ready to dive in? Let's get your premium portal set up in just one click:</p>
+          
+          <div class="button-container">
+            <a href="#" class="button">✨ Access My Portal</a>
+          </div>
+          
+          <div class="features">
+            <h3>🌟 Your Premium Experience Includes:</h3>
+            <div class="feature-grid">
+              <div class="feature-item">
+                <span class="feature-icon">⚡</span>
+                <div class="feature-text">Instant Payment Setup</div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">📊</span>
+                <div class="feature-text">Beautiful Dashboard</div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🎯</span>
+                <div class="feature-text">Project Tracking</div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">💬</span>
+                <div class="feature-text">Direct Team Chat</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="security-notice">
+            <p>🔒 Bank-level security • Link expires in 24 hours</p>
+          </div>
+        </div>
+        
+        <div class="contact-info">
+          <h3>Questions? We're here! 🤝</h3>
+          <p>Our support team is always ready to help:</p>
+          <a href="mailto:support@bowerycreativeagency.com">📧 Email Support</a>
+          <a href="tel:5551234567">📞 Call Us</a>
+        </div>
+        
+        <div class="footer">
+          <p><strong>Bowery Creative Agency</strong></p>
+          <p>© 2025 • Creating extraordinary experiences</p>
+          <p>New York • Los Angeles • Miami</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control Chatbot Widget - Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .demo-content {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .widget-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d4af37;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🏥 Dr. Smith Medical Practice</h1>
+        
+        <div class="widget-info">
+            <h3>Mission Control Chatbot Widget Demo</h3>
+            <p><strong>Widget Status:</strong> <span id="widget-status" style="color: #d4af37;">Loading...</span></p>
+            <p><strong>Client:</strong> Dr. Smith Medical Practice</p>
+            <p><strong>Business Type:</strong> Medical Practice</p>
+        </div>
+        
+        <div class="demo-content">
+            <h2>Welcome to Dr. Smith Medical Practice</h2>
+            <p>We provide comprehensive healthcare services including:</p>
+            <ul>
+                <li>General Practice & Family Medicine</li>
+                <li>Preventive Care & Health Screenings</li>
+                <li>Chronic Disease Management</li>
+                <li>Internal Medicine</li>
+            </ul>
+            
+            <h3>Office Hours</h3>
+            <p>Monday - Friday: 9:00 AM - 5:00 PM<br>
+               Saturday: 9:00 AM - 1:00 PM<br>
+               Sunday: Closed</p>
+            
+            <p>Have questions? Chat with our AI assistant in the bottom right corner!</p>
+        </div>
+    </div>
+
+    <!-- Mission Control Chatbot Widget -->
+    <div id="mission-control-chatbot"></div>
+
+    <script>
+        // Mission Control Chatbot Widget
+        (function() {
+            const CHATBOT_ID = 'bff938f8-edd1-4421-a7b0-b4bcdcd1fe07'; // Real chatbot ID from database
+            const API_BASE = 'https://bowerycreative-backend.onrender.com';
+            
+            let isOpen = false;
+            let conversationId = null;
+            let visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+            // Widget HTML
+            const widgetHTML = `
+                <div id="chatbot-widget" style="
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                ">
+                    <!-- Chat Button -->
+                    <div id="chat-button" style="
+                        width: 60px;
+                        height: 60px;
+                        background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+                        border-radius: 50%;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+                        transition: all 0.3s ease;
+                        color: #000;
+                        font-size: 24px;
+                    " onclick="toggleChat()">
+                        💬
+                    </div>
+
+                    <!-- Chat Window -->
+                    <div id="chat-window" style="
+                        position: absolute;
+                        bottom: 80px;
+                        right: 0;
+                        width: 350px;
+                        height: 500px;
+                        background: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+                        display: none;
+                        flex-direction: column;
+                        border: 1px solid #e0e0e0;
+                        overflow: hidden;
+                    ">
+                        <!-- Header -->
+                        <div style="
+                            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+                            color: white;
+                            padding: 16px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                        ">
+                            <div>
+                                <div style="font-weight: 600; font-size: 16px;">Dr. Smith Assistant</div>
+                                <div style="font-size: 12px; opacity: 0.9;">Online • Ready to help</div>
+                            </div>
+                            <button onclick="toggleChat()" style="
+                                background: none;
+                                border: none;
+                                color: white;
+                                font-size: 20px;
+                                cursor: pointer;
+                                padding: 4px;
+                            ">×</button>
+                        </div>
+
+                        <!-- Messages -->
+                        <div id="chat-messages" style="
+                            flex: 1;
+                            padding: 16px;
+                            overflow-y: auto;
+                            background: #f8f9fa;
+                        ">
+                            <div class="message bot-message" style="
+                                margin-bottom: 12px;
+                                display: flex;
+                                align-items: flex-start;
+                            ">
+                                <div style="
+                                    background: #0066cc;
+                                    color: white;
+                                    padding: 10px 14px;
+                                    border-radius: 18px;
+                                    max-width: 80%;
+                                    font-size: 14px;
+                                    line-height: 1.4;
+                                ">
+                                    Hi! I'm Dr. Smith's virtual assistant. How can I help you today?
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Input -->
+                        <div style="
+                            padding: 16px;
+                            border-top: 1px solid #e0e0e0;
+                            background: white;
+                        ">
+                            <div style="display: flex; gap: 8px;">
+                                <input 
+                                    id="chat-input" 
+                                    type="text" 
+                                    placeholder="Type your message..."
+                                    style="
+                                        flex: 1;
+                                        border: 1px solid #ddd;
+                                        border-radius: 20px;
+                                        padding: 10px 16px;
+                                        outline: none;
+                                        font-size: 14px;
+                                    "
+                                    onkeypress="handleKeyPress(event)"
+                                >
+                                <button onclick="sendMessage()" style="
+                                    background: #0066cc;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 50%;
+                                    width: 40px;
+                                    height: 40px;
+                                    cursor: pointer;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-size: 16px;
+                                ">→</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize widget
+            function initWidget() {
+                const container = document.getElementById('mission-control-chatbot');
+                container.innerHTML = widgetHTML;
+                
+                // Update status
+                const statusEl = document.getElementById('widget-status');
+                if (statusEl) {
+                    statusEl.textContent = 'Active';
+                    statusEl.style.color = '#28a745';
+                }
+            }
+
+            // Toggle chat window
+            window.toggleChat = function() {
+                const chatWindow = document.getElementById('chat-window');
+                const chatButton = document.getElementById('chat-button');
+                
+                isOpen = !isOpen;
+                chatWindow.style.display = isOpen ? 'flex' : 'none';
+                chatButton.innerHTML = isOpen ? '×' : '💬';
+                
+                if (isOpen) {
+                    document.getElementById('chat-input').focus();
+                }
+            };
+
+            // Handle key press
+            window.handleKeyPress = function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            };
+
+            // Send message
+            window.sendMessage = async function() {
+                const input = document.getElementById('chat-input');
+                const message = input.value.trim();
+                
+                if (!message) return;
+                
+                // Add user message to chat
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Show typing indicator
+                addTypingIndicator();
+                
+                try {
+                    // Call backend API
+                    const response = await fetch(`${API_BASE}/api/public/chatbots/${CHATBOT_ID}/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            visitor_id: visitorId,
+                            conversation_id: conversationId
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Remove typing indicator
+                    removeTypingIndicator();
+                    
+                    if (response.ok) {
+                        // Add bot response
+                        addMessage(data.message, 'bot');
+                        if (data.conversation_id) {
+                            conversationId = data.conversation_id;
+                        }
+                    } else {
+                        addMessage("I'm having trouble connecting right now. Please try again later or call us directly at (555) 123-4567.", 'bot');
+                    }
+                } catch (error) {
+                    console.error('Chat error:', error);
+                    removeTypingIndicator();
+                    addMessage("I'm having trouble connecting right now. Please try again later or call us directly at (555) 123-4567.", 'bot');
+                }
+            };
+
+            // Add message to chat
+            function addMessage(text, sender) {
+                const messagesContainer = document.getElementById('chat-messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                const isUser = sender === 'user';
+                messageDiv.style.cssText = `
+                    margin-bottom: 12px;
+                    display: flex;
+                    justify-content: ${isUser ? 'flex-end' : 'flex-start'};
+                `;
+                
+                messageDiv.innerHTML = `
+                    <div style="
+                        background: ${isUser ? '#0066cc' : '#f1f1f1'};
+                        color: ${isUser ? 'white' : '#333'};
+                        padding: 10px 14px;
+                        border-radius: 18px;
+                        max-width: 80%;
+                        font-size: 14px;
+                        line-height: 1.4;
+                        word-wrap: break-word;
+                    ">
+                        ${text}
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            // Add typing indicator
+            function addTypingIndicator() {
+                const messagesContainer = document.getElementById('chat-messages');
+                const typingDiv = document.createElement('div');
+                typingDiv.id = 'typing-indicator';
+                typingDiv.style.cssText = `
+                    margin-bottom: 12px;
+                    display: flex;
+                    align-items: flex-start;
+                `;
+                
+                typingDiv.innerHTML = `
+                    <div style="
+                        background: #f1f1f1;
+                        color: #666;
+                        padding: 10px 14px;
+                        border-radius: 18px;
+                        font-size: 14px;
+                        line-height: 1.4;
+                    ">
+                        <span style="animation: typing 1.5s infinite;">●●●</span>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(typingDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes typing {
+                    0% { opacity: 0.3; }
+                    50% { opacity: 1; }
+                    100% { opacity: 0.3; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initWidget);
+            } else {
+                initWidget();
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bowery Creative - Cosmic Big Bang Theme</title>
+    <style>
+      @keyframes explode {
+        0% { transform: scale(0) rotate(0deg); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: scale(1) rotate(360deg); opacity: 1; }
+      }
+      
+      @keyframes particles {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-100px) scale(0); opacity: 0; }
+      }
+      
+      @keyframes atomSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @keyframes energyPulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 255, 255, 0.4); }
+      }
+
+      body { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        line-height: 1.6; 
+        color: #ffffff; 
+        margin: 0; 
+        padding: 0;
+        background: #0a0a0a;
+        overflow-x: hidden;
+      }
+      
+      .email-wrapper {
+        background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #16213e 30%, #0f0f23 60%, #000000 100%);
+        padding: 40px 20px;
+        min-height: 100vh;
+        position: relative;
+      }
+      
+      .stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+          radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+          radial-gradient(1px 1px at 90px 40px, #eee, transparent),
+          radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+          radial-gradient(2px 2px at 160px 30px, #eee, transparent);
+        background-repeat: repeat;
+        background-size: 200px 100px;
+        animation: particles 4s linear infinite;
+        opacity: 0.7;
+      }
+      
+      .container { 
+        max-width: 600px; 
+        margin: 0 auto; 
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 
+          0 0 50px rgba(255, 215, 0, 0.4),
+          0 0 100px rgba(255, 165, 0, 0.2),
+          0 20px 40px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 10;
+        animation: explode 1.5s ease-out;
+      }
+      
+      .header { 
+        background: linear-gradient(135deg, #000428 0%, #004e92 50%, #ff6b35 100%);
+        color: white; 
+        padding: 60px 40px; 
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .header::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, 
+          rgba(255, 255, 255, 0.8) 0%, 
+          rgba(255, 215, 0, 0.6) 20%, 
+          rgba(255, 165, 0, 0.4) 40%, 
+          transparent 60%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        animation: energyPulse 2s ease-in-out infinite;
+        z-index: 1;
+      }
+      
+      .atom {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        width: 60px;
+        height: 60px;
+        z-index: 2;
+      }
+      
+      .nucleus {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background: #ffd700;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px #ffd700;
+      }
+      
+      .electron-orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        animation: atomSpin 3s linear infinite;
+      }
+      
+      .orbit1 { width: 40px; height: 40px; animation-duration: 2s; }
+      .orbit2 { width: 60px; height: 20px; animation-duration: 3s; animation-direction: reverse; }
+      .orbit3 { width: 50px; height: 50px; animation-duration: 2.5s; }
+      
+      .electron {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #00f0ff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #00f0ff;
+      }
+      
+      .electron1 { top: -2px; left: 18px; }
+      .electron2 { top: 8px; right: -2px; }
+      .electron3 { bottom: -2px; left: 23px; }
+      
+      .header h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 900;
+        text-shadow: 
+          0 0 10px rgba(255, 255, 255, 0.8),
+          0 0 20px rgba(255, 215, 0, 0.6),
+          0 0 30px rgba(255, 165, 0, 0.4);
+        position: relative;
+        z-index: 2;
+      }
+      
+      .header p {
+        margin: 15px 0 0 0;
+        font-size: 18px;
+        font-weight: 300;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        position: relative;
+        z-index: 2;
+      }
+      
+      .content { 
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+        padding: 50px 40px;
+        color: #1a202c;
+      }
+      
+      .content h2 {
+        color: #1a202c;
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 25px 0;
+        background: linear-gradient(135deg, #004e92 0%, #ff6b35 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .content p {
+        color: #4a5568;
+        font-size: 17px;
+        margin: 0 0 25px 0;
+      }
+      
+      .button-container {
+        text-align: center;
+        margin: 45px 0;
+        position: relative;
+      }
+      
+      .button { 
+        display: inline-block; 
+        padding: 25px 50px; 
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffd700 100%);
+        color: #1a202c; 
+        text-decoration: none; 
+        border-radius: 50px; 
+        font-weight: 900;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 
+          0 15px 35px rgba(255, 107, 53, 0.4),
+          0 0 20px rgba(255, 215, 0, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.3s ease;
+      }
+      
+      .button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 
+          0 20px 50px rgba(255, 107, 53, 0.6),
+          0 0 40px rgba(255, 215, 0, 0.5);
+      }
+      
+      .button:hover::before {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .features {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 40px;
+        margin: 40px 0;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .features::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, 
+          rgba(255, 255, 255, 0.1) 0%, 
+          transparent 70%);
+        animation: atomSpin 20s linear infinite;
+      }
+      
+      .features h3 {
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0 0 30px 0;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        position: relative;
+        z-index: 2;
+      }
+      
+      .feature-item {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 25px 20px;
+        border-radius: 15px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .feature-item:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      
+      .feature-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+        display: block;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+      
+      .feature-text {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      
+      .contact-info {
+        background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+      }
+      
+      .footer { 
+        background: #000000;
+        color: #666; 
+        text-align: center; 
+        padding: 35px 40px;
+        font-size: 15px;
+      }
+      
+      .security-notice {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 30px 0;
+        text-align: center;
+        color: #1a202c;
+      }
+      
+      .energy-burst {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, #ffd700 0%, transparent 70%);
+        border-radius: 50%;
+        animation: energyPulse 1.5s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-wrapper">
+      <div class="stars"></div>
+      
+      <div class="container">
+        <div class="header">
+          <div class="atom">
+            <div class="nucleus"></div>
+            <div class="electron-orbit orbit1">
+              <div class="electron electron1"></div>
+            </div>
+            <div class="electron-orbit orbit2">
+              <div class="electron electron2"></div>
+            </div>
+            <div class="electron-orbit orbit3">
+              <div class="electron electron3"></div>
+            </div>
+          </div>
+          
+          <h1>Welcome to Bowery Creative</h1>
+          <p>Where Extraordinary Ideas Come to Life</p>
+        </div>
+        
+        <div class="content">
+          <div class="energy-burst"></div>
+          
+          <h2>Hi Dr. Greg Pedro! 🚀</h2>
+          <p>We're absolutely <strong>thrilled</strong> to welcome you to the Bowery Creative family!</p>
+          <p>Your partnership with us is about to unlock <em>incredible creative potential</em> that will transform your practice and elevate your brand to extraordinary new heights.</p>
+          
+          <p>Ready to get started? Let's set up your secure portal:</p>
+          
+          <div class="button-container">
+            <a href="#" class="button">🚀 Launch My Portal</a>
+          </div>
+          
+          <div class="features">
+            <h3>🌟 Your Premium Experience Includes:</h3>
+            <div class="feature-grid">
+              <div class="feature-item">
+                <span class="feature-icon">⚛️</span>
+                <div class="feature-text">Secure Payment Management</div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🌌</span>
+                <div class="feature-text">Beautiful Project Dashboard</div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🚀</span>
+                <div class="feature-text">Real-Time Progress Tracking</div>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">💫</span>
+                <div class="feature-text">Direct Team Communication</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="security-notice">
+            <p><strong>🔐 Bank-Level Security</strong> • Link expires in 24 hours for your protection</p>
+          </div>
+        </div>
+        
+        <div class="contact-info">
+          <h3>🌟 Need Help? We're Here! 🌟</h3>
+          <p>Our support team is always ready to assist:</p>
+          <p><strong>📧 support@bowerycreativeagency.com</strong></p>
+          <p><strong>📞 (555) 123-4567</strong></p>
+        </div>
+        
+        <div class="footer">
+          <p><strong>Bowery Creative Agency</strong></p>
+          <p>© 2025 • Creating extraordinary experiences</p>
+          <p>New York • Los Angeles • Miami</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
