@@ -94,13 +94,13 @@ export const Navigation: React.FC = () => {
                     </a>
                   )}
                   <a
-                    href="https://payments.bowerycreativeagency.com/"
+                    href="https://bowerycreativepayments.netlify.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-ghost flex items-center gap-2"
                   >
                     <CreditCard className="w-4 h-4" />
-                    Payments
+                    Billing
                   </a>
                 </>
               )}
@@ -169,14 +169,14 @@ export const Navigation: React.FC = () => {
                     </a>
                   )}
                   <a
-                    href="https://payments.bowerycreativeagency.com/"
+                    href="https://bowerycreativepayments.netlify.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xl text-champagne flex items-center gap-2 justify-center"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <CreditCard className="w-5 h-5" />
-                    Payments
+                    Billing
                   </a>
                 </motion.div>
               )}
