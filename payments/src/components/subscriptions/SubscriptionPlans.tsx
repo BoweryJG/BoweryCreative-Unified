@@ -43,61 +43,61 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: 'starter',
-    name: 'Starter',
-    description: 'Perfect for small practices getting started',
-    monthlyPrice: 99,
-    annualPrice: 950,
+    id: 'foundation',
+    name: 'Foundation Elite',
+    description: 'Premium entry point for ambitious practices ready to dominate their market',
+    monthlyPrice: 4997,
+    annualPrice: 47970,
     icon: <Star sx={{ fontSize: 28 }} />,
     color: colors.racingSilver,
     features: [
-      { name: '25 campaigns per month', included: true },
-      { name: 'Basic templates', included: true },
-      { name: 'Email support', included: true },
-      { name: 'Basic analytics', included: true },
-      { name: 'Custom branding', included: false },
-      { name: 'Advanced AI features', included: false },
-      { name: 'Priority support', included: false },
-      { name: 'API access', included: false },
+      { name: 'Complete brand transformation', included: true },
+      { name: 'Comprehensive market analysis', included: true },
+      { name: 'Custom content strategy', included: true },
+      { name: 'Professional website design', included: true },
+      { name: 'Local SEO optimization', included: true },
+      { name: 'Social media presence setup', included: true },
+      { name: 'Monthly performance reports', included: true },
+      { name: 'Dedicated success manager', included: false },
     ],
   },
   {
-    id: 'professional',
-    name: 'Professional',
-    description: 'Ideal for growing practices and agencies',
-    monthlyPrice: 299,
-    annualPrice: 2990,
+    id: 'transformation',
+    name: 'Visionary Transformation',
+    description: 'Accelerated growth for practices targeting rapid expansion and market leadership',
+    monthlyPrice: 9950,
+    annualPrice: 95520,
     popular: true,
     icon: <Bolt sx={{ fontSize: 28 }} />,
     color: colors.champagne,
     features: [
-      { name: '100 campaigns per month', included: true },
-      { name: 'Premium templates', included: true },
-      { name: 'Priority support', included: true },
-      { name: 'Advanced analytics', included: true },
-      { name: 'Custom branding', included: true },
-      { name: 'Advanced AI features', included: true },
-      { name: 'A/B testing', included: true },
-      { name: 'API access', included: false },
+      { name: 'Everything in Foundation Elite', included: true },
+      { name: 'Advanced AI-powered campaigns', included: true },
+      { name: 'Multi-channel marketing automation', included: true },
+      { name: 'Conversion rate optimization', included: true },
+      { name: 'Dedicated success manager', included: true },
+      { name: 'Weekly strategy sessions', included: true },
+      { name: 'Custom landing pages & funnels', included: true },
+      { name: 'Priority 24/7 support', included: true },
     ],
   },
   {
-    id: 'agency',
-    name: 'Agency',
-    description: 'For large agencies and enterprise clients',
-    monthlyPrice: 999,
-    annualPrice: 9990,
+    id: 'dominance',
+    name: 'Market Dominance',
+    description: 'Complete market control for practices committed to becoming the undisputed leader',
+    monthlyPrice: 19500,
+    annualPrice: 187200,
     icon: <Rocket sx={{ fontSize: 28 }} />,
     color: colors.electric,
     features: [
-      { name: 'Unlimited campaigns', included: true },
-      { name: 'All templates', included: true },
-      { name: 'White-label solution', included: true },
-      { name: 'Advanced analytics', included: true },
-      { name: 'Custom branding', included: true },
-      { name: 'Advanced AI features', included: true },
-      { name: 'A/B testing', included: true },
-      { name: 'Full API access', included: true },
+      { name: 'Everything in Visionary Transformation', included: true },
+      { name: 'Full marketing team dedication', included: true },
+      { name: 'Custom software development', included: true },
+      { name: 'Competitive market takeover strategy', included: true },
+      { name: 'Executive brand positioning', included: true },
+      { name: 'Daily performance optimization', included: true },
+      { name: 'Unlimited campaigns & resources', included: true },
+      { name: 'C-suite strategic partnership', included: true },
     ],
   },
 ];
@@ -316,7 +316,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan, isAnnual, onSelect, currentPl
 
 export const SubscriptionPlans: React.FC = () => {
   const [isAnnual, setIsAnnual] = useState(false);
-  const [currentPlan] = useState('professional'); // Mock current plan
+  const [currentPlan] = useState(''); // No current plan by default
   const [loading, setLoading] = useState(false);
 
   const handlePlanSelect = async (planId: string) => {
@@ -354,7 +354,7 @@ export const SubscriptionPlans: React.FC = () => {
             lineHeight: 1.6,
           }}
         >
-          Select the perfect plan for your practice. Upgrade or downgrade at any time with no commitments.
+          Invest in your practice's future with our premium growth acceleration programs. Transform your market presence today.
         </Typography>
 
         <Paper
@@ -467,7 +467,7 @@ export const SubscriptionPlans: React.FC = () => {
             mx: 'auto',
           }}
         >
-          For enterprise customers with specific requirements, we offer custom pricing and features tailored to your needs.
+          For practices with unique requirements or seeking even more aggressive growth strategies, we offer bespoke solutions starting at $25,000/month.
         </Typography>
         <Button
           variant="outlined"

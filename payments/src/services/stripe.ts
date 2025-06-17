@@ -1,17 +1,17 @@
 import { supabase } from '../lib/supabase';
 
 const STRIPE_PRICE_IDS = {
-  starter: {
-    monthly: 'price_starter_monthly', // Replace with your actual Stripe price IDs
-    annual: 'price_starter_annual',
+  foundation: {
+    monthly: 'price_foundation_monthly', // Replace with your actual Stripe price IDs
+    annual: 'price_foundation_annual',
   },
-  professional: {
-    monthly: 'price_professional_monthly',
-    annual: 'price_professional_annual',
+  transformation: {
+    monthly: 'price_transformation_monthly',
+    annual: 'price_transformation_annual',
   },
-  agency: {
-    monthly: 'price_agency_monthly',
-    annual: 'price_agency_annual',
+  dominance: {
+    monthly: 'price_dominance_monthly',
+    annual: 'price_dominance_annual',
   },
 };
 

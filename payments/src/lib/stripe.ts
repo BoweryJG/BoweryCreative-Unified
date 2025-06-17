@@ -53,17 +53,17 @@ export const createPortalSession = async () => {
 // Product/Price definitions matching backend
 export const PRODUCTS = {
   subscriptions: {
-    starter: {
-      monthly: 'price_starter_monthly',
-      annual: 'price_starter_annual',
+    foundation: {
+      monthly: 'price_foundation_monthly',
+      annual: 'price_foundation_annual',
     },
-    professional: {
-      monthly: 'price_pro_monthly',
-      annual: 'price_pro_annual',
+    transformation: {
+      monthly: 'price_transformation_monthly',
+      annual: 'price_transformation_annual',
     },
-    agency: {
-      monthly: 'price_agency_monthly',
-      annual: 'price_agency_annual',
+    dominance: {
+      monthly: 'price_dominance_monthly',
+      annual: 'price_dominance_annual',
     },
   },
   credits: {
@@ -76,5 +76,6 @@ export const PRODUCTS = {
     websiteRedesign: 'price_website_redesign',
     brandingPackage: 'price_branding',
     marketingSetup: 'price_marketing_setup',
+    customSolution: 'price_custom_solution',
   },
 } as const;
