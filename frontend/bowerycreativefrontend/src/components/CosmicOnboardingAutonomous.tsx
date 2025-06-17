@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, ChevronRight, ChevronLeft, Rocket, Sparkles,
-  Globe, Instagram, Facebook, Twitter, Linkedin,
-  Check, AlertCircle, Package, TrendingUp, Users, Zap
+  Globe, Instagram, Facebook,
+  Check, TrendingUp, Zap
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -701,7 +701,7 @@ export const CosmicOnboardingAutonomous: React.FC<CosmicOnboardingProps> = ({ on
                 </div>
               </div>
               
-              <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.1)' }} />
+              <div className="my-6 border-t border-white/10"></div>
               
               <h4 className="text-md font-semibold mb-2">What happens next:</h4>
               <ul className="space-y-2 text-left text-sm">
@@ -839,7 +839,7 @@ export const CosmicOnboardingAutonomous: React.FC<CosmicOnboardingProps> = ({ on
         </div>
       </motion.div>
       
-      <style jsx>{`
+      <style>{`
         .stars {
           position: absolute;
           top: 0;
