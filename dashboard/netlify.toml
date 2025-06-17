@@ -1,7 +1,7 @@
 [build]
   command = "npm ci && npm run build"
   publish = "dist"
-  # Skip builds when only non-code files change
+  # Skip builds when only non-code files change - force redeploy
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF . '../**.md' '../**.sql' '../docs/**'"
 
 [build.environment]
