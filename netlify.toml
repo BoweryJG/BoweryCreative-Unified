@@ -1,0 +1,4 @@
+# Netlify deployment from frontend folder
+[build]
+  base = "frontend"
+  publish = "."
