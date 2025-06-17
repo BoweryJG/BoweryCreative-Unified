@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS public.onboarding_submissions (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users(id),
+    client_account_id UUID,
     form_data JSONB NOT NULL,
     completed_at TIMESTAMP WITH TIME ZONE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

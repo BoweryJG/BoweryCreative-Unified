@@ -12,6 +12,7 @@ import { Insights } from './components/Insights';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { AudioToggle } from './components/AudioToggle';
+import { CosmicWelcome } from './components/CosmicWelcome';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './lib/analytics';
 
@@ -25,6 +26,7 @@ function App() {
     isOpen: false,
     documentType: null,
   });
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
     // Track initial page view
@@ -33,7 +35,11 @@ function App() {
     // Track navigation changes
     const handleLocationChange = () => {
       trackPageView(window.location.pathname);
+      setCurrentPath(window.location.pathname);
     };
+    
+    // Listen for popstate events
+    window.addEventListener('popstate', handleLocationChange);
 
     // Handle legal document links
     const handleLegalLinks = (e: Event) => {
@@ -66,14 +72,17 @@ function App() {
   return (
     <AuthProvider>
       <ErrorBoundary>
-        <div className="min-h-screen bg-obsidian cursor-luxury">
-          <ErrorBoundary fallback={<div className="text-center p-8 text-arctic">Navigation temporarily unavailable</div>}>
-            <Navigation />
-          </ErrorBoundary>
-        
-        <ErrorBoundary fallback={<div className="h-screen bg-obsidian flex items-center justify-center text-arctic">Hero section loading...</div>}>
-          <Hero />
-        </ErrorBoundary>
+        {currentPath === '/welcome' ? (
+          <CosmicWelcome />
+        ) : (
+          <div className="min-h-screen bg-obsidian cursor-luxury">
+            <ErrorBoundary fallback={<div className="text-center p-8 text-arctic">Navigation temporarily unavailable</div>}>
+              <Navigation />
+            </ErrorBoundary>
+          
+            <ErrorBoundary fallback={<div className="h-screen bg-obsidian flex items-center justify-center text-arctic">Hero section loading...</div>}>
+              <Hero />
+            </ErrorBoundary>
         
         <ErrorBoundary>
           <Capabilities />
@@ -114,9 +123,10 @@ function App() {
               onClose={closeLegalModal}
             />
             
-          {/* Audio Toggle */}
-          <AudioToggle />
-        </div>
+            {/* Audio Toggle */}
+            <AudioToggle />
+          </div>
+        )}
       </ErrorBoundary>
     </AuthProvider>
   );

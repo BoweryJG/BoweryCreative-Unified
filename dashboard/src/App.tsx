@@ -44,7 +44,7 @@ import SocialMedia from './components/SocialMedia';
 import Analytics from './components/Analytics';
 import CampaignMarketplace from './components/CampaignMarketplace';
 import CampaignManager from './components/CampaignManager';
-import ClientManagement from './components/ClientManagement';
+import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import ClientDashboard from './components/ClientDashboard';
 import LoginModal from './components/LoginModal';
 import { BillingAdmin } from './components/BillingAdmin';
@@ -289,7 +289,7 @@ function App() {
       case 'dashboard':
         return renderDashboard();
       case 'clients':
-        return <ClientManagement />;
+        return <ClientManagementEnhanced />;
       case 'billing':
         return <BillingAdmin />;
       case 'contacts':

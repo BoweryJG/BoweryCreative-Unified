@@ -41,6 +41,7 @@ interface FormData {
   monthlyBudget: string;
   startDate: string;
   additionalNotes: string;
+  promoCode: string;
 }
 
 const initialFormData: FormData = {
@@ -63,7 +64,8 @@ const initialFormData: FormData = {
   marketingGoals: [],
   monthlyBudget: '',
   startDate: '',
-  additionalNotes: ''
+  additionalNotes: '',
+  promoCode: ''
 };
 
 export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) => {
@@ -134,12 +136,30 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
     setIsSubmitting(true);
     
     try {
+      // First validate the access code if provided
+      let clientData = null;
+      if (formData.promoCode) {
+        const { data, error } = await supabase.rpc('use_access_code', {
+          p_access_code: formData.promoCode,
+          p_user_email: formData.email
+        });
+
+        if (error || !data?.[0]?.success) {
+          setErrors({ promoCode: 'Invalid access code' });
+          setIsSubmitting(false);
+          return;
+        }
+
+        clientData = data[0].client_data;
+      }
+
       // Save to Supabase
       const { error } = await supabase
         .from('onboarding_submissions')
         .insert([{
           user_id: user?.id,
           form_data: formData,
+          client_account_id: clientData?.id,
           completed_at: new Date().toISOString()
         }]);
 
@@ -148,12 +168,24 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       // Clear localStorage
       localStorage.removeItem('cosmicOnboardingData');
       
-      // Redirect to payment portal
-      window.location.href = 'https://bowerycreativepayments.netlify.app/';
+      // Prepare welcome data with client info
+      const welcomeData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        practiceName: formData.practiceName,
+        email: formData.email,
+        promoCode: formData.promoCode,
+        clientData: clientData // Include pricing and package info
+      };
+      
+      // Store data for welcome page
+      localStorage.setItem('welcomeData', JSON.stringify(welcomeData));
+      
+      // Redirect to welcome page
+      window.location.href = '/welcome';
     } catch (error) {
       console.error('Error submitting onboarding:', error);
-      // Still redirect even if save fails
-      window.location.href = 'https://bowerycreativepayments.netlify.app/';
+      setIsSubmitting(false);
     }
   };
 
@@ -479,6 +511,18 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all"
                 min={new Date().toISOString().split('T')[0]}
               />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-300">Special Pricing Code (if you have one)</label>
+              <input
+                type="text"
+                value={formData.promoCode}
+                onChange={(e) => handleInputChange('promoCode', e.target.value.toUpperCase())}
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 transition-all uppercase"
+                placeholder="Enter code (e.g., PEDRO)"
+              />
+              <p className="text-xs text-gray-400">If you've been given a special pricing code, enter it here</p>
             </div>
             
             <div className="space-y-2">
