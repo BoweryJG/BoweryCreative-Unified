@@ -58,43 +58,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [clientData, setClientData] = useState<ClientData | null>(null);
   const [hasAccess, setHasAccess] = useState(false);
 
-  useEffect(() => {
-    // Handle OAuth callback tokens
-    const handleOAuthCallback = async () => {
-      const hash = window.location.hash;
-      if (hash && hash.includes('access_token')) {
-        console.log('OAuth callback detected, processing tokens...');
-        try {
-          // Parse tokens from URL hash
-          const hashParams = new URLSearchParams(hash.substring(1));
-          const accessToken = hashParams.get('access_token');
-          const refreshToken = hashParams.get('refresh_token');
-          
-          if (accessToken && refreshToken) {
-            console.log('Setting session with tokens...');
-            // Set the session using the tokens
-            const { data, error } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
-            
-            console.log('Session set result:', { data, error });
-            if (error) {
-              console.error('Failed to set session:', error);
-            }
-          }
-        } catch (err) {
-          console.error('OAuth processing error:', err);
-        }
+  // Handle OAuth callback immediately on component mount
+  React.useLayoutEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+      console.log('OAuth callback detected IMMEDIATELY, processing tokens...');
+      try {
+        // Parse tokens from URL hash
+        const hashParams = new URLSearchParams(hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
         
-        // Clean up URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-        return;
+        if (accessToken && refreshToken) {
+          console.log('Setting session with tokens IMMEDIATELY...');
+          // Set the session using the tokens
+          supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          }).then(({ data, error }) => {
+            console.log('Session set result IMMEDIATE:', { data, error });
+            if (error) {
+              console.error('Failed to set session IMMEDIATE:', error);
+            }
+          });
+        }
+      } catch (err) {
+        console.error('OAuth processing error IMMEDIATE:', err);
       }
-    };
+      
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
-    handleOAuthCallback();
-
+  useEffect(() => {
     // Check current session
     supabase.auth.getSession().then(async ({ data: { session }, error }: any) => {
       console.log('Initial session check:', { session, error });
