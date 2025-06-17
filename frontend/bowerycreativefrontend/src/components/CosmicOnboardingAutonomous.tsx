@@ -20,48 +20,59 @@ interface Campaign {
 
 const availableCampaigns: Campaign[] = [
   {
-    id: 'starter',
-    name: 'Starter Package',
-    description: 'Perfect for small practices getting started',
-    price: 999,
+    id: 'foundation',
+    name: 'Foundation Elite',
+    description: 'Premium entry point for ambitious practices',
+    price: 4997,
     icon: <Rocket className="w-6 h-6" />,
     features: [
-      'Social Media Management (3 platforms)',
-      'Monthly Content Calendar',
-      'Basic Email Marketing',
-      'Monthly Analytics Report',
-      'Dedicated Account Manager'
+      'Complete brand strategy audit & refinement',
+      'AI-powered patient acquisition campaigns',
+      'Premium website optimization with conversion tracking',
+      'Monthly content creation (4 videos, 12 posts, 2 blogs)',
+      'Advanced analytics and ROI reporting',
+      'Dedicated senior account manager',
+      'Monthly strategy consultation calls'
     ]
   },
   {
-    id: 'growth',
-    name: 'Growth Package',
-    description: 'Scale your practice with comprehensive marketing',
-    price: 1999,
+    id: 'transformation',
+    name: 'Visionary Transformation',
+    description: 'Complete practice transformation through AI',
+    price: 9950,
     popular: true,
     icon: <TrendingUp className="w-6 h-6" />,
     features: [
-      'Everything in Starter',
-      'Google Ads Management',
-      'SEO Optimization',
-      'Advanced Email Campaigns',
-      'Weekly Performance Calls',
-      'Custom Landing Pages'
+      'Everything in Foundation Elite',
+      'AI-powered patient journey optimization',
+      'Advanced funnel development & automation',
+      'Premium video production (8 videos/month)',
+      'Multi-channel campaign management (Google, Meta, LinkedIn)',
+      'Reputation management & review optimization',
+      'Bi-weekly strategy sessions with senior team',
+      'Custom AI chatbot development',
+      'Competitive intelligence reports',
+      'Staff training on digital marketing best practices'
     ]
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise Package',
-    description: 'Full-service marketing for established practices',
-    price: 3999,
+    id: 'dominance',
+    name: 'Market Dominance',
+    description: 'Industry leadership through innovation',
+    price: 19500,
     icon: <Zap className="w-6 h-6" />,
     features: [
-      'Everything in Growth',
-      'Multi-location Support',
-      'Video Content Production',
-      'Influencer Partnerships',
-      'AI-Powered Chatbot',
-      '24/7 Priority Support'
+      'Everything in Visionary Transformation',
+      'Market expansion strategy for new locations',
+      'Advanced AI patient prediction modeling',
+      'Custom software development for practice optimization',
+      'Weekly strategy sessions with C-level team',
+      'Dedicated team of 5+ specialists',
+      'PR and thought leadership campaigns',
+      'Speaking engagement opportunities',
+      'Industry conference presence & custom research',
+      '24/7 support and emergency response',
+      'Quarterly in-person strategy intensives'
     ]
   }
 ];
@@ -522,7 +533,7 @@ export const CosmicOnboardingAutonomous: React.FC<CosmicOnboardingProps> = ({ on
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="text-xl font-bold">{campaign.name}</h3>
                         <div className="text-right">
-                          <p className="text-3xl font-bold">${campaign.price}</p>
+                          <p className="text-3xl font-bold">${campaign.price.toLocaleString()}</p>
                           <p className="text-sm text-gray-400">/month</p>
                         </div>
                       </div>
