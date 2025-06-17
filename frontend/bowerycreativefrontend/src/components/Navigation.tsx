@@ -137,34 +137,42 @@ export const Navigation: React.FC = () => {
               <div className="relative" ref={dropdownRef}>
                 <motion.button 
                   onClick={() => setShowStartDropdown(!showStartDropdown)}
-                  className="btn-primary cosmic-glow flex items-center gap-2"
+                  className="btn-primary cosmic-glow flex items-center gap-2 text-sm md:text-base"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Rocket className="w-4 h-4" />
-                  Start Project
+                  <span className="hidden sm:inline">Start Project</span>
+                  <span className="sm:hidden">Start</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showStartDropdown ? 'rotate-180' : ''}`} />
                 </motion.button>
                 
                 <AnimatePresence>
                   {showStartDropdown && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-64 bg-[#1a1a2e] border border-white/20 rounded-lg shadow-xl overflow-hidden z-50"
-                    >
+                    <>
+                      {/* Mobile overlay */}
+                      <div 
+                        className="fixed inset-0 z-40 bg-black/20 lg:hidden"
+                        onClick={() => setShowStartDropdown(false)}
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-40 sm:w-48 bg-[#1a1a2e]/95 backdrop-blur border border-white/20 rounded-lg shadow-xl overflow-hidden z-[60]"
+                      >
                       <button
                         onClick={() => {
                           setIsOnboardingOpen(true);
                           setShowStartDropdown(false);
                         }}
-                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
+                        className="w-full px-3 py-2 flex items-center gap-2 hover:bg-white/10 transition-colors text-left"
                       >
-                        <CreditCard className="w-5 h-5 text-yellow-400" />
+                        <CreditCard className="w-4 h-4 text-yellow-400" />
                         <div>
-                          <p className="font-semibold">I Have an Access Code</p>
-                          <p className="text-xs text-gray-400">For existing clients</p>
+                          <p className="text-sm font-semibold">Access Code</p>
+                          <p className="text-xs text-gray-400">Existing clients</p>
                         </div>
                       </button>
                       
@@ -175,15 +183,16 @@ export const Navigation: React.FC = () => {
                           setIsAutonomousOnboardingOpen(true);
                           setShowStartDropdown(false);
                         }}
-                        className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
+                        className="w-full px-3 py-2 flex items-center gap-2 hover:bg-white/10 transition-colors text-left"
                       >
-                        <Rocket className="w-5 h-5 text-orange-400" />
+                        <Rocket className="w-4 h-4 text-orange-400" />
                         <div>
-                          <p className="font-semibold">Browse Packages</p>
-                          <p className="text-xs text-gray-400">Start fresh with our plans</p>
+                          <p className="text-sm font-semibold">Browse Packages</p>
+                          <p className="text-xs text-gray-400">New customers</p>
                         </div>
                       </button>
                     </motion.div>
+                    </>
                   )}
                 </AnimatePresence>
               </div>
