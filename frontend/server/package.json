@@ -1,0 +1,15 @@
+{
+  "name": "mcp-server",
+  "version": "1.0.0",
+  "description": "Minimal MCP server for agentic workflows with tool selection and structured outputs.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "express": "^4.18.2",
+    "googleapis": "^128.0.0"
+  }
+}

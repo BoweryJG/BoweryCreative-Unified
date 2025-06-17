@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podcast | Bowery</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/podcast-carousel.css" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D5J7CQJVR8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D5J7CQJVR8');
+</script>
+</head>
+<body>
+  <header class="header">
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">Our Story</a></li>
+        <li><a href="services.html">Solutions & Services</a></li>
+
+        <li><a href="sphere.html">Sphere OS</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="podcast.html" class="active">Podcast</a></li>
+        <li><a href="insights.html">Insights</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="btn btn-primary">Get in Touch</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+  <!-- Hero Banner -->
+  <section class="hero-banner podcast-hero">
+    <div class="hero-content">
+      <h1>The Creative Sphere</h1>
+      <p>Bowery’s podcast: Where creativity, AI, and industry leaders converge.</p>
+    </div>
+    <svg class="hero-divider" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-opacity="0.7" d="M0,120 C480,0 960,120 1440,0 L1440,120 L0,120 Z" fill="#21709e"/></svg>
+  </section>
+
+    <section id="podcast" class="podcast-section">
+  <div class="container">
+    <div class="podcast-carousel" id="podcastCarousel" aria-label="Podcast Episodes Carousel">
+      <!-- Podcast story cards will be dynamically loaded here by JS -->
+    </div>
+  </div>
+</section>
+  </main>
+  <footer class="footer">
+    <p>&copy; 2025 Bowery. All rights reserved.</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="script/podcast.js"></script>
+</body>
+</html>

@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DocSpheres - AI Practice Management | Bowery Creative Agency</title>
+  <meta name="description" content="DocSpheres: Doctor-specific workflow automation that reduces administrative workload by 62% while enhancing patient satisfaction. Built for medical professionals.">
+  <link rel="icon" type="image/svg+xml" href="bowery-creative-refined-logo.svg">
+  <link rel="alternate icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D5J7CQJVR8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D5J7CQJVR8');
+</script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <a href="index.html">
+            <img src="bowery-creative-refined-logo.svg" alt="Bowery Creative Logo" class="site-logo">
+          </a>
+        </div>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="services.html">Solutions & Services</a></li>
+            <li><a href="work.html">Our Work</a></li>
+            <li class="dropdown">
+              <a href="sphere.html" class="active">Sphere oS</a>
+              <ul class="dropdown-menu">
+                <li><a href="repspheres.html">RepSpheres</a></li>
+                <li><a href="docspheres.html" class="active">DocSpheres</a></li>
+                <li><a href="sphereos-core.html">Sphere oS Core</a></li>
+              </ul>
+            </li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="podcast.html">Podcast</a></li>
+            <li><a href="insights.html">Insights</a></li>
+            <li><a href="login.html" class="btn btn-secondary">Login</a></li>
+            <li><a href="contact.html" class="btn btn-primary">Get in Touch</a></li>
+          </ul>
+        </nav>
+        <div class="header-actions">
+          <button class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="sphere-module-hero docspheres-hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="module-badge">
+          <span>Sphere oS Module</span>
+        </div>
+        <h1>DocSpheres</h1>
+        <p class="hero-subtitle">The Intelligent Practice OS for Modern Medical Professionals</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-number">62%</span>
+            <span class="stat-label">Less Administrative Work</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">91%</span>
+            <span class="stat-label">Patient Satisfaction Score</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">3.2hr</span>
+            <span class="stat-label">Saved Per Day</span>
+          </div>
+        </div>
+        <div class="hero-cta">
+          <a href="#demo" class="btn btn-primary btn-large">Schedule Demo</a>
+          <a href="#features" class="btn btn-secondary btn-large">See How It Works</a>
+        </div>
+      </div>
+    </div>
+    <svg class="hero-divider" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-opacity="0.7" d="M0,120 C480,0 960,120 1440,0 L1440,120 L0,120 Z" fill="#0a2342"/>
+    </svg>
+  </section>
+
+  <!-- Problem/Solution Section -->
+  <section class="problem-solution">
+    <div class="container">
+      <div class="problem-solution-grid">
+        <div class="problem">
+          <h2>The Daily Struggle</h2>
+          <p>Medical professionals face overwhelming administrative burdens:</p>
+          <ul>
+            <li><i class="fas fa-times-circle"></i> Hours spent on paperwork and scheduling</li>
+            <li><i class="fas fa-times-circle"></i> Patient communications falling through cracks</li>
+            <li><i class="fas fa-times-circle"></i> Missed revenue from no-shows</li>
+            <li><i class="fas fa-times-circle"></i> Difficulty tracking treatment outcomes</li>
+            <li><i class="fas fa-times-circle"></i> Compliance documentation headaches</li>
+          </ul>
+        </div>
+        <div class="solution">
+          <h2>The DocSpheres Advantage</h2>
+          <p>Focus on patients while AI handles the rest:</p>
+          <ul>
+            <li><i class="fas fa-check-circle"></i> Automated appointment management</li>
+            <li><i class="fas fa-check-circle"></i> Intelligent patient communication</li>
+            <li><i class="fas fa-check-circle"></i> Treatment plan optimization</li>
+            <li><i class="fas fa-check-circle"></i> HIPAA-compliant documentation</li>
+            <li><i class="fas fa-check-circle"></i> Real-time practice analytics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features-deep-dive">
+    <div class="container">
+      <div class="section-header">
+        <h2>Built for How Doctors Work</h2>
+        <p>Every feature designed with medical professionals in mind</p>
+      </div>
+
+      <div class="features-showcase">
+        <!-- Feature 1: Patient Journey Automation -->
+        <div class="feature-item">
+          <div class="feature-content">
+            <div class="feature-icon">
+              <i class="fas fa-route"></i>
+            </div>
+            <h3>Patient Journey Automation</h3>
+            <p>Create seamless experiences from initial inquiry to long-term follow-up, all automated based on treatment protocols.</p>
+            <ul class="feature-benefits">
+              <li>Automated appointment reminders</li>
+              <li>Pre-visit questionnaires</li>
+              <li>Post-treatment follow-ups</li>
+              <li>Outcome tracking surveys</li>
+            </ul>
+          </div>
+          <div class="feature-visual">
+            <img src="img/docspheres/patient-journey.png" alt="Patient Journey Dashboard">
+          </div>
+        </div>
+
+        <!-- Feature 2: Smart Scheduling -->
+        <div class="feature-item reverse">
+          <div class="feature-content">
+            <div class="feature-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3>AI-Powered Smart Scheduling</h3>
+            <p>Optimize your calendar with intelligent scheduling that considers procedure types, equipment availability, and patient preferences.</p>
+            <ul class="feature-benefits">
+              <li>Automatic conflict resolution</li>
+              <li>Buffer time optimization</li>
+              <li>Equipment allocation</li>
+              <li>Wait list management</li>
+            </ul>
+          </div>
+          <div class="feature-visual">
+            <img src="img/docspheres/smart-scheduling.png" alt="Smart Scheduling System">
+          </div>
+        </div>
+
+        <!-- Feature 3: Treatment Planning -->
+        <div class="feature-item">
+          <div class="feature-content">
+            <div class="feature-icon">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h3>Intelligent Treatment Planning</h3>
+            <p>Generate comprehensive treatment plans with pricing, timelines, and expected outcomes based on thousands of similar cases.</p>
+            <ul class="feature-benefits">
+              <li>Evidence-based recommendations</li>
+              <li>Automatic cost calculations</li>
+              <li>Visual treatment timelines</li>
+              <li>Consent form generation</li>
+            </ul>
+          </div>
+          <div class="feature-visual">
+            <img src="img/docspheres/treatment-planning.png" alt="Treatment Planning Interface">
+          </div>
+        </div>
+
+        <!-- Feature 4: Practice Analytics -->
+        <div class="feature-item reverse">
+          <div class="feature-content">
+            <div class="feature-icon">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <h3>Comprehensive Practice Analytics</h3>
+            <p>Get real-time insights into practice performance, patient satisfaction, and revenue opportunities.</p>
+            <ul class="feature-benefits">
+              <li>Revenue cycle management</li>
+              <li>Patient satisfaction tracking</li>
+              <li>Procedure outcome analytics</li>
+              <li>Staff productivity metrics</li>
+            </ul>
+          </div>
+          <div class="feature-visual">
+            <img src="img/docspheres/analytics.png" alt="Practice Analytics Dashboard">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compliance Section -->
+  <section class="compliance-security">
+    <div class="container">
+      <div class="section-header">
+        <h2>Built for Healthcare Compliance</h2>
+        <p>Security and compliance are at the core of everything we do</p>
+      </div>
+      <div class="compliance-grid">
+        <div class="compliance-item">
+          <div class="compliance-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3>HIPAA Compliant</h3>
+          <p>Full HIPAA compliance with encrypted data storage, secure communications, and audit trails.</p>
+        </div>
+        <div class="compliance-item">
+          <div class="compliance-icon">
+            <i class="fas fa-lock"></i>
+          </div>
+          <h3>End-to-End Encryption</h3>
+          <p>Military-grade encryption for all patient data, both in transit and at rest.</p>
+        </div>
+        <div class="compliance-item">
+          <div class="compliance-icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <h3>Access Controls</h3>
+          <p>Role-based permissions ensure staff only access information they need.</p>
+        </div>
+        <div class="compliance-item">
+          <div class="compliance-icon">
+            <i class="fas fa-history"></i>
+          </div>
+          <h3>Audit Trails</h3>
+          <p>Complete audit logs of all system access and changes for compliance reporting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Metrics Section -->
+  <section class="success-metrics">
+    <div class="container">
+      <div class="section-header">
+        <h2>Proven Results Across Specialties</h2>
+        <p>DocSpheres delivers measurable improvements for practices of all sizes</p>
+      </div>
+      <div class="metrics-showcase">
+        <div class="metric-category">
+          <h3>Dermatology & Aesthetics</h3>
+          <div class="metric-grid">
+            <div class="metric">
+              <span class="value">47%</span>
+              <span class="label">More consultations booked</span>
+            </div>
+            <div class="metric">
+              <span class="value">-73%</span>
+              <span class="label">No-show rate reduction</span>
+            </div>
+            <div class="metric">
+              <span class="value">$380K</span>
+              <span class="label">Additional annual revenue</span>
+            </div>
+          </div>
+        </div>
+        <div class="metric-category">
+          <h3>Plastic Surgery</h3>
+          <div class="metric-grid">
+            <div class="metric">
+              <span class="value">2.8x</span>
+              <span class="label">Faster treatment planning</span>
+            </div>
+            <div class="metric">
+              <span class="value">94%</span>
+              <span class="label">Patient satisfaction score</span>
+            </div>
+            <div class="metric">
+              <span class="value">62%</span>
+              <span class="label">Admin time saved</span>
+            </div>
+          </div>
+        </div>
+        <div class="metric-category">
+          <h3>Dental Practices</h3>
+          <div class="metric-grid">
+            <div class="metric">
+              <span class="value">38%</span>
+              <span class="label">More treatment acceptances</span>
+            </div>
+            <div class="metric">
+              <span class="value">$127</span>
+              <span class="label">Higher average case value</span>
+            </div>
+            <div class="metric">
+              <span class="value">5-star</span>
+              <span class="label">Average patient rating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>Trusted by Leading Practices</h2>
+      </div>
+      <div class="testimonial-carousel">
+        <div class="testimonial-item">
+          <div class="testimonial-content">
+            <blockquote>
+              "DocSpheres gave me back 3 hours every day. I can focus on my patients instead of paperwork. The ROI was immediate - we paid for the system in the first month through improved efficiency alone."
+            </blockquote>
+            <div class="testimonial-author">
+              <img src="img/testimonials/dr-sarah.jpg" alt="Dr. Sarah Williams">
+              <div>
+                <h4>Dr. Sarah Williams</h4>
+                <p>Williams Dermatology, New York</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-item">
+          <div class="testimonial-content">
+            <blockquote>
+              "The patient journey automation is incredible. Our satisfaction scores went from 78% to 94% in just 6 months. Patients love the seamless communication and we love the efficiency."
+            </blockquote>
+            <div class="testimonial-author">
+              <img src="img/testimonials/dr-james.jpg" alt="Dr. James Park">
+              <div>
+                <h4>Dr. James Park</h4>
+                <p>Park Plastic Surgery, Los Angeles</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing">
+    <div class="container">
+      <div class="section-header">
+        <h2>Simple, Transparent Pricing</h2>
+        <p>Choose the plan that fits your practice</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Solo Practice</h3>
+          <div class="price">
+            <span class="amount">$499</span>
+            <span class="period">per month</span>
+          </div>
+          <ul class="features">
+            <li><i class="fas fa-check"></i> Up to 500 patients</li>
+            <li><i class="fas fa-check"></i> Core automation features</li>
+            <li><i class="fas fa-check"></i> Smart scheduling</li>
+            <li><i class="fas fa-check"></i> Patient communications</li>
+            <li><i class="fas fa-check"></i> Basic analytics</li>
+            <li><i class="fas fa-check"></i> Email support</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary">Start Free Trial</a>
+        </div>
+        <div class="pricing-card featured">
+          <div class="badge">Most Popular</div>
+          <h3>Group Practice</h3>
+          <div class="price">
+            <span class="amount">$999</span>
+            <span class="period">per provider/month</span>
+          </div>
+          <ul class="features">
+            <li><i class="fas fa-check"></i> Unlimited patients</li>
+            <li><i class="fas fa-check"></i> All automation features</li>
+            <li><i class="fas fa-check"></i> Treatment planning AI</li>
+            <li><i class="fas fa-check"></i> Advanced analytics</li>
+            <li><i class="fas fa-check"></i> Multi-location support</li>
+            <li><i class="fas fa-check"></i> Priority support</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary">Start Free Trial</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Enterprise</h3>
+          <div class="price">
+            <span class="amount">Custom</span>
+            <span class="period">contact us</span>
+          </div>
+          <ul class="features">
+            <li><i class="fas fa-check"></i> Everything in Group</li>
+            <li><i class="fas fa-check"></i> Custom integrations</li>
+            <li><i class="fas fa-check"></i> Dedicated success manager</li>
+            <li><i class="fas fa-check"></i> Custom AI training</li>
+            <li><i class="fas fa-check"></i> On-site implementation</li>
+            <li><i class="fas fa-check"></i> 24/7 phone support</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Implementation Timeline -->
+  <section class="implementation">
+    <div class="container">
+      <div class="section-header">
+        <h2>Quick & Painless Implementation</h2>
+        <p>Be up and running in days, not months</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker">1</div>
+          <div class="timeline-content">
+            <h3>Day 1-2: Setup & Migration</h3>
+            <p>We handle data migration and system configuration</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker">2</div>
+          <div class="timeline-content">
+            <h3>Day 3-4: Staff Training</h3>
+            <p>Comprehensive training for your entire team</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker">3</div>
+          <div class="timeline-content">
+            <h3>Day 5: Go Live</h3>
+            <p>Launch with full support and monitoring</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker">4</div>
+          <div class="timeline-content">
+            <h3>Week 2+: Optimization</h3>
+            <p>Continuous improvement based on your workflow</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo CTA Section -->
+  <section id="demo" class="demo-cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Transform Your Practice?</h2>
+        <p>See how DocSpheres can give you back hours every day</p>
+        <div class="demo-form">
+          <form id="demoForm">
+            <div class="form-row">
+              <input type="text" placeholder="Your Name" required>
+              <input type="email" placeholder="Work Email" required>
+            </div>
+            <div class="form-row">
+              <input type="text" placeholder="Practice Name" required>
+              <select required>
+                <option value="">Specialty</option>
+                <option value="dermatology">Dermatology</option>
+                <option value="plastic-surgery">Plastic Surgery</option>
+                <option value="aesthetics">Medical Aesthetics</option>
+                <option value="dental">Dental</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large">Schedule Your Demo</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <img src="bowery-creative-refined-logo.svg" alt="Bowery Creative Agency Logo" class="site-logo-footer">
+          <a href="https://www.instagram.com/bowerycreativeagency/" target="_blank" rel="noopener noreferrer" class="footer-social">
+            <i class="fab fa-instagram"></i> @bowerycreativeagency
+          </a>
+          <p>Transformative AI-driven creative solutions for the aesthetics and medical technology industries.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-link-group">
+            <h4>Sphere oS</h4>
+            <ul>
+              <li><a href="repspheres.html">RepSpheres</a></li>
+              <li><a href="docspheres.html">DocSpheres</a></li>
+              <li><a href="sphereos-core.html">Sphere oS Core</a></li>
+              <li><a href="sphere.html">Platform Overview</a></li>
+            </ul>
+          </div>
+          <div class="footer-link-group">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="about.html">Our Story</a></li>
+              <li><a href="work.html">Case Studies</a></li>
+              <li><a href="#careers">Careers</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-link-group">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="blog.html">Blog</a></li>
+              <li><a href="podcast.html">Podcast</a></li>
+              <li><a href="#events">Events</a></li>
+              <li><a href="members.html">Membership</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="copyright">
+          <p>&copy; 2025 Bowery Creative Agency. All rights reserved.</p>
+        </div>
+        <div class="legal-links">
+          <a href="#privacy">Privacy Policy</a>
+          <a href="#terms">Terms of Service</a>
+          <a href="#cookies">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="script/script.js"></script>
+</body>
+</html>

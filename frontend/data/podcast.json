@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Episode 12: AI & Creativity",
+    "description": "We sit down with AI experts to discuss how machine learning is transforming creative work in marketing and design.",
+    "audio": "audio/podcast-1.mp3",
+    "image": "img/podcast/podcast-1.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Episode 11: The Future of Branding",
+    "description": "Brand strategists share their predictions for the future of branding in a rapidly changing digital landscape.",
+    "audio": "audio/podcast-2.mp3",
+    "image": "img/podcast/podcast-2.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Episode 10: Medical Tech Marketing",
+    "description": "Industry leaders discuss the unique challenges and opportunities in marketing for medical technology.",
+    "audio": "audio/podcast-3.mp3",
+    "image": "img/podcast/podcast-3.jpg"
+  }
+]

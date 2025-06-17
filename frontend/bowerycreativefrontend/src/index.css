@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-obsidian text-arctic font-sans antialiased;
+    font-feature-settings: "liga" 1, "calt" 1, "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    @apply bg-champagne text-obsidian;
+  }
+
+  /* Luxury scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-obsidian;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-champagne rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-electric;
+  }
+
+  /* Typography hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-normal tracking-tech;
+  }
+
+  p {
+    @apply leading-relaxed text-titanium;
+  }
+
+  /* Enhanced focus states */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-champagne ring-offset-2 ring-offset-obsidian;
+  }
+}
+
+@layer components {
+  /* Container with luxury spacing */
+  .container-luxury {
+    @apply container mx-auto px-8 md:px-16 lg:px-24 max-w-[1920px];
+  }
+
+  /* GT500-inspired buttons */
+  .btn-performance {
+    @apply relative inline-block px-10 py-4 bg-champagne text-obsidian font-medium;
+    @apply text-sm tracking-wide uppercase overflow-hidden;
+    @apply transition-all duration-300 transform hover:scale-105;
+    @apply before:absolute before:inset-0 before:bg-electric before:translate-x-[-100%];
+    @apply before:transition-transform before:duration-300 hover:before:translate-x-0;
+    @apply hover:text-arctic z-10;
+  }
+
+  .btn-performance span {
+    @apply relative z-10;
+  }
+
+  .btn-stealth {
+    @apply inline-block px-10 py-4 bg-transparent text-champagne;
+    @apply text-sm tracking-wide uppercase border border-champagne;
+    @apply transition-all duration-300;
+    @apply hover:bg-champagne hover:text-obsidian hover:border-champagne;
+    @apply relative overflow-hidden;
+  }
+
+  .btn-ghost {
+    @apply inline-block text-sm tracking-wide uppercase text-racing-silver;
+    @apply border-b-2 border-transparent hover:border-champagne hover:text-champagne;
+    @apply transition-all duration-300;
+  }
+
+  /* Metallic card effects */
+  .card-metallic {
+    @apply bg-carbon border border-graphite rounded-none;
+    @apply backdrop-blur-sm relative overflow-hidden;
+    @apply before:absolute before:inset-0 before:bg-metallic-gradient before:opacity-0;
+    @apply before:transition-opacity before:duration-500 hover:before:opacity-10;
+  }
+
+  /* Glitch text effect */
+  .text-glitch {
+    @apply relative;
+  }
+
+  .text-glitch::before,
+  .text-glitch::after {
+    content: attr(data-text);
+    @apply absolute top-0 left-0 w-full h-full;
+  }
+
+  .text-glitch::before {
+    @apply text-electric;
+    animation: glitch 2s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  }
+
+  .text-glitch::after {
+    @apply text-champagne;
+    animation: glitch 2.5s infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  }
+
+  /* Section spacing */
+  .section-luxury {
+    @apply py-32 md:py-48 lg:py-64;
+  }
+
+  /* Refined divider */
+  .divider-gold {
+    @apply w-24 h-px bg-champagne mx-auto;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300;
+    @apply hover:shadow-[0_0_30px_rgba(212,175,55,0.5)];
+  }
+
+  /* Gradient text */
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-champagne via-[#FFD700] to-champagne bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Glass morphism */
+  .glass-morphism {
+    @apply bg-carbon/20 backdrop-blur-md border border-racing-silver/20;
+  }
+
+  .glass-morphism-premium {
+    background: linear-gradient(
+      135deg,
+      rgba(28, 28, 28, 0.9) 0%,
+      rgba(15, 15, 15, 0.8) 100%
+    );
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Carbon fiber texture overlay */
+  .carbon-overlay {
+    @apply relative;
+  }
+
+  .carbon-overlay::before {
+    content: '';
+    @apply absolute inset-0 opacity-5 pointer-events-none;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,.05) 10px,
+      rgba(255,255,255,.05) 20px
+    );
+  }
+}
+
+@layer utilities {
+  /* Animation delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+  .delay-800 { animation-delay: 800ms; }
+
+  /* Performance metrics */
+  .font-mono-refined {
+    @apply font-mono tracking-tech;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Responsive typography */
+  .text-responsive {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+  }
+
+  .heading-responsive {
+    font-size: clamp(3rem, 8vw, 8rem);
+  }
+
+  /* Gradient masks */
+  .mask-fade-bottom {
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  }
+
+  .mask-fade-sides {
+    mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  }
+
+  /* Performance shadows */
+  .shadow-performance {
+    box-shadow: 0 20px 40px -10px rgba(212, 175, 55, 0.3);
+  }
+
+  /* Text shadows */
+  .text-shadow-luxury {
+    text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+  }
+
+  /* Custom cursor */
+  .cursor-luxury {
+    cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23D4AF37'/%3E%3C/svg%3E") 12 12, auto;
+  }
+}
+
+/* Three.js canvas container */
+.canvas-container {
+  @apply fixed inset-0 -z-10;
+}
+
+/* Performance animations */
+@keyframes race-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.race-line {
+  animation: race-line 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Loading states */
+.loading-performance {
+  @apply relative overflow-hidden;
+}
+
+.loading-performance::after {
+  content: '';
+  @apply absolute bottom-0 left-0 h-1 bg-champagne;
+  animation: race-line 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}

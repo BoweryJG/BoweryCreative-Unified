@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "How AI is Shaping the Future of Creative Campaigns",
+    "category": "AI & Innovation",
+    "summary": "Discover how artificial intelligence is revolutionizing the creative industry with real-world examples and expert insights.",
+    "image": "img/blog/blog-1.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Brand Storytelling in the Age of Automation",
+    "category": "Branding",
+    "summary": "Explore the intersection of technology and storytelling, and how brands can stay authentic in an automated world.",
+    "image": "img/blog/blog-2.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Design Trends to Watch in 2025",
+    "category": "Design Trends",
+    "summary": "A look ahead at the design trends that will define the coming year, from immersive UX to bold, expressive visuals.",
+    "image": "img/blog/blog-3.jpg"
+  }
+]

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Analytics Dashboard</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D5J7CQJVR8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D5J7CQJVR8');
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #chart { max-width: 600px; }
+    table { border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h1>Analytics Dashboard</h1>
+  <canvas id="chart" width="600" height="300"></canvas>
+  <table id="metricsTable">
+    <thead>
+      <tr><th>Metric</th><th>Value</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <script>
+    async function loadData() {
+      const token = localStorage.getItem('adminToken') || prompt('Admin token:');
+      localStorage.setItem('adminToken', token);
+      const res = await fetch('/admin/analytics', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) {
+        document.body.innerHTML = 'Failed to load analytics';
+        return;
+      }
+      const data = await res.json();
+      const rows = data.rows || [];
+      const labels = [];
+      const values = [];
+      const tbody = document.querySelector('#metricsTable tbody');
+      rows.forEach(r => {
+        const name = r.dimensionValues ? r.dimensionValues[0].value : 'Metric';
+        const value = r.metricValues[0].value;
+        labels.push(name);
+        values.push(Number(value));
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${name}</td><td>${value}</td>`;
+        tbody.appendChild(tr);
+      });
+      new Chart(document.getElementById('chart').getContext('2d'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'Value', data: values }] },
+      });
+    }
+    loadData();
+  </script>
+</body>
+</html>
