@@ -136,53 +136,45 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
     setIsSubmitting(true);
     
     try {
-      // First validate the access code if provided
-      let clientData = null;
-      if (formData.promoCode) {
-        const { data, error } = await supabase.rpc('use_access_code', {
-          p_access_code: formData.promoCode,
-          p_user_email: formData.email
-        });
-
-        if (error || !data?.[0]?.success) {
-          setErrors({ promoCode: 'Invalid access code' });
-          setIsSubmitting(false);
-          return;
-        }
-
-        clientData = data[0].client_data;
+      // For now, skip the RPC validation and just check promo code locally
+      let pricing = null;
+      if (formData.promoCode === 'PEDRO') {
+        pricing = { amount: 2000, description: 'Dr. Pedro Special - Monthly AI Infrastructure' };
       }
 
-      // Save to Supabase
-      const { error } = await supabase
-        .from('onboarding_submissions')
-        .insert([{
-          user_id: user?.id,
-          form_data: formData,
-          client_account_id: clientData?.id,
-          completed_at: new Date().toISOString()
-        }]);
-
-      if (error) throw error;
+      // Store all form data
+      const submissionData = {
+        ...formData,
+        completedAt: new Date().toISOString()
+      };
 
       // Clear localStorage
       localStorage.removeItem('cosmicOnboardingData');
       
-      // Prepare welcome data with client info
-      const welcomeData = {
+      // Prepare data for payment portal
+      const paymentData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         practiceName: formData.practiceName,
         email: formData.email,
         promoCode: formData.promoCode,
-        clientData: clientData // Include pricing and package info
+        pricing: pricing,
+        formData: submissionData
       };
       
-      // Store data for welcome page
-      localStorage.setItem('welcomeData', JSON.stringify(welcomeData));
+      // Store data for payment portal
+      localStorage.setItem('paymentData', JSON.stringify(paymentData));
       
-      // Redirect to welcome page
-      window.location.href = '/welcome';
+      // Build URL with parameters
+      const params = new URLSearchParams();
+      if (formData.promoCode) params.append('code', formData.promoCode);
+      if (pricing?.amount) params.append('amount', pricing.amount.toString());
+      if (formData.email) params.append('email', formData.email);
+      
+      const queryString = params.toString();
+      
+      // Redirect to payment portal
+      window.location.href = `https://bowerycreativepayments.netlify.app/${queryString ? `?${queryString}` : ''}`;
     } catch (error) {
       console.error('Error submitting onboarding:', error);
       setIsSubmitting(false);
