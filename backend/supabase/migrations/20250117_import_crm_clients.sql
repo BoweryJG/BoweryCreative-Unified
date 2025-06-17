@@ -117,7 +117,7 @@ BEGIN
         SELECT EXISTS(
             SELECT 1 FROM public.invoices 
             WHERE client_id = v_pedro_id 
-            AND invoice_number = 'INV-2025-001'
+            AND invoice_number = 'SVC-2025-001'
         ) INTO v_invoice_exists;
         
         IF NOT v_invoice_exists THEN
@@ -133,7 +133,7 @@ BEGIN
                 payment_link,
                 created_at
             ) VALUES (
-                'INV-2025-001',
+                'SVC-2025-001',
                 v_pedro_id,
                 2000.00,
                 'USD',
@@ -141,12 +141,12 @@ BEGIN
                 CURRENT_DATE + INTERVAL '30 days',
                 '[{
                     "id": "1",
-                    "description": "Monthly Marketing Services - Premium Package",
+                    "description": "Enterprise AI Infrastructure Management - January 2025",
                     "quantity": 1,
                     "unit_price": 2000,
                     "amount": 2000
                 }]'::jsonb,
-                'https://start.bowerycreativeagency.com/pay/INV-2025-001',
+                'https://start.bowerycreativeagency.com/pay/SVC-2025-001',
                 now()
             );
         END IF;
