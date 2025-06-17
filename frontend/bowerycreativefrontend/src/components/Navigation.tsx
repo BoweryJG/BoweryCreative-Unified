@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard, Rocket, ChevronDown, Package, Users } from 'lucide-react';
+import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard, Rocket, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { CosmicOnboarding } from './CosmicOnboarding';
 import { CosmicOnboardingAutonomous } from './CosmicOnboardingAutonomous';
