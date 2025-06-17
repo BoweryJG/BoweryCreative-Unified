@@ -1,7 +1,6 @@
 {
-  "name": "Bowery Creative",
+  "name": "Bowery Creative Agency",
   "short_name": "Bowery",
-  "description": "AI Solutions for Enterprise",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,8 +13,11 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "theme_color": "#0A0A0A",
+  "background_color": "#0A0A0A",
   "display": "standalone",
-  "start_url": "/"
+  "start_url": "/",
+  "description": "Where Medical Excellence Meets Digital Mastery",
+  "categories": ["business", "marketing", "medical"],
+  "lang": "en-US"
 }
