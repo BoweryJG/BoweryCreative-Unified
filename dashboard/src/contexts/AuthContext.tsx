@@ -60,8 +60,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
   useEffect(() => {
-    // Check current session
-    supabase.auth.getSession().then(async ({ data: { session }, error }: any) => {
+    // Handle OAuth tokens from URL hash FIRST
+    const processOAuthTokens = async () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token=')) {
+        console.log('Processing OAuth tokens from URL...');
+        const params = new URLSearchParams(hash.substring(1));
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+        
+        if (accessToken && refreshToken) {
+          console.log('Found tokens, setting session...');
+          try {
+            const { data, error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+            console.log('setSession result:', { data, error });
+            if (data.session) {
+              console.log('Session established successfully!');
+            }
+            if (error) {
+              console.error('setSession error:', error);
+            }
+          } catch (err) {
+            console.error('Exception during setSession:', err);
+          }
+          
+          // Clear URL hash
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    };
+
+    processOAuthTokens().then(() => {
+      // Check current session AFTER processing OAuth
+      supabase.auth.getSession().then(async ({ data: { session }, error }: any) => {
       console.log('Initial session check:', { session, error });
       if (session?.user) {
         const userWithRoles = session.user as User;
@@ -114,6 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('No session found');
       }
       setLoading(false);
+    });
     });
 
     // Listen for auth changes
