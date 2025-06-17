@@ -28,6 +28,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   
   // Check if user is logged in but unauthorized
   const isUnauthorized = user && !hasAccess;
+  
+  // Close modal when user successfully logs in and has access
+  React.useEffect(() => {
+    if (user && hasAccess) {
+      onClose();
+    }
+  }, [user, hasAccess, onClose]);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +69,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={() => {}} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={isUnauthorized ? () => {} : onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
         <Typography variant="h5" component="div" sx={{ color: 'primary.main' }}>
           {isUnauthorized ? 'Access Restricted' : 'Welcome to Mission Control'}

@@ -68,15 +68,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('User set:', userWithRoles);
         
         // Check if user is admin
-        const { data: roleData, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', userWithRoles.id)
-          .eq('role', 'admin')
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', userWithRoles.id)
           .single();
         
-        const adminStatus = !!roleData && !roleError;
-        console.log('Admin check:', { roleData, roleError, adminStatus });
+        const adminStatus = !!profileData?.is_admin && !profileError;
+        console.log('Admin check:', { profileData, profileError, adminStatus });
         setIsAdmin(adminStatus);
         
         // Check if user is authorized client (only if not admin)
@@ -124,15 +123,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(userWithRoles);
         
         // Check if user is admin
-        const { data: roleData, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', userWithRoles.id)
-          .eq('role', 'admin')
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', userWithRoles.id)
           .single();
         
-        const adminStatus = !!roleData && !roleError;
-        console.log('Auth change - Admin check:', { roleData, roleError, adminStatus });
+        const adminStatus = !!profileData?.is_admin && !profileError;
+        console.log('Auth change - Admin check:', { profileData, profileError, adminStatus });
         setIsAdmin(adminStatus);
         
         // Check if user is authorized client (only if not admin)
