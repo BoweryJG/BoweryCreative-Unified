@@ -55,10 +55,19 @@ export const CosmicWelcome: React.FC = () => {
     // Pass promo code and user data to payment portal
     const paymentData = {
       ...welcomeData,
-      pricing
+      pricing,
+      clientAccountId: welcomeData?.clientData?.id
     };
     localStorage.setItem('paymentData', JSON.stringify(paymentData));
-    window.location.href = `https://bowerycreativepayments.netlify.app/${welcomeData?.promoCode ? `?code=${welcomeData.promoCode}` : ''}`;
+    
+    // Build URL with parameters
+    const params = new URLSearchParams();
+    if (welcomeData?.promoCode) params.append('code', welcomeData.promoCode);
+    if (welcomeData?.clientData?.id) params.append('client', welcomeData.clientData.id);
+    if (pricing.amount > 0) params.append('amount', pricing.amount.toString());
+    
+    const queryString = params.toString();
+    window.location.href = `https://bowerycreativepayments.netlify.app/${queryString ? `?${queryString}` : ''}`;
   };
 
   return (

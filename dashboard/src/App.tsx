@@ -45,7 +45,7 @@ import Analytics from './components/Analytics';
 import CampaignMarketplace from './components/CampaignMarketplace';
 import CampaignManager from './components/CampaignManager';
 import ClientManagementEnhanced from './components/ClientManagementEnhanced';
-import ClientDashboard from './components/ClientDashboard';
+import ClientMissionControl from './components/ClientMissionControl';
 import LoginModal from './components/LoginModal';
 import { BillingAdmin } from './components/BillingAdmin';
 import { useAuth } from './contexts/AuthContext';
@@ -281,7 +281,7 @@ function App() {
   const renderContent = () => {
     // Show client dashboard for authorized clients
     if (isAuthorizedClient && !isAdmin) {
-      return <ClientDashboard />;
+      return <ClientMissionControl />;
     }
     
     // Show admin dashboard for admins
