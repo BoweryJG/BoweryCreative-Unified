@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, CreditCard, Shield, Zap, Star, Rocket } from 'lucide-react';
+import { Shield, Zap, Star, Rocket } from 'lucide-react';
 
 interface WelcomeData {
   firstName: string;
