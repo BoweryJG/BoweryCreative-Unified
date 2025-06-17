@@ -10,9 +10,12 @@ import {
   Stack,
   Grid,
   Chip,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import { Add as AddIcon, Receipt as ReceiptIcon } from '@mui/icons-material';
 import { supabase } from '../lib/supabase';
+import { InvoiceManagement } from './InvoiceManagement';
 
 interface Customer {
   id: string;
@@ -28,6 +31,7 @@ export const BillingAdmin: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [selectedTab, setSelectedTab] = useState(0);
   const [formData, setFormData] = useState({
     email: '',
     full_name: '',
@@ -126,7 +130,46 @@ export const BillingAdmin: React.FC = () => {
 
   React.useEffect(() => {
     loadCustomers();
+    ensureDrPedroExists();
   }, []);
+
+  const ensureDrPedroExists = async () => {
+    try {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('full_name', 'Dr. Greg Pedro')
+        .single();
+
+      if (!existingProfile) {
+        // Create Dr. Greg Pedro if he doesn't exist
+        const { data: authData } = await supabase.auth.signUp({
+          email: 'greg@gregpedromd.com',
+          password: Math.random().toString(36).slice(-12),
+          options: {
+            data: {
+              full_name: 'Dr. Greg Pedro',
+              company_name: 'Greg Pedro MD',
+              monthly_billing: 2000,
+            },
+          },
+        });
+
+        if (authData?.user) {
+          await supabase
+            .from('profiles')
+            .update({
+              full_name: 'Dr. Greg Pedro',
+              company_name: 'Greg Pedro MD',
+              monthly_billing: 2000,
+            })
+            .eq('id', authData.user.id);
+        }
+      }
+    } catch (error) {
+      console.log('Dr. Pedro profile check:', error);
+    }
+  };
 
   const handleSendInvoice = async (customer: Customer) => {
     try {
@@ -162,13 +205,19 @@ export const BillingAdmin: React.FC = () => {
         Billing Administration
       </Typography>
       
-      <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Create New Customer
-              </Typography>
+      <Tabs value={selectedTab} onChange={(_, value) => setSelectedTab(value)} sx={{ mb: 3 }}>
+        <Tab label="Customers" />
+        <Tab label="Invoices" />
+      </Tabs>
+
+      {selectedTab === 0 && (
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Create New Customer
+                </Typography>
               
               {error && (
                 <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
@@ -282,6 +331,11 @@ export const BillingAdmin: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
+      )}
+
+      {selectedTab === 1 && (
+        <InvoiceManagement />
+      )}
     </Box>
   );
 };
