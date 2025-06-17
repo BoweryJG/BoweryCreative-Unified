@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard } from 'lucide-react';
+import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard, Rocket } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { CosmicOnboarding } from './CosmicOnboarding';
 
 const navItems = [
   { label: 'Capabilities', href: '#capabilities' },
@@ -16,6 +17,7 @@ const navItems = [
 export const Navigation: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
@@ -104,9 +106,15 @@ export const Navigation: React.FC = () => {
                   </a>
                 </>
               )}
-              <button className="btn-ghost">
+              <motion.button 
+                onClick={() => setIsOnboardingOpen(true)}
+                className="btn-primary cosmic-glow flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Rocket className="w-4 h-4" />
                 Start Project
-              </button>
+              </motion.button>
             </motion.div>
 
             {/* Mobile Menu Toggle */}
@@ -206,6 +214,13 @@ export const Navigation: React.FC = () => {
           style={{ transformOrigin: '0 0' }}
         />
       )}
+
+      {/* Cosmic Onboarding Modal */}
+      <AnimatePresence>
+        {isOnboardingOpen && (
+          <CosmicOnboarding onClose={() => setIsOnboardingOpen(false)} />
+        )}
+      </AnimatePresence>
     </>
   );
 };

@@ -269,3 +269,41 @@
   @apply absolute bottom-0 left-0 h-1 bg-champagne;
   animation: race-line 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
+/* Cosmic glow effect for buttons */
+.cosmic-glow {
+  @apply relative;
+  animation: cosmic-pulse 2s ease-in-out infinite;
+}
+
+.cosmic-glow::before {
+  content: '';
+  @apply absolute inset-0 rounded-lg;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+  filter: blur(10px);
+  z-index: -1;
+  animation: cosmic-rotate 3s linear infinite;
+}
+
+@keyframes cosmic-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3),
+                0 0 40px rgba(255, 165, 0, 0.2),
+                0 0 60px rgba(255, 69, 0, 0.1);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5),
+                0 0 60px rgba(255, 165, 0, 0.3),
+                0 0 80px rgba(255, 69, 0, 0.2);
+  }
+}
+
+@keyframes cosmic-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-obsidian font-semibold px-6 py-3 rounded-lg;
+  @apply transform transition-all duration-300;
+}
