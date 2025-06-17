@@ -93,7 +93,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    processOAuthTokens().then(() => {
+    processOAuthTokens().then(async () => {
+      // Test basic Supabase connection
+      console.log('Testing Supabase connection...');
+      const { data: testData, error: testError } = await supabase
+        .from('profiles')
+        .select('id')
+        .limit(1);
+      console.log('Supabase connection test:', { testData, testError });
+      
       // Check current session AFTER processing OAuth
       supabase.auth.getSession().then(async ({ data: { session }, error }: any) => {
       console.log('Initial session check:', { session, error });
