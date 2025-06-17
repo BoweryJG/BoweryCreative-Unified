@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  X, ChevronRight, ChevronLeft, Rocket, Star, Sparkles,
-  User, Building, Mail, Phone, MapPin, Globe, 
-  Instagram, Facebook, Twitter, Linkedin, Youtube,
+  X, ChevronRight, ChevronLeft, Rocket, Sparkles,
+  Globe, 
+  Instagram, Facebook, Twitter, Linkedin,
   Check, AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -662,7 +662,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
         </div>
       </motion.div>
       
-      <style jsx>{`
+      <style>{`
         .stars {
           position: absolute;
           top: 0;
