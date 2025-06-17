@@ -7,7 +7,6 @@ import {
   Check, AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
 
 interface CosmicOnboardingProps {
   onClose: () => void;
@@ -73,7 +72,7 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
+  // const { user } = useAuth(); // Not needed since we're not saving to Supabase
 
   const totalSteps = 5;
 
