@@ -22,7 +22,7 @@ export const LoginPage: React.FC = () => {
       sx={{
         minHeight: '100vh',
         width: '100%',
-        background: `linear-gradient(135deg, ${colors.obsidian} 0%, ${colors.carbon} 100%)`,
+        background: 'transparent',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -40,6 +40,9 @@ export const LoginPage: React.FC = () => {
         },
       }}
     >
+      {/* Cosmic orbs */}
+      <div className="login-cosmic-orb login-cosmic-orb-1" />
+      <div className="login-cosmic-orb login-cosmic-orb-2" />
       <Container maxWidth="sm" sx={{ width: '100%', maxWidth: { xs: '100%', sm: '480px' } }}>
         <Card
           elevation={0}
@@ -58,8 +61,23 @@ export const LoginPage: React.FC = () => {
               p: { xs: 3, sm: 4 },
               textAlign: 'center',
               borderBottom: `1px solid ${colors.graphite}`,
+              position: 'relative',
+              overflow: 'visible',
             }}
           >
+            {/* Atomic animation */}
+            <div className="cosmic-atom">
+              <div className="cosmic-nucleus"></div>
+              <div className="cosmic-electron-orbit cosmic-orbit-1">
+                <div className="cosmic-electron cosmic-electron-1"></div>
+              </div>
+              <div className="cosmic-electron-orbit cosmic-orbit-2">
+                <div className="cosmic-electron cosmic-electron-2"></div>
+              </div>
+              <div className="cosmic-electron-orbit cosmic-orbit-3">
+                <div className="cosmic-electron cosmic-electron-3"></div>
+              </div>
+            </div>
             <Box sx={{ mb: 3 }}>
               <Box
                 sx={{
