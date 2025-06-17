@@ -59,6 +59,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
+    // Handle OAuth callback tokens
+    const handleOAuthCallback = async () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token')) {
+        console.log('OAuth callback detected, waiting for auth state change...');
+        // Let Supabase handle the OAuth callback automatically
+        // Don't manually process tokens, just clean URL after a delay
+        setTimeout(() => {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }, 1000);
+        return;
+      }
+    };
+
+    handleOAuthCallback();
+
     // Check current session
     supabase.auth.getSession().then(async ({ data: { session }, error }: any) => {
       console.log('Initial session check:', { session, error });
