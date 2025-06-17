@@ -40,9 +40,22 @@ export const Navigation: React.FC = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowStartDropdown(false);
+      }
+    };
+
+    if (showStartDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showStartDropdown]);
 
   return (
     <>
@@ -139,7 +152,7 @@ export const Navigation: React.FC = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-64 bg-[#1a1a2e] border border-white/20 rounded-lg shadow-xl overflow-hidden"
+                      className="absolute right-0 mt-2 w-64 bg-[#1a1a2e] border border-white/20 rounded-lg shadow-xl overflow-hidden z-50"
                     >
                       <button
                         onClick={() => {
@@ -148,7 +161,7 @@ export const Navigation: React.FC = () => {
                         }}
                         className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
                       >
-                        <Users className="w-5 h-5 text-yellow-400" />
+                        <CreditCard className="w-5 h-5 text-yellow-400" />
                         <div>
                           <p className="font-semibold">I Have an Access Code</p>
                           <p className="text-xs text-gray-400">For existing clients</p>
@@ -164,7 +177,7 @@ export const Navigation: React.FC = () => {
                         }}
                         className="w-full px-4 py-3 flex items-center gap-3 hover:bg-white/10 transition-colors text-left"
                       >
-                        <Package className="w-5 h-5 text-orange-400" />
+                        <Rocket className="w-5 h-5 text-orange-400" />
                         <div>
                           <p className="font-semibold">Browse Packages</p>
                           <p className="text-xs text-gray-400">Start fresh with our plans</p>
@@ -263,7 +276,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className="btn-primary cosmic-glow flex items-center gap-2 justify-center"
                   >
-                    <Users className="w-4 h-4" />
+                    <CreditCard className="w-4 h-4" />
                     I Have an Access Code
                   </button>
                   <button
@@ -273,7 +286,7 @@ export const Navigation: React.FC = () => {
                     }}
                     className="btn-ghost flex items-center gap-2 justify-center"
                   >
-                    <Package className="w-4 h-4" />
+                    <Rocket className="w-4 h-4" />
                     Browse Packages
                   </button>
                 </div>
