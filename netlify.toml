@@ -1,4 +1,10 @@
-# Netlify deployment from frontend folder
+# Root netlify.toml - for monorepo structure
+# Each project should have its own netlify.toml in its directory
+# This file helps Netlify understand the monorepo structure
+
 [build]
-  base = "frontend"
-  publish = "."
+  # Default build command if no project-specific netlify.toml exists
+  command = "echo 'Please use project-specific netlify.toml files'"
+  
+# Note: Each project (frontend/bowerycreativefrontend, dashboard, payments, etc.) 
+# should be deployed as a separate Netlify site with its own configuration
