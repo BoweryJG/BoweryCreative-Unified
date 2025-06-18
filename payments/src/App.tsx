@@ -11,7 +11,12 @@ import { SubscriptionPlans } from './components/subscriptions/SubscriptionPlans'
 import { CreditPackages } from './components/credits/CreditPackages';
 import { SimpleAdminDashboard } from './components/admin/SimpleAdminDashboard';
 import { LoginPage } from './components/auth/LoginPage';
+import ClientManagementEnhanced from './components/ClientManagementEnhanced';
+import { InvoiceManagement } from './components/InvoiceManagement';
+import { BoweryCreativeChatbot } from './components/BoweryCreativeChatbot';
 import AuthCallback from './components/auth/AuthCallback';
+import { CosmicOnboarding } from './components/CosmicOnboarding';
+import { HomePage } from './components/HomePage';
 import { theme } from './theme/theme';
 import { stripePromise } from './lib/stripe';
 
@@ -28,6 +33,10 @@ function DashboardContainer() {
         return <SubscriptionPlans />;
       case 'credits':
         return <CreditPackages />;
+      case 'clients':
+        return isAdmin ? <ClientManagementEnhanced /> : <Navigate to="/dashboard" replace />;
+      case 'invoices':
+        return isAdmin ? <InvoiceManagement /> : <Navigate to="/dashboard" replace />;
       case 'payments':
         return <div>Payment History - Coming Soon</div>;
       case 'settings':
@@ -50,6 +59,8 @@ function DashboardContainer() {
 }
 
 function App() {
+  const [showChatbot, setShowChatbot] = useState(false);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -58,8 +69,22 @@ function App() {
           <AuthProvider>
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<LoginPage />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              
+              {/* Cosmic onboarding route */}
+              <Route 
+                path="/onboarding" 
+                element={
+                  <div style={{ minHeight: '100vh', background: '#0a0a0a', color: 'white' }}>
+                    <CosmicOnboarding onClose={() => window.location.href = '/'} />
+                  </div>
+                } 
+              />
+              
+              {/* Payment route (placeholder for now) */}
+              <Route path="/pay" element={<div>Payment page - Coming soon</div>} />
               
               {/* Protected routes */}
               <Route
@@ -77,6 +102,13 @@ function App() {
           </AuthProvider>
         </Elements>
       </Router>
+      
+      {/* Floating Chatbot */}
+      <BoweryCreativeChatbot 
+        isOpen={showChatbot}
+        onClose={() => setShowChatbot(false)}
+        onOpen={() => setShowChatbot(true)}
+      />
     </ThemeProvider>
   );
 }

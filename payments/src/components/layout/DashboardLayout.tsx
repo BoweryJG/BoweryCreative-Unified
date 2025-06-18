@@ -27,6 +27,8 @@ import {
   CreditCard,
   Subscriptions,
   AdminPanelSettings,
+  People,
+  Receipt,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { colors } from '../../theme/theme';
@@ -90,6 +92,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     { id: 'dashboard', label: 'Dashboard', icon: <Dashboard /> },
     { id: 'subscriptions', label: 'Subscriptions', icon: <Subscriptions /> },
     { id: 'credits', label: 'Campaign Credits', icon: <CreditCard /> },
+    ...(isAdmin ? [
+      { id: 'clients', label: 'Client Management', icon: <People /> },
+      { id: 'invoices', label: 'Invoice Management', icon: <Receipt /> },
+    ] : []),
     { id: 'payments', label: 'Payment History', icon: <History /> },
     { id: 'settings', label: 'Settings', icon: <Settings /> },
     ...(isAdmin ? [{ id: 'admin', label: 'Admin', icon: <AdminPanelSettings /> }] : []),

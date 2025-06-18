@@ -6,7 +6,7 @@ import {
   Instagram, Facebook, Twitter, Linkedin,
   Check, AlertCircle
 } from 'lucide-react';
-// import { useAuth } from '../contexts/AuthContext'; // Not needed anymore
+import './CosmicOnboarding.css';
 
 interface CosmicOnboardingProps {
   onClose: () => void;
@@ -172,9 +172,9 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       
       const queryString = params.toString();
       
-      // Redirect to payment portal at start.bowerycreativeagency.com
-      console.log('Redirecting to payment portal...');
-      window.location.href = `https://start.bowerycreativeagency.com/${queryString ? `?${queryString}` : ''}`;
+      // Navigate to payment page within the same app
+      console.log('Navigating to payment page...');
+      window.location.href = `/pay${queryString ? `?${queryString}` : ''}`;
     } catch (error) {
       console.error('Error submitting onboarding:', error);
       setIsSubmitting(false);
