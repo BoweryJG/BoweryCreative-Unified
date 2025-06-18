@@ -32,6 +32,15 @@ export const PaymentPage: React.FC = () => {
   const amount = parseFloat(searchParams.get('amount') || '0');
   const code = searchParams.get('code');
   const email = searchParams.get('email');
+  
+  // Debug logging
+  console.log('Payment page URL params:', {
+    invoiceId,
+    amount,
+    code,
+    email,
+    fullURL: window.location.href
+  });
 
   // Map invoice IDs to test data
   useEffect(() => {
