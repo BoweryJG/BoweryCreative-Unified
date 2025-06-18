@@ -1,6 +1,8 @@
 [build]
   command = "npm ci && npm run build"
   publish = "dist"
+  # Skip all builds - this app is now integrated into /payments
+  ignore = "exit 0"
   
 [build.environment]
   NODE_VERSION = "20"
