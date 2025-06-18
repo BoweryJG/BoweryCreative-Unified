@@ -1,0 +1,7 @@
+{
+  "steps": [],
+  "errors": [
+    "page.waitForTimeout is not a function"
+  ],
+  "timestamp": "2025-06-18T13:14:39.226Z"
+}

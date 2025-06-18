@@ -121,6 +121,29 @@ export default function ClientManagementEnhanced() {
       features: ['AI Marketing', 'Automated Campaigns', 'Real-time Analytics', 'Custom Integrations'],
     }
   };
+
+  // Hardcoded Sarah Jones test client
+  const sarahJonesClient: ClientAccount = {
+    id: 'sarah-jones-001',
+    name: 'Sarah Jones',
+    email: 'sarah@example.com',
+    phone: '+1234567890', // Update this with your phone number
+    company: 'Sarah Jones Test',
+    industry: 'Medical Spa',
+    status: 'pending',
+    joinDate: new Date().toISOString(),
+    totalSpent: 0,
+    monthlyAmount: 5,
+    accessCode: 'SARAH',
+    codeUsed: false,
+    onboardingCompleted: false,
+    paymentCompleted: false,
+    customPackage: {
+      name: 'Test Package',
+      description: 'Test flow for $5/month',
+      features: ['Basic Features'],
+    }
+  };
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<ClientAccount | null>(null);
@@ -156,14 +179,16 @@ export default function ClientManagementEnhanced() {
 
       if (error) throw error;
       
-      // Always include Dr. Pedro at the top
-      const allClients = [drPedroClient];
+      // Always include Dr. Pedro and Sarah at the top
+      const allClients = [drPedroClient, sarahJonesClient];
       
       // Add other clients from database, but filter out any duplicates
       if (data) {
         const otherClients = data.filter(client => 
           client.email !== 'greg@gregpedromd.com' && 
-          client.name !== 'Dr. Greg Pedro'
+          client.email !== 'sarah@example.com' &&
+          client.name !== 'Dr. Greg Pedro' &&
+          client.name !== 'Sarah Jones'
         );
         allClients.push(...otherClients);
       }
@@ -171,8 +196,8 @@ export default function ClientManagementEnhanced() {
       setClients(allClients);
     } catch (error) {
       console.error('Error loading clients:', error);
-      // Even if there's an error, show Dr. Pedro
-      setClients([drPedroClient]);
+      // Even if there's an error, show Dr. Pedro and Sarah
+      setClients([drPedroClient, sarahJonesClient]);
     }
   };
 
@@ -210,8 +235,8 @@ export default function ClientManagementEnhanced() {
 
       if (error) throw error;
 
-      // Add new client after Dr. Pedro
-      setClients([drPedroClient, data, ...clients.filter(c => c.id !== drPedroClient.id)]);
+      // Add new client after Dr. Pedro and Sarah
+      setClients([drPedroClient, sarahJonesClient, data, ...clients.filter(c => c.id !== drPedroClient.id && c.id !== sarahJonesClient.id)]);
       setAddClientOpen(false);
       setSnackbar({ 
         open: true, 

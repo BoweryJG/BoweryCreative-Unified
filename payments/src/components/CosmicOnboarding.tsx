@@ -139,6 +139,8 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       let pricing = null;
       if (formData.promoCode === 'PEDRO') {
         pricing = { amount: 2000, description: 'Dr. Pedro Special - Monthly AI Infrastructure' };
+      } else if (formData.promoCode === 'SARAH') {
+        pricing = { amount: 5, description: 'Sarah Jones Test - $5/month Test Package' };
       }
 
       // Store all form data

@@ -257,6 +257,36 @@ export const InvoiceManagement: React.FC = () => {
         } as Invoice);
       }
 
+      // Add Sarah Jones $5 test invoice
+      const hasSarahInvoice = mappedInvoices.some(inv => 
+        inv.client_name === 'Sarah Jones' || inv.invoice_number === 'SARAH-TEST-001'
+      );
+      
+      if (!hasSarahInvoice) {
+        mappedInvoices.push({
+          id: 'sarah-invoice-001',
+          invoice_number: 'SARAH-TEST-001',
+          client_id: 'sarah-jones-001',
+          client_name: 'Sarah Jones',
+          client_email: 'sarah@example.com',
+          client_phone: '+1234567890', // Update with your phone
+          amount_due: 5.00,
+          amount_paid: 0,
+          currency: 'USD',
+          status: 'sent',
+          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          line_items: [{
+            id: '1',
+            description: 'Test Package - Monthly Subscription',
+            quantity: 1,
+            unit_price: 5.00,
+            amount: 5.00,
+          }],
+          created_at: new Date().toISOString(),
+          payment_link: `https://start.bowerycreativeagency.com/pay/sarah-test`
+        } as Invoice);
+      }
+
       setInvoices(mappedInvoices);
 
       // Check for Dr. Greg Pedro
