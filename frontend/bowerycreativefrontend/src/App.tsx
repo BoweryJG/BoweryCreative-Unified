@@ -18,7 +18,7 @@ import { trackPageView } from './lib/analytics';
 
 type LegalDocumentType = 'privacy' | 'terms' | null;
 
-function MarketingSite({ onOpenLegal }: { onOpenLegal: (type: LegalDocumentType) => void }) {
+function MarketingSite() {
   return (
     <>
       <Navigation />
@@ -76,7 +76,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <MarketingSite onOpenLegal={handleOpenLegal} />
+        <MarketingSite />
         
         <LegalModal
           isOpen={legalModal.isOpen}
