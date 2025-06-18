@@ -48,6 +48,7 @@ import {
   ContentCopy,
   Send,
   HourglassEmpty,
+  AutoAwesome as Sparkles,
   CheckCircle,
 } from '@mui/icons-material';
 import { supabase } from '../lib/supabase';
@@ -388,19 +389,38 @@ export default function ClientManagementEnhanced() {
                     </TableCell>
                     <TableCell>${client.monthlyAmount}/mo</TableCell>
                     <TableCell>
-                      {!client.codeUsed && (
-                        <Tooltip title="Send Invite">
+                      <Box sx={{ display: 'flex', gap: 1 }}>
+                        {!client.codeUsed && (
+                          <Tooltip title="Send Invite">
+                            <IconButton 
+                              size="small" 
+                              onClick={() => {
+                                setSelectedClient(client);
+                                setSendInviteOpen(true);
+                              }}
+                            >
+                              <Send />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Send Cosmic Onboarding">
                           <IconButton 
                             size="small" 
+                            color="primary"
                             onClick={() => {
-                              setSelectedClient(client);
-                              setSendInviteOpen(true);
+                              // Copy onboarding link to clipboard
+                              navigator.clipboard.writeText('https://start.bowerycreativeagency.com');
+                              setSnackbar({ 
+                                open: true, 
+                                message: 'Cosmic onboarding link copied! Send via SMS or email.', 
+                                severity: 'success' 
+                              });
                             }}
                           >
-                            <Send />
+                            <Sparkles />
                           </IconButton>
                         </Tooltip>
-                      )}
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}

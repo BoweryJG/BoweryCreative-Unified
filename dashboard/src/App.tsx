@@ -241,8 +241,26 @@ function App() {
               Quick Actions
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Button variant="contained" fullWidth startIcon={<People />}>
+              <Button 
+                variant="contained" 
+                fullWidth 
+                startIcon={<People />}
+                onClick={() => setSelectedView('clients')}
+              >
                 Add New Client
+              </Button>
+              <Button 
+                variant="contained" 
+                fullWidth 
+                sx={{ 
+                  background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                  boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+                }}
+                onClick={() => {
+                  window.open('https://start.bowerycreativeagency.com', '_blank');
+                }}
+              >
+                🚀 Send Cosmic Onboarding
               </Button>
               <Button variant="outlined" fullWidth startIcon={<Chat />}>
                 Create Chatbot

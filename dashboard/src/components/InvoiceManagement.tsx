@@ -81,14 +81,20 @@ interface SMSDialogProps {
 const SMSDialog: React.FC<SMSDialogProps> = ({ open, onClose, invoice, onSend }) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState<'invoice' | 'onboarding'>('invoice');
 
   useEffect(() => {
     if (invoice) {
-      const defaultMessage = `Hi ${invoice.client_name || 'there'}, your invoice ${invoice.invoice_number} for $${invoice.amount_due.toFixed(2)} is ready. Pay securely here: ${invoice.payment_link || `${window.location.origin}/pay/${invoice.id}`}`;
-      setMessage(defaultMessage);
+      if (messageType === 'invoice') {
+        const defaultMessage = `Hi ${invoice.client_name || 'there'}, your invoice ${invoice.invoice_number} for $${invoice.amount_due.toFixed(2)} is ready. Pay securely here: ${invoice.payment_link || `${window.location.origin}/pay/${invoice.id}`}`;
+        setMessage(defaultMessage);
+      } else {
+        const onboardingMessage = `Hi ${invoice.client_name || 'there'}, welcome to Bowery Creative! Get started with our cosmic onboarding experience: https://start.bowerycreativeagency.com`;
+        setMessage(onboardingMessage);
+      }
       setPhone(invoice.client_phone || '');
     }
-  }, [invoice]);
+  }, [invoice, messageType]);
 
   const handleSend = () => {
     onSend(phone, message);
@@ -100,6 +106,17 @@ const SMSDialog: React.FC<SMSDialogProps> = ({ open, onClose, invoice, onSend })
       <DialogTitle>Send Invoice via SMS</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 2 }}>
+          <FormControl fullWidth>
+            <InputLabel>Message Type</InputLabel>
+            <Select
+              value={messageType}
+              onChange={(e) => setMessageType(e.target.value as 'invoice' | 'onboarding')}
+              label="Message Type"
+            >
+              <MenuItem value="invoice">Invoice Payment Link</MenuItem>
+              <MenuItem value="onboarding">Cosmic Onboarding Link</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             label="Phone Number"
             value={phone}
@@ -117,7 +134,10 @@ const SMSDialog: React.FC<SMSDialogProps> = ({ open, onClose, invoice, onSend })
             helperText={`${message.length}/160 characters`}
           />
           <Alert severity="info">
-            SMS will be sent via Twilio. Standard messaging rates may apply.
+            {messageType === 'onboarding' 
+              ? 'Send the cosmic onboarding experience link to your client!'
+              : 'SMS will be sent via Twilio. Standard messaging rates may apply.'
+            }
           </Alert>
         </Stack>
       </DialogContent>
