@@ -1,6 +1,7 @@
 [build]
   command = "cd bowerycreativefrontend && npm ci && npm run build"
   publish = "bowerycreativefrontend/dist"
+  # Force build always
 
 [build.environment]
   NODE_VERSION = "20"

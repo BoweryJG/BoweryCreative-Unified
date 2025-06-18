@@ -2,6 +2,7 @@
   base = "payments"
   publish = "dist"
   command = "npm run build"
+  # Force build always
 
 [[redirects]]
   from = "/*"
