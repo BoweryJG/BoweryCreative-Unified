@@ -85,11 +85,17 @@ export const HomePage: React.FC = () => {
               </Box>
               <Typography
                 variant="h6"
-                onClick={() => setLoginModalOpen(true)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setLoginModalOpen(true);
+                  console.log('BOWERY clicked - opening login modal');
+                }}
                 sx={{
                   color: 'white',
                   fontWeight: 600,
                   cursor: 'pointer',
+                  userSelect: 'none',
                   '&:hover': {
                     color: '#fbbf24',
                   },
@@ -117,21 +123,38 @@ export const HomePage: React.FC = () => {
                   Dashboard
                 </Button>
               ) : (
-                <Button
-                  variant="outlined"
-                  startIcon={<Login />}
-                  onClick={() => navigate('/login')}
-                  sx={{
-                    borderColor: 'rgba(255,255,255,0.3)',
-                    color: 'white',
-                    '&:hover': {
-                      borderColor: 'rgba(255,255,255,0.5)',
-                      background: 'rgba(255,255,255,0.1)'
-                    }
-                  }}
-                >
-                  Login
-                </Button>
+                <>
+                  <Button
+                    variant="contained"
+                    startIcon={<Login />}
+                    onClick={() => setLoginModalOpen(true)}
+                    sx={{
+                      background: '#fbbf24',
+                      color: '#000',
+                      fontWeight: 600,
+                      '&:hover': {
+                        background: '#f59e0b'
+                      }
+                    }}
+                  >
+                    Admin Login
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Login />}
+                    onClick={() => navigate('/login')}
+                    sx={{
+                      borderColor: 'rgba(255,255,255,0.3)',
+                      color: 'white',
+                      '&:hover': {
+                        borderColor: 'rgba(255,255,255,0.5)',
+                        background: 'rgba(255,255,255,0.1)'
+                      }
+                    }}
+                  >
+                    Client Login
+                  </Button>
+                </>
               )}
             </Box>
           </Box>
