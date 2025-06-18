@@ -1,8 +1,7 @@
 [build]
-  command = "npm ci && npm run build"
-  publish = "dist"
-  # Skip all builds - this app is now integrated into /payments
-  ignore = "exit 0"
+  command = "cd ../../payments && npm ci && npm run build"
+  publish = "../../payments/dist"
+  base = "frontend/bowerycreativefrontend"
   
 [build.environment]
   NODE_VERSION = "20"

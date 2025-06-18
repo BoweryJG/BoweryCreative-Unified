@@ -473,7 +473,7 @@ export default function ClientManagementEnhanced() {
                             color="primary"
                             onClick={() => {
                               // Copy onboarding link to clipboard
-                              navigator.clipboard.writeText('https://start.bowerycreativeagency.com');
+                              navigator.clipboard.writeText('https://bowerycreativeagency.com/onboarding');
                               setSnackbar({ 
                                 open: true, 
                                 message: 'Cosmic onboarding link copied! Send via SMS or email.', 
