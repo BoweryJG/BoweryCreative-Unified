@@ -17,6 +17,9 @@ import { BoweryCreativeChatbot } from './components/BoweryCreativeChatbot';
 import AuthCallback from './components/auth/AuthCallback';
 import { CosmicOnboarding } from './components/CosmicOnboarding';
 import { HomePage } from './components/HomePage';
+import { PaymentPage } from './components/PaymentPage';
+import { PaymentSuccess } from './components/PaymentSuccess';
+import { PaymentCancel } from './components/PaymentCancel';
 import { theme } from './theme/theme';
 import { stripePromise } from './lib/stripe';
 
@@ -83,8 +86,11 @@ function App() {
                 } 
               />
               
-              {/* Payment route (placeholder for now) */}
-              <Route path="/pay" element={<div>Payment page - Coming soon</div>} />
+              {/* Payment routes */}
+              <Route path="/pay" element={<PaymentPage />} />
+              <Route path="/pay/:invoiceId" element={<PaymentPage />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-cancel" element={<PaymentCancel />} />
               
               {/* Protected routes */}
               <Route
