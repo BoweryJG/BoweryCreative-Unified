@@ -35,16 +35,13 @@ import {
 } from '@mui/material';
 import {
   Add,
-  Payment,
   Edit,
   Search,
   Email,
   Business,
   AttachMoney,
   TrendingUp,
-  CreditCard,
   Code,
-  Check,
   ContentCopy,
   Send,
   HourglassEmpty,
@@ -648,7 +645,7 @@ export default function ClientManagementEnhanced() {
         </Typography>
       </Box>
 
-      <Tabs value={selectedTab} onChange={(e, v) => setSelectedTab(v)} sx={{ mb: 3 }}>
+      <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 3 }}>
         <Tab label="Overview" />
         <Tab label="All Clients" />
         <Tab label="Pending Setup" />

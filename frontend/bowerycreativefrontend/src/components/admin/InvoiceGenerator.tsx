@@ -28,7 +28,6 @@ import {
   Add as AddIcon,
   Delete as DeleteIcon,
   Send as SendIcon,
-  Preview as PreviewIcon,
   Save as SaveIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
@@ -113,7 +112,7 @@ export const InvoiceGenerator: React.FC<InvoiceGeneratorProps> = ({
     setError(null);
     
     try {
-      const { data, error } = await supabase.functions.invoke('admin-create-invoice', {
+      const { error } = await supabase.functions.invoke('admin-create-invoice', {
         body: {
           customer_id: customer.id,
           customer_email: customer.email,
@@ -149,7 +148,7 @@ export const InvoiceGenerator: React.FC<InvoiceGeneratorProps> = ({
     setError(null);
     
     try {
-      const { data, error } = await supabase.functions.invoke('admin-create-invoice', {
+      const { error } = await supabase.functions.invoke('admin-create-invoice', {
         body: {
           customer_id: customer.id,
           customer_email: customer.email,

@@ -84,7 +84,7 @@ export const CreateCustomerModal: React.FC<CreateCustomerModalProps> = ({
 
       // Create Stripe customer if requested
       if (formData.create_stripe_customer) {
-        const { data, error } = await supabase.functions.invoke('admin-create-customer', {
+        const { error } = await supabase.functions.invoke('admin-create-customer', {
           body: {
             userId: authData.user.id,
             email: formData.email,
@@ -104,7 +104,7 @@ export const CreateCustomerModal: React.FC<CreateCustomerModalProps> = ({
 
       // Send welcome email with billing setup link
       if (formData.send_welcome_email) {
-        const { data, error } = await supabase.functions.invoke('admin-send-setup-email', {
+        const { error } = await supabase.functions.invoke('admin-send-setup-email', {
           body: {
             email: formData.email,
             name: formData.full_name,
@@ -128,6 +128,15 @@ export const CreateCustomerModal: React.FC<CreateCustomerModalProps> = ({
 
   const handleChange = (field: string) => (
     event: React.ChangeEvent<HTMLInputElement | { value: unknown }>
+  ) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleSelectChange = (field: string) => (
+    event: any
   ) => {
     setFormData({
       ...formData,
@@ -209,7 +218,7 @@ export const CreateCustomerModal: React.FC<CreateCustomerModalProps> = ({
                   <InputLabel>Billing Cycle</InputLabel>
                   <Select
                     value={formData.billing_cycle}
-                    onChange={handleChange('billing_cycle')}
+                    onChange={handleSelectChange('billing_cycle')}
                     label="Billing Cycle"
                   >
                     <MenuItem value="monthly">Monthly</MenuItem>

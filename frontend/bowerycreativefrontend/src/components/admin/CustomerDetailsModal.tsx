@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   TextField,
   Button,
   Box,
@@ -28,9 +27,7 @@ import {
 } from '@mui/material';
 import {
   Close as CloseIcon,
-  Payment as PaymentIcon,
   Receipt as ReceiptIcon,
-  CreditCard as CreditCardIcon,
   Link as LinkIcon,
   ContentCopy as CopyIcon,
 } from '@mui/icons-material';
@@ -218,7 +215,7 @@ export const CustomerDetailsModal: React.FC<CustomerDetailsModalProps> = ({
           </Alert>
         )}
         
-        <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)}>
+        <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)}>
           <Tab label="Details" />
           <Tab label="Payments" />
           <Tab label="Invoices" />
