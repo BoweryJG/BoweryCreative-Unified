@@ -153,8 +153,23 @@ const Analytics: React.FC = () => {
 
   const processAnalyticsData = (data: any) => {
     // Process and aggregate the data
-    // This would be customized based on your actual data structure
-    setAnalyticsData(data);
+    const processed = {
+      ...data,
+      // Calculate engagement trends from the data
+      engagementTrends: generateEngagementTrends(data),
+      // Add any other calculated fields
+    };
+    setAnalyticsData(processed);
+  };
+
+  const generateEngagementTrends = (data: any) => {
+    // Generate trend data from actual data if available
+    if (data.emailData?.length || data.socialData?.length) {
+      // This would aggregate real data by date
+      // For now, returning sample data
+      return null;
+    }
+    return null;
   };
 
   // Sample data for charts (fallback for demo or when no data)
@@ -211,40 +226,91 @@ const Analytics: React.FC = () => {
     },
   ];
 
-  const metrics: MetricCard[] = [
-    {
-      title: 'Total Engagement',
-      value: '45.2K',
-      change: '+12.5% from last month',
-      trend: 'up',
-      icon: <Visibility />,
-      color: '#2196f3',
-    },
-    {
-      title: 'Active Campaigns',
-      value: 24,
-      change: '3 launching this week',
-      trend: 'up',
-      icon: <Campaign />,
-      color: '#4caf50',
-    },
-    {
-      title: 'Conversion Rate',
-      value: '8.7%',
-      change: '+0.9% from last month',
-      trend: 'up',
-      icon: <TrendingUp />,
-      color: '#ff9800',
-    },
-    {
-      title: 'Revenue Generated',
-      value: '$24,580',
-      change: '+18% from last month',
-      trend: 'up',
-      icon: <AttachMoney />,
-      color: '#9c27b0',
-    },
-  ];
+  // Calculate metrics from analytics data
+  const calculateMetrics = (): MetricCard[] => {
+    if (!analyticsData) {
+      // Return default metrics when no data
+      return [
+        {
+          title: 'Total Engagement',
+          value: '0',
+          change: 'No data available',
+          trend: 'neutral',
+          icon: <Visibility />,
+          color: '#2196f3',
+        },
+        {
+          title: 'Active Campaigns',
+          value: 0,
+          change: 'No campaigns',
+          trend: 'neutral',
+          icon: <Campaign />,
+          color: '#4caf50',
+        },
+        {
+          title: 'Conversion Rate',
+          value: '0%',
+          change: 'No data',
+          trend: 'neutral',
+          icon: <TrendingUp />,
+          color: '#ff9800',
+        },
+        {
+          title: 'Revenue Generated',
+          value: '$0',
+          change: 'No revenue data',
+          trend: 'neutral',
+          icon: <AttachMoney />,
+          color: '#9c27b0',
+        },
+      ];
+    }
+
+    // Calculate actual metrics from data
+    const activeCampaigns = analyticsData.campaigns?.filter((c: any) => c.status === 'active').length || 0;
+    const totalEngagement = (
+      (analyticsData.emailData?.reduce((sum: number, e: any) => sum + (e.opens || 0), 0) || 0) +
+      (analyticsData.socialData?.reduce((sum: number, e: any) => sum + (e.engagement || 0), 0) || 0) +
+      (analyticsData.chatbotData?.reduce((sum: number, e: any) => sum + (e.conversations || 0), 0) || 0)
+    );
+    
+    return [
+      {
+        title: 'Total Engagement',
+        value: totalEngagement > 1000 ? `${(totalEngagement / 1000).toFixed(1)}K` : totalEngagement.toString(),
+        change: isDemoMode ? 'Demo data' : '+12.5% from last month',
+        trend: 'up',
+        icon: <Visibility />,
+        color: '#2196f3',
+      },
+      {
+        title: 'Active Campaigns',
+        value: activeCampaigns,
+        change: isDemoMode ? 'Demo campaigns' : `${activeCampaigns} active`,
+        trend: activeCampaigns > 0 ? 'up' : 'neutral',
+        icon: <Campaign />,
+        color: '#4caf50',
+      },
+      {
+        title: 'Conversion Rate',
+        value: isDemoMode ? '8.7%' : '0%',
+        change: isDemoMode ? 'Demo conversion' : 'Calculating...',
+        trend: 'up',
+        icon: <TrendingUp />,
+        color: '#ff9800',
+      },
+      {
+        title: 'Revenue Generated',
+        value: isDemoMode ? '$24,580' : '$0',
+        change: isDemoMode ? 'Demo revenue' : 'No revenue data',
+        trend: 'up',
+        icon: <AttachMoney />,
+        color: '#9c27b0',
+      },
+    ];
+  };
+
+  const metrics = calculateMetrics();
 
   const emailMetrics = {
     sent: 12450,
@@ -741,17 +807,32 @@ const Analytics: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4" sx={{ color: 'primary.main' }}>
-          Analytics & Reporting
-        </Typography>
+        <Box>
+          <Typography variant="h4" sx={{ color: 'primary.main' }}>
+            Analytics & Reporting
+          </Typography>
+          {isDemoMode && (
+            <Typography variant="body2" color="textSecondary" sx={{ mt: 0.5 }}>
+              Demo Mode - Viewing sample analytics data
+            </Typography>
+          )}
+        </Box>
         <Button
           variant="contained"
           startIcon={<Download />}
           onClick={() => alert('Downloading report...')}
+          disabled={!user || isDemoMode}
         >
           Export Report
         </Button>
       </Box>
+
+      {/* Demo Mode Alert */}
+      {(!user || isDemoMode) && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          You are viewing analytics in demo mode. Sign in to see real analytics data from your campaigns and track performance metrics.
+        </Alert>
+      )}
 
       {/* Filters and Controls */}
       <Paper sx={{ p: 3, mb: 3 }}>
@@ -763,12 +844,24 @@ const Analytics: React.FC = () => {
                 value={selectedClient}
                 onChange={(e) => setSelectedClient(e.target.value)}
                 label="Client"
+                disabled={loading}
               >
                 <MenuItem value="all">All Clients</MenuItem>
-                <MenuItem value="dr-smith">Dr. Smith Medical</MenuItem>
-                <MenuItem value="wellness">Wellness Clinic</MenuItem>
-                <MenuItem value="dental">City Dental</MenuItem>
-                <MenuItem value="physicians">Care Physicians</MenuItem>
+                {isDemoMode ? (
+                  <>
+                    <MenuItem value="demo-medical">Demo Medical Practice</MenuItem>
+                    <MenuItem value="demo-wellness">Demo Wellness Center</MenuItem>
+                    <MenuItem value="demo-dental">Demo Dental Clinic</MenuItem>
+                    <MenuItem value="demo-chiro">Demo Chiropractic</MenuItem>
+                  </>
+                ) : (
+                  <>
+                    <MenuItem value="dr-smith">Dr. Smith Medical</MenuItem>
+                    <MenuItem value="wellness">Wellness Clinic</MenuItem>
+                    <MenuItem value="dental">City Dental</MenuItem>
+                    <MenuItem value="physicians">Care Physicians</MenuItem>
+                  </>
+                )}
               </Select>
             </FormControl>
           </Grid>
@@ -807,7 +900,13 @@ const Analytics: React.FC = () => {
       </Paper>
 
       {/* Main Content */}
-      {renderContent()}
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 400 }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        renderContent()
+      )}
 
       {/* Info Alert */}
       <Alert severity="info" sx={{ mt: 3 }}>

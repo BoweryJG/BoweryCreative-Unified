@@ -227,7 +227,7 @@ export const InvoiceManagement: React.FC = () => {
             amount: 2000.00,
           }],
           created_at: new Date().toISOString(),
-          payment_link: `https://bowerycreativeagency.com/pay/pedro-monthly`
+          payment_link: `https://start.bowerycreativeagency.com/pay/pedro-monthly`
         } as Invoice);
       }
       
@@ -253,7 +253,7 @@ export const InvoiceManagement: React.FC = () => {
             amount: 1.00,
           }],
           created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          payment_link: `https://bowerycreativeagency.com/pay/test-flow`
+          payment_link: `https://start.bowerycreativeagency.com/pay/test-flow`
         } as Invoice);
       }
 
@@ -283,7 +283,7 @@ export const InvoiceManagement: React.FC = () => {
             amount: 5.00,
           }],
           created_at: new Date().toISOString(),
-          payment_link: `https://bowerycreativeagency.com/pay/sarah-test`
+          payment_link: `https://start.bowerycreativeagency.com/pay/sarah-test`
         } as Invoice);
       }
 
