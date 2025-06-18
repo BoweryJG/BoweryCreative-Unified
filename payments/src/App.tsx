@@ -74,6 +74,7 @@ function App() {
               {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/admin-login" element={<LoginPage />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               
               {/* Cosmic onboarding route */}
