@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { LegalModal } from './components/LegalModal';
 import { Navigation } from './components/Navigation';
@@ -16,7 +17,43 @@ import { CosmicWelcome } from './components/CosmicWelcome';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './lib/analytics';
 
+// Admin imports
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { SimpleAdminDashboard } from './admin-components/admin/SimpleAdminDashboard';
+import { CosmicOnboarding } from './admin-components/CosmicOnboarding';
+import { PaymentPage } from './admin-components/PaymentPage';
+import { PaymentSuccess } from './admin-components/PaymentSuccess';
+import { PaymentCancel } from './admin-components/PaymentCancel';
+import { ProtectedRoute } from './admin-components/auth/ProtectedRoute';
+import { theme } from './theme/theme';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51PNwP6RuBqx4KHEuEJxDZGKfn0LJcqg4gfhFnYRgMF0WBSbaLDMLTjrFmY5LoMb0RcPnPqFAGpLM6vslCcfZPApD00FGOJmoWD');
+
 type LegalDocumentType = 'privacy' | 'terms' | null;
+
+function MarketingSite({ onOpenLegal }: { onOpenLegal: (type: LegalDocumentType) => void }) {
+  return (
+    <>
+      <Navigation />
+      <main className="relative">
+        <CosmicWelcome />
+        <Hero />
+        <Capabilities />
+        <Showcase />
+        <Technology />
+        <Process />
+        <About />
+        <Insights />
+        <Contact />
+      </main>
+      <Footer onOpenLegal={onOpenLegal} />
+      <AudioToggle />
+    </>
+  );
+}
 
 function App() {
   const [legalModal, setLegalModal] = useState<{
@@ -26,7 +63,6 @@ function App() {
     isOpen: false,
     documentType: null,
   });
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
     // Track initial page view
@@ -35,100 +71,83 @@ function App() {
     // Track navigation changes
     const handleLocationChange = () => {
       trackPageView(window.location.pathname);
-      setCurrentPath(window.location.pathname);
     };
     
     // Listen for popstate events
     window.addEventListener('popstate', handleLocationChange);
 
-    // Handle legal document links
-    const handleLegalLinks = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'A') {
-        const href = target.getAttribute('href');
-        if (href === '#privacy-policy') {
-          e.preventDefault();
-          setLegalModal({ isOpen: true, documentType: 'privacy' });
-        } else if (href === '#terms-of-service') {
-          e.preventDefault();
-          setLegalModal({ isOpen: true, documentType: 'terms' });
-        }
-      }
-    };
-
-    window.addEventListener('popstate', handleLocationChange);
-    document.addEventListener('click', handleLegalLinks);
-    
     return () => {
       window.removeEventListener('popstate', handleLocationChange);
-      document.removeEventListener('click', handleLegalLinks);
     };
   }, []);
 
-  const closeLegalModal = () => {
+  const handleOpenLegal = (documentType: LegalDocumentType) => {
+    setLegalModal({ isOpen: true, documentType });
+  };
+
+  const handleCloseLegal = () => {
     setLegalModal({ isOpen: false, documentType: null });
   };
 
   return (
-    <AuthProvider>
-      <ErrorBoundary>
-        {currentPath === '/welcome' ? (
-          <CosmicWelcome />
-        ) : (
-          <div className="min-h-screen bg-obsidian cursor-luxury">
-            <ErrorBoundary fallback={<div className="text-center p-8 text-arctic">Navigation temporarily unavailable</div>}>
-              <Navigation />
-            </ErrorBoundary>
-          
-            <ErrorBoundary fallback={<div className="h-screen bg-obsidian flex items-center justify-center text-arctic">Hero section loading...</div>}>
-              <Hero />
-            </ErrorBoundary>
-        
-        <ErrorBoundary>
-          <Capabilities />
-        </ErrorBoundary>
-        
-        <ErrorBoundary>
-          <Showcase />
-        </ErrorBoundary>
-        
-        <ErrorBoundary>
-          <Technology />
-        </ErrorBoundary>
-        
-        <ErrorBoundary>
-          <Process />
-        </ErrorBoundary>
-        
-        <ErrorBoundary>
-          <About />
-        </ErrorBoundary>
-        
-        <ErrorBoundary>
-          <Insights />
-        </ErrorBoundary>
-        
-            <ErrorBoundary fallback={<div className="text-center p-8 text-arctic">Contact form temporarily unavailable. Please email us directly.</div>}>
-              <Contact />
-            </ErrorBoundary>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* Marketing site */}
+            <Route path="/" element={<MarketingSite onOpenLegal={handleOpenLegal} />} />
             
-            <ErrorBoundary>
-              <Footer />
-            </ErrorBoundary>
+            {/* Admin routes */}
+            <Route path="/admin" element={
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Elements stripe={stripePromise}>
+                  <ProtectedRoute>
+                    <SimpleAdminDashboard />
+                  </ProtectedRoute>
+                </Elements>
+              </ThemeProvider>
+            } />
             
-            {/* Legal Documents Modal */}
-            <LegalModal
-              isOpen={legalModal.isOpen}
-              documentType={legalModal.documentType}
-              onClose={closeLegalModal}
-            />
+            {/* Onboarding */}
+            <Route path="/onboarding" element={
+              <div style={{ minHeight: '100vh', background: '#0a0a0a', color: 'white' }}>
+                <CosmicOnboarding onClose={() => window.location.href = '/'} />
+              </div>
+            } />
             
-            {/* Audio Toggle */}
-            <AudioToggle />
-          </div>
-        )}
-      </ErrorBoundary>
-    </AuthProvider>
+            {/* Payment routes */}
+            <Route path="/pay" element={
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Elements stripe={stripePromise}>
+                  <PaymentPage />
+                </Elements>
+              </ThemeProvider>
+            } />
+            <Route path="/pay/:invoiceId" element={
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Elements stripe={stripePromise}>
+                  <PaymentPage />
+                </Elements>
+              </ThemeProvider>
+            } />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
+            
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+        
+        <LegalModal
+          isOpen={legalModal.isOpen}
+          documentType={legalModal.documentType}
+          onClose={handleCloseLegal}
+        />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

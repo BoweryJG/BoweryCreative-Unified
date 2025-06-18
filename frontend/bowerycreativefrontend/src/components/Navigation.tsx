@@ -81,7 +81,16 @@ export const Navigation: React.FC = () => {
                   <Brain className="w-5 h-5 text-champagne -rotate-45" />
                 </div>
               </div>
-              <a href="/" className="font-sans text-xl font-medium tracking-wide text-arctic">
+              <a 
+                href="/" 
+                className="font-sans text-xl font-medium tracking-wide text-arctic cursor-pointer hover:text-champagne transition-colors"
+                onClick={(e) => {
+                  if (e.detail === 3) { // Triple click
+                    e.preventDefault();
+                    window.location.href = '/admin';
+                  }
+                }}
+              >
                 BOWERY
               </a>
             </motion.div>
