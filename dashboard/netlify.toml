@@ -1,8 +1,8 @@
 [build]
   command = "npm ci && npm run build"
   publish = "dist"
-  # Skip all builds - this app is now integrated into main site
-  ignore = "exit 0"
+  # Only build when dashboard files change
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
 
 [build.environment]
   NODE_VERSION = "18"

@@ -11,7 +11,6 @@ import { Insights } from './components/Insights';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { AudioToggle } from './components/AudioToggle';
-import { CosmicWelcome } from './components/CosmicWelcome';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './lib/analytics';
 
@@ -38,7 +37,6 @@ function App() {
       <AuthProvider>
         <Navigation />
         <main className="relative">
-          <CosmicWelcome />
           <Hero />
           <Capabilities />
           <Showcase />
