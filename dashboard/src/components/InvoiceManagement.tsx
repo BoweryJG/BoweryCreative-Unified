@@ -196,16 +196,47 @@ export const InvoiceManagement: React.FC = () => {
         client_phone: invoice.profiles?.phone || '',
       })) || [];
 
-      // Always add a test invoice for Dr. Pedro if not present
-      const hasDrPedro = mappedInvoices.some(inv => 
-        inv.invoice_number === 'TEST-FLOW-001'
+      // Always add both invoices for Dr. Pedro
+      const hasPedroMonthly = mappedInvoices.some(inv => 
+        inv.invoice_number === 'INV-2024-001' || inv.amount_due === 2000
       );
       
-      if (!hasDrPedro) {
+      const hasPedroTest = mappedInvoices.some(inv => 
+        inv.invoice_number === 'TEST-FLOW-001' || inv.amount_due === 1
+      );
+      
+      // Add the $2000 monthly invoice
+      if (!hasPedroMonthly) {
         mappedInvoices.unshift({
+          id: 'pedro-invoice-001',
+          invoice_number: 'INV-2024-001',
+          client_id: 'dr-pedro-001',
+          client_name: 'Dr. Greg Pedro',
+          client_email: 'greg@gregpedromd.com',
+          client_phone: '+1234567890',
+          amount_due: 2000.00,
+          amount_paid: 0,
+          currency: 'USD',
+          status: 'sent',
+          due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          line_items: [{
+            id: '1',
+            description: 'Premium AI Infrastructure - Monthly Marketing Services',
+            quantity: 1,
+            unit_price: 2000.00,
+            amount: 2000.00,
+          }],
+          created_at: new Date().toISOString(),
+          payment_link: `https://start.bowerycreativeagency.com/pay/pedro-monthly`
+        } as Invoice);
+      }
+      
+      // Add the $1 test invoice  
+      if (!hasPedroTest) {
+        mappedInvoices.push({
           id: 'test-pedro-001',
           invoice_number: 'TEST-FLOW-001',
-          client_id: 'test-client-001',
+          client_id: 'dr-pedro-001',
           client_name: 'Dr. Greg Pedro',
           client_email: 'greg@gregpedromd.com',
           client_phone: '+1234567890',
@@ -213,15 +244,15 @@ export const InvoiceManagement: React.FC = () => {
           amount_paid: 0,
           currency: 'USD',
           status: 'sent',
-          due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
           line_items: [{
             id: '1',
-            description: 'Test Invoice - $1 Payment Flow Test',
+            description: 'Test Invoice - Payment Flow Test',
             quantity: 1,
             unit_price: 1.00,
             amount: 1.00,
           }],
-          created_at: new Date().toISOString(),
+          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
           payment_link: `https://start.bowerycreativeagency.com/pay/test-flow`
         } as Invoice);
       }
