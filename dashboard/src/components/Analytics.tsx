@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -60,6 +60,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface MetricCard {
   title: string;
@@ -70,13 +72,93 @@ interface MetricCard {
   color: string;
 }
 
+// Hook to detect app mode
+const useAppMode = () => {
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  
+  useEffect(() => {
+    // Check if we're in demo mode by looking at the URL or a flag
+    const checkDemoMode = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('demo') === 'true' || window.location.hostname.includes('demo');
+    };
+    
+    setIsDemoMode(checkDemoMode());
+  }, []);
+  
+  return { isDemoMode };
+};
+
 const Analytics: React.FC = () => {
+  const { user } = useAuth();
+  const { isDemoMode } = useAppMode();
   const [dateRange, setDateRange] = useState('30d');
   const [selectedClient, setSelectedClient] = useState('all');
   const [reportType, setReportType] = useState('overview');
+  const [loading, setLoading] = useState(true);
+  const [analyticsData, setAnalyticsData] = useState<any>(null);
 
-  // Sample data for charts
-  const engagementData = [
+  // Determine which tables to use based on authentication and demo mode
+  const campaignsTable = !user || isDemoMode ? 'public_campaigns' : 'campaigns';
+  const emailMarketingTable = !user || isDemoMode ? 'public_email_marketing' : 'email_marketing';
+  const socialMediaTable = !user || isDemoMode ? 'public_social_media' : 'social_media';
+  const chatbotsTable = !user || isDemoMode ? 'public_chatbots' : 'chatbots';
+
+  // Fetch analytics data based on mode
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [user, isDemoMode, dateRange, selectedClient]);
+
+  const fetchAnalyticsData = async () => {
+    setLoading(true);
+    try {
+      // Fetch campaigns data
+      let campaignsQuery = supabase.from(campaignsTable).select('*');
+      if (selectedClient !== 'all' && !isDemoMode && user) {
+        campaignsQuery = campaignsQuery.eq('client_id', selectedClient);
+      }
+      const { data: campaigns } = await campaignsQuery;
+
+      // Fetch email marketing data
+      const { data: emailData } = await supabase
+        .from(emailMarketingTable)
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      // Fetch social media data
+      const { data: socialData } = await supabase
+        .from(socialMediaTable)
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      // Fetch chatbot data
+      const { data: chatbotData } = await supabase
+        .from(chatbotsTable)
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      // Process the data for analytics
+      processAnalyticsData({
+        campaigns,
+        emailData,
+        socialData,
+        chatbotData
+      });
+    } catch (error) {
+      console.error('Error fetching analytics data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const processAnalyticsData = (data: any) => {
+    // Process and aggregate the data
+    // This would be customized based on your actual data structure
+    setAnalyticsData(data);
+  };
+
+  // Sample data for charts (fallback for demo or when no data)
+  const engagementData = analyticsData?.engagementTrends || [
     { date: 'Jan 1', email: 450, social: 890, chatbot: 234, content: 156 },
     { date: 'Jan 8', email: 520, social: 1200, chatbot: 298, content: 189 },
     { date: 'Jan 15', email: 480, social: 1100, chatbot: 312, content: 204 },

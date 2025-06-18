@@ -35,7 +35,9 @@ import {
   Menu as MenuIcon,
   Campaign as CampaignIcon,
   ShoppingCart as ShoppingCartIcon,
-  Receipt as ReceiptIcon
+  Receipt as ReceiptIcon,
+  Phone,
+  Science
 } from '@mui/icons-material';
 import ContentStudio from './components/ContentStudio';
 import EmailMarketing from './components/EmailMarketing';
@@ -48,6 +50,9 @@ import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import ClientMissionControl from './components/ClientMissionControl';
 import LoginModal from './components/LoginModal';
 import { BillingAdmin } from './components/BillingAdmin';
+import CallAnalysis from './components/CallAnalysis';
+import Practices from './components/Practices';
+import Research from './components/Research';
 import { useAuth } from './contexts/AuthContext';
 import { IconButton } from '@mui/material';
 import { Logout as LogoutIcon } from '@mui/icons-material';
@@ -112,8 +117,10 @@ interface NavigationItem {
 const navigationItems: NavigationItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <Dashboard /> },
   { id: 'clients', label: 'Clients', icon: <Business />, badge: 3 },
+  { id: 'practices', label: 'Practices', icon: <Business /> },
+  { id: 'research', label: 'Research', icon: <Science /> },
   { id: 'billing', label: 'Billing', icon: <ReceiptIcon /> },
-  { id: 'contacts', label: 'Contacts', icon: <People />, badge: 12 },
+  { id: 'call-analysis', label: 'Call Analysis', icon: <Phone />, badge: 4 },
   { id: 'chatbots', label: 'AI Chatbots', icon: <Chat />, badge: 2 },
   { id: 'campaigns', label: 'Campaign Marketplace', icon: <CampaignIcon /> },
   { id: 'my-campaigns', label: 'My Campaigns', icon: <ShoppingCartIcon /> },
@@ -306,10 +313,14 @@ function App() {
         return renderDashboard();
       case 'clients':
         return <ClientManagementEnhanced />;
+      case 'practices':
+        return <Practices />;
+      case 'research':
+        return <Research />;
       case 'billing':
         return <BillingAdmin />;
-      case 'contacts':
-        return renderPlaceholder('Contact Management');
+      case 'call-analysis':
+        return <CallAnalysis />;
       case 'chatbots':
         return renderPlaceholder('AI Chatbots');
       case 'campaigns':

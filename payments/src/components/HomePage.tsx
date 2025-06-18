@@ -3,12 +3,9 @@ import { Box, Button, Container, Typography, Paper } from '@mui/material';
 import { Rocket, Dashboard as DashboardIcon, Login } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { CosmicOnboarding } from './CosmicOnboarding';
-
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [showOnboarding, setShowOnboarding] = useState(false);
 
   return (
     <Box sx={{ 
@@ -77,7 +74,7 @@ export const HomePage: React.FC = () => {
                 variant="contained"
                 size="large"
                 startIcon={<Rocket />}
-                onClick={() => setShowOnboarding(true)}
+                onClick={() => navigate('/onboarding')}
                 sx={{
                   background: 'linear-gradient(135deg, #fbbf24 0%, #f97316 100%)',
                   color: 'black',
@@ -91,7 +88,7 @@ export const HomePage: React.FC = () => {
                   transition: 'all 0.3s ease'
                 }}
               >
-                Start Your Journey
+                START PROJECT
               </Button>
 
               {user ? (
@@ -180,11 +177,6 @@ export const HomePage: React.FC = () => {
           </Box>
         </Box>
       </Container>
-
-      {/* Cosmic Onboarding Modal */}
-      {showOnboarding && (
-        <CosmicOnboarding onClose={() => setShowOnboarding(false)} />
-      )}
 
       <style>{`
         @keyframes pulse {
