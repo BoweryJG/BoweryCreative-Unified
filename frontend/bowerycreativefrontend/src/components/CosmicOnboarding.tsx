@@ -172,8 +172,8 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       
       const queryString = params.toString();
       
-      // Redirect to payment portal
-      window.location.href = `https://bowerycreativepayments.netlify.app/${queryString ? `?${queryString}` : ''}`;
+      // Redirect to payment portal at start.bowerycreativeagency.com
+      window.location.href = `https://start.bowerycreativeagency.com/${queryString ? `?${queryString}` : ''}`;
     } catch (error) {
       console.error('Error submitting onboarding:', error);
       setIsSubmitting(false);

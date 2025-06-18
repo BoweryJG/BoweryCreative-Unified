@@ -98,6 +98,29 @@ function TabPanel(props: TabPanelProps) {
 
 export default function ClientManagementEnhanced() {
   const [clients, setClients] = useState<ClientAccount[]>([]);
+  
+  // Hardcoded Dr. Pedro client
+  const drPedroClient: ClientAccount = {
+    id: 'dr-pedro-001',
+    name: 'Dr. Greg Pedro',
+    email: 'greg@gregpedromd.com',
+    phone: '+1234567890',
+    company: 'Greg Pedro MD',
+    industry: 'Medical Spa',
+    status: 'active',
+    joinDate: '2024-01-01T00:00:00Z',
+    totalSpent: 24000,
+    monthlyAmount: 2000,
+    accessCode: 'PEDRO',
+    codeUsed: true,
+    onboardingCompleted: true,
+    paymentCompleted: true,
+    customPackage: {
+      name: 'Premium AI Infrastructure',
+      description: 'Complete marketing automation with AI-powered insights',
+      features: ['AI Marketing', 'Automated Campaigns', 'Real-time Analytics', 'Custom Integrations'],
+    }
+  };
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<ClientAccount | null>(null);
@@ -132,9 +155,24 @@ export default function ClientManagementEnhanced() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      if (data) setClients(data);
+      
+      // Always include Dr. Pedro at the top
+      const allClients = [drPedroClient];
+      
+      // Add other clients from database, but filter out any duplicates
+      if (data) {
+        const otherClients = data.filter(client => 
+          client.email !== 'greg@gregpedromd.com' && 
+          client.name !== 'Dr. Greg Pedro'
+        );
+        allClients.push(...otherClients);
+      }
+      
+      setClients(allClients);
     } catch (error) {
       console.error('Error loading clients:', error);
+      // Even if there's an error, show Dr. Pedro
+      setClients([drPedroClient]);
     }
   };
 
@@ -172,7 +210,8 @@ export default function ClientManagementEnhanced() {
 
       if (error) throw error;
 
-      setClients([data, ...clients]);
+      // Add new client after Dr. Pedro
+      setClients([drPedroClient, data, ...clients.filter(c => c.id !== drPedroClient.id)]);
       setAddClientOpen(false);
       setSnackbar({ 
         open: true, 
