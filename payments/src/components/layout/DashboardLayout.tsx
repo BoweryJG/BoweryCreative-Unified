@@ -36,7 +36,7 @@ import {
   Receipt,
   Close as CloseIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContextPayments';
 import { colors } from '../../theme/theme';
 import { useNavigate } from 'react-router-dom';
 

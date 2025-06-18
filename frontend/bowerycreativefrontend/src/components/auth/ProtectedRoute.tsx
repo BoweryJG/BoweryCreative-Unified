@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, Typography, Alert, Container, Paper } from '@mui/material';
-import { useAuth } from '../../contexts/AuthContextPayments';
+import { useAuth } from '../../contexts/AuthContext';
 import { LoginPage } from './LoginPage';
 import { colors } from '../../theme/theme';
 

@@ -18,7 +18,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { supabase } from '../../lib/supabasePayments';
+import { supabase } from '../../lib/supabase';
 
 interface CreateCustomerModalProps {
   open: boolean;

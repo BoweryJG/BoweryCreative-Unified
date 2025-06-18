@@ -29,8 +29,8 @@ import {
   Person as PersonIcon,
   AttachMoney as AttachMoneyIcon,
 } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
-import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContextPayments';
+import { supabase } from '../../lib/supabasePayments';
 import { CreateCustomerModal } from './CreateCustomerModal';
 import { InvoiceGenerator } from './InvoiceGenerator';
 import { CustomerDetailsModal } from './CustomerDetailsModal';

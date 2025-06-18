@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Container, Typography, Paper, Dialog, TextField, Alert, IconButton } from '@mui/material';
 import { Rocket, Dashboard as DashboardIcon, Login, Close as CloseIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContextPayments';
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, signIn } = useAuth();

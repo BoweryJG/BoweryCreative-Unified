@@ -51,7 +51,7 @@ import {
   AutoAwesome as Sparkles,
   CheckCircle,
 } from '@mui/icons-material';
-import { supabase } from '../lib/supabasePayments';
+import { supabase } from '../lib/supabase';
 
 interface ClientAccount {
   id: string;

@@ -15,7 +15,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { CreditCard, ArrowBack } from '@mui/icons-material';
-import { supabase } from '../lib/supabasePayments';
+import { supabase } from '../lib/supabase';
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51PNwP6RuBqx4KHEuEJxDZGKfn0LJcqg4gfhFnYRgMF0WBSbaLDMLTjrFmY5LoMb0RcPnPqFAGpLM6vslCcfZPApD00FGOJmoWD');

@@ -32,7 +32,7 @@ import {
   Save as SaveIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
-import { supabase } from '../../lib/supabasePayments';
+import { supabase } from '../../lib/supabase';
 
 interface Customer {
   id: string;

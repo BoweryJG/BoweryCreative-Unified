@@ -42,7 +42,7 @@ import {
   Cancel,
   Pending,
 } from '@mui/icons-material';
-import { supabase } from '../lib/supabasePayments';
+import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 
 interface Invoice {

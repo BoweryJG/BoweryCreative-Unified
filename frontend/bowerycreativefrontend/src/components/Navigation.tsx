@@ -143,6 +143,12 @@ export const Navigation: React.FC = () => {
                   </a>
                 </>
               )}
+              <a 
+                href="/admin-login"
+                className="btn-ghost flex items-center gap-2"
+              >
+                Admin
+              </a>
               <div className="relative" ref={dropdownRef}>
                 <motion.button 
                   onClick={() => setShowStartDropdown(!showStartDropdown)}

@@ -18,7 +18,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
 import PaymentIcon from '@mui/icons-material/Payment';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContextPayments';
 import { colors } from '../../theme/theme';
 
 interface GlobalAuthModalProps {

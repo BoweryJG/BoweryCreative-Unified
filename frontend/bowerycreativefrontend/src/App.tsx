@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
@@ -13,6 +14,46 @@ import { Footer } from './components/Footer';
 import { AudioToggle } from './components/AudioToggle';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './lib/analytics';
+
+// Payment & Admin imports
+import { LoginPage } from './components/auth/LoginPage';
+import { PaymentPage } from './components/payment/PaymentPage';
+import { PaymentSuccess } from './components/payment/PaymentSuccess';
+import { PaymentCancel } from './components/payment/PaymentCancel';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { SimpleAdminDashboard } from './components/admin/SimpleAdminDashboard';
+import ClientManagementEnhanced from './components/ClientManagementEnhanced';
+import { InvoiceManagement } from './components/InvoiceManagement';
+import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
+
+// Homepage component
+const Homepage = () => (
+  <>
+    <Navigation />
+    <main className="relative">
+      <Hero />
+      <Capabilities />
+      <Showcase />
+      <Technology />
+      <Process />
+      <About />
+      <Insights />
+      <Contact />
+    </main>
+    <Footer />
+    <AudioToggle />
+  </>
+);
+
+// Dashboard Layout
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <Navigation />
+    <main className="relative min-h-screen bg-obsidian">
+      {children}
+    </main>
+  </>
+);
 
 function App() {
   useEffect(() => {
@@ -35,19 +76,44 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <Navigation />
-        <main className="relative">
-          <Hero />
-          <Capabilities />
-          <Showcase />
-          <Technology />
-          <Process />
-          <About />
-          <Insights />
-          <Contact />
-        </main>
-        <Footer />
-        <AudioToggle />
+        <AuthProviderPayments>
+          <Router>
+            <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Homepage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/admin-login" element={<LoginPage />} />
+            
+            {/* Payment routes */}
+            <Route path="/pay" element={<PaymentPage />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
+            
+            {/* Protected admin routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <SimpleAdminDashboard />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/clients" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <ClientManagementEnhanced />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/invoices" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <InvoiceManagement />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            </Routes>
+          </Router>
+        </AuthProviderPayments>
       </AuthProvider>
     </ErrorBoundary>
   );

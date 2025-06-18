@@ -10,7 +10,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { supabase } from '../../lib/supabasePayments';
+import { supabase } from '../../lib/supabase';
 
 export const SimpleAdminDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);

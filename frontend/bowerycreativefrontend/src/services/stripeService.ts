@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabasePayments';
+import { supabase } from '../lib/supabase';
 
 const STRIPE_PRICE_IDS = {
   foundation: {
