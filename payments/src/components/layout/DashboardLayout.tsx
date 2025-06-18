@@ -17,6 +17,11 @@ import {
   useMediaQuery,
   useTheme,
   Paper,
+  Dialog,
+  DialogContent,
+  TextField,
+  Button,
+  Alert,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -29,9 +34,11 @@ import {
   AdminPanelSettings,
   People,
   Receipt,
+  Close as CloseIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import { colors } from '../../theme/theme';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 280;
 
@@ -48,9 +55,14 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { user, signOut, isAdmin } = useAuth();
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const { user, signOut, signIn, isAdmin } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
 
   // Helper function to get initials from name or email
   const getInitials = (name?: string | null): string => {
@@ -86,6 +98,24 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const handleSignOut = async () => {
     await signOut();
     handleClose();
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+    
+    try {
+      await signIn(loginForm.email, loginForm.password);
+      setLoginModalOpen(false);
+      setLoginForm({ email: '', password: '' });
+      // Redirect to admin dashboard after successful login
+      navigate('/dashboard');
+    } catch (error: any) {
+      setLoginError(error.message || 'Failed to login');
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   const menuItems = [
@@ -138,11 +168,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <Box>
             <Typography
               variant="h6"
+              onClick={() => setLoginModalOpen(true)}
               sx={{
                 color: colors.arctic,
                 fontWeight: 600,
                 fontSize: '1.1rem',
                 lineHeight: 1,
+                cursor: 'pointer',
+                '&:hover': {
+                  color: colors.champagne,
+                },
+                transition: 'color 0.2s ease',
               }}
             >
               BOWERY
@@ -425,6 +461,119 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           {children}
         </Box>
       </Box>
+
+      {/* Hidden Login Modal */}
+      <Dialog
+        open={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            background: colors.carbon,
+            border: `1px solid ${colors.graphite}`,
+            borderRadius: 2,
+          },
+        }}
+      >
+        <Box sx={{ p: 3, position: 'relative' }}>
+          <IconButton
+            onClick={() => setLoginModalOpen(false)}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: colors.racingSilver,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          
+          <Typography variant="h5" sx={{ color: colors.arctic, mb: 3, fontWeight: 600 }}>
+            Admin Login
+          </Typography>
+          
+          <form onSubmit={handleLogin}>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              value={loginForm.email}
+              onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+              sx={{ mb: 2 }}
+              required
+              InputLabelProps={{ sx: { color: colors.racingSilver } }}
+              InputProps={{
+                sx: {
+                  color: colors.arctic,
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: colors.graphite,
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: colors.champagne,
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: colors.champagne,
+                  },
+                },
+              }}
+            />
+            
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              value={loginForm.password}
+              onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+              sx={{ mb: 3 }}
+              required
+              InputLabelProps={{ sx: { color: colors.racingSilver } }}
+              InputProps={{
+                sx: {
+                  color: colors.arctic,
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: colors.graphite,
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: colors.champagne,
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: colors.champagne,
+                  },
+                },
+              }}
+            />
+            
+            {loginError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {loginError}
+              </Alert>
+            )}
+            
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              disabled={loginLoading}
+              sx={{
+                background: `linear-gradient(135deg, ${colors.champagne}, ${colors.champagne}DD)`,
+                color: colors.obsidian,
+                fontWeight: 600,
+                py: 1.5,
+                '&:hover': {
+                  background: colors.champagne,
+                },
+                '&:disabled': {
+                  background: colors.graphite,
+                  color: colors.racingSilver,
+                },
+              }}
+            >
+              {loginLoading ? 'Logging in...' : 'Login'}
+            </Button>
+          </form>
+        </Box>
+      </Dialog>
     </Box>
   );
 };

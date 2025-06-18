@@ -264,7 +264,7 @@ function App() {
                   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
                 }}
                 onClick={() => {
-                  window.open('https://start.bowerycreativeagency.com', '_blank');
+                  window.open('https://start.bowerycreativeagency.com/onboarding', '_blank');
                 }}
               >
                 🚀 Send Cosmic Onboarding
