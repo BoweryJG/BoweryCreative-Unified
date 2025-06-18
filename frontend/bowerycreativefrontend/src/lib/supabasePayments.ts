@@ -14,9 +14,9 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
     persistSession: true,
     detectSessionInUrl: true,
     storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    storageKey: 'repspheres-auth',
+    storageKey: 'bowery-auth',
     cookieOptions: {
-      domain: '.repspheres.com',
+      domain: '.bowerycreativeagency.com',
       sameSite: 'lax',
       secure: true,
       maxAge: 60 * 60 * 24 * 7 // 7 days
