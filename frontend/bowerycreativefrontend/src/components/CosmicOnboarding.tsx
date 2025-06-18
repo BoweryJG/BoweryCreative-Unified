@@ -172,9 +172,9 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       
       const queryString = params.toString();
       
-      // Redirect to payment portal at start.bowerycreativeagency.com
+      // Redirect to payment portal at start.bowerycreativeagency.com/pay
       console.log('Redirecting to payment portal...');
-      window.location.href = `https://start.bowerycreativeagency.com/${queryString ? `?${queryString}` : ''}`;
+      window.location.href = `https://start.bowerycreativeagency.com/pay${queryString ? `?${queryString}` : ''}`;
     } catch (error) {
       console.error('Error submitting onboarding:', error);
       setIsSubmitting(false);
