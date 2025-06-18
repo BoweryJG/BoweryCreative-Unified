@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { LegalModal } from './components/LegalModal';
 import { Navigation } from './components/Navigation';
@@ -16,21 +15,6 @@ import { AudioToggle } from './components/AudioToggle';
 import { CosmicWelcome } from './components/CosmicWelcome';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './lib/analytics';
-
-// Admin imports
-import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { SimpleAdminDashboard } from './admin-components/admin/SimpleAdminDashboard';
-import { CosmicOnboarding } from './admin-components/CosmicOnboarding';
-import { PaymentPage } from './admin-components/PaymentPage';
-import { PaymentSuccess } from './admin-components/PaymentSuccess';
-import { PaymentCancel } from './admin-components/PaymentCancel';
-import { ProtectedRoute } from './admin-components/auth/ProtectedRoute';
-import { theme } from './theme/theme';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51PNwP6RuBqx4KHEuEJxDZGKfn0LJcqg4gfhFnYRgMF0WBSbaLDMLTjrFmY5LoMb0RcPnPqFAGpLM6vslCcfZPApD00FGOJmoWD');
 
 type LegalDocumentType = 'privacy' | 'terms' | null;
 
@@ -92,54 +76,7 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Marketing site */}
-            <Route path="/" element={<MarketingSite onOpenLegal={handleOpenLegal} />} />
-            
-            {/* Admin routes */}
-            <Route path="/admin" element={
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <Elements stripe={stripePromise}>
-                  <ProtectedRoute>
-                    <SimpleAdminDashboard />
-                  </ProtectedRoute>
-                </Elements>
-              </ThemeProvider>
-            } />
-            
-            {/* Onboarding */}
-            <Route path="/onboarding" element={
-              <div style={{ minHeight: '100vh', background: '#0a0a0a', color: 'white' }}>
-                <CosmicOnboarding onClose={() => window.location.href = '/'} />
-              </div>
-            } />
-            
-            {/* Payment routes */}
-            <Route path="/pay" element={
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <Elements stripe={stripePromise}>
-                  <PaymentPage />
-                </Elements>
-              </ThemeProvider>
-            } />
-            <Route path="/pay/:invoiceId" element={
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <Elements stripe={stripePromise}>
-                  <PaymentPage />
-                </Elements>
-              </ThemeProvider>
-            } />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-cancel" element={<PaymentCancel />} />
-            
-            {/* Catch all */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
+        <MarketingSite onOpenLegal={handleOpenLegal} />
         
         <LegalModal
           isOpen={legalModal.isOpen}

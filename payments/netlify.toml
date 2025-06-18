@@ -2,8 +2,6 @@
   base = "payments"
   publish = "dist"
   command = "npm run build"
-  # Skip all builds - this app is now integrated into main site
-  ignore = "exit 0"
 
 [[redirects]]
   from = "/*"
