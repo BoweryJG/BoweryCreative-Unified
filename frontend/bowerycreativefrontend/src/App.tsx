@@ -33,7 +33,7 @@ function MarketingSite({ onOpenLegal }: { onOpenLegal: (type: LegalDocumentType)
         <Insights />
         <Contact />
       </main>
-      <Footer onOpenLegal={onOpenLegal} />
+      <Footer />
       <AudioToggle />
     </>
   );
