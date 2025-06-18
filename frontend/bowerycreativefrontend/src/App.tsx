@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { LegalModal } from './components/LegalModal';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { Capabilities } from './components/Capabilities';
@@ -16,38 +15,7 @@ import { CosmicWelcome } from './components/CosmicWelcome';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './lib/analytics';
 
-type LegalDocumentType = 'privacy' | 'terms' | null;
-
-function MarketingSite() {
-  return (
-    <>
-      <Navigation />
-      <main className="relative">
-        <CosmicWelcome />
-        <Hero />
-        <Capabilities />
-        <Showcase />
-        <Technology />
-        <Process />
-        <About />
-        <Insights />
-        <Contact />
-      </main>
-      <Footer />
-      <AudioToggle />
-    </>
-  );
-}
-
 function App() {
-  const [legalModal, setLegalModal] = useState<{
-    isOpen: boolean;
-    documentType: LegalDocumentType;
-  }>({
-    isOpen: false,
-    documentType: null,
-  });
-
   useEffect(() => {
     // Track initial page view
     trackPageView(window.location.pathname);
@@ -65,24 +33,23 @@ function App() {
     };
   }, []);
 
-  const handleOpenLegal = (documentType: LegalDocumentType) => {
-    setLegalModal({ isOpen: true, documentType });
-  };
-
-  const handleCloseLegal = () => {
-    setLegalModal({ isOpen: false, documentType: null });
-  };
-
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <MarketingSite />
-        
-        <LegalModal
-          isOpen={legalModal.isOpen}
-          documentType={legalModal.documentType}
-          onClose={handleCloseLegal}
-        />
+        <Navigation />
+        <main className="relative">
+          <CosmicWelcome />
+          <Hero />
+          <Capabilities />
+          <Showcase />
+          <Technology />
+          <Process />
+          <About />
+          <Insights />
+          <Contact />
+        </main>
+        <Footer />
+        <AudioToggle />
       </AuthProvider>
     </ErrorBoundary>
   );
