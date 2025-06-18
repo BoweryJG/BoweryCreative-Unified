@@ -51,7 +51,6 @@ import { BillingAdmin } from './components/BillingAdmin';
 import { useAuth } from './contexts/AuthContext';
 import { IconButton } from '@mui/material';
 import { Logout as LogoutIcon } from '@mui/icons-material';
-import DebugAuth from './components/DebugAuth';
 
 // Mission Control Theme
 const theme = createTheme({
@@ -154,7 +153,6 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(!isMobile);
 
   useEffect(() => {
-    // TEMPORARY: Skip auth check for testing
     if (!loading && !user) {
       setLoginOpen(true);
     } else if (user && !hasAccess) {
@@ -460,9 +458,6 @@ function App() {
         open={loginOpen} 
         onClose={() => setLoginOpen(false)} 
       />
-      
-      {/* Debug info - remove this later */}
-      <DebugAuth />
     </ThemeProvider>
   );
 }
