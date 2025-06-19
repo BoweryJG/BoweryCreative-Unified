@@ -21,7 +21,7 @@ import { PaymentPage } from './components/payment/PaymentPage';
 import { PaymentSuccess } from './components/payment/PaymentSuccess';
 import { PaymentCancel } from './components/payment/PaymentCancel';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
-import { SimpleAdminDashboard } from './components/admin/SimpleAdminDashboard';
+import { AdminDashboard } from './components/AdminDashboard';
 import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import { InvoiceManagement } from './components/InvoiceManagement';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
@@ -97,7 +97,7 @@ function App() {
             <Route path="/admin" element={
               <ProtectedRoute>
                 <DashboardLayout>
-                  <SimpleAdminDashboard />
+                  <AdminDashboard />
                 </DashboardLayout>
               </ProtectedRoute>
             } />
