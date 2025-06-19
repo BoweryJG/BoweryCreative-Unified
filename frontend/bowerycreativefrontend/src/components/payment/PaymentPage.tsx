@@ -33,6 +33,7 @@ export const PaymentPage: React.FC = () => {
   const code = searchParams.get('code');
   const email = searchParams.get('email');
   const submissionId = searchParams.get('submissionId');
+  const packageName = searchParams.get('package');
   
   // Debug logging
   console.log('Payment page URL params:', {
@@ -74,7 +75,7 @@ export const PaymentPage: React.FC = () => {
         id: 'custom-payment',
         client_name: email || 'Customer',
         amount: amount,
-        description: 'Custom Payment',
+        description: packageName || 'Custom Payment',
         invoice_number: 'CUSTOM-001'
       });
     }

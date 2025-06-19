@@ -209,9 +209,9 @@ export default function ClientManagementEnhanced() {
             onboardingCompleted: true,
             paymentCompleted: true,
             customPackage: {
-              name: 'Onboarded via Portal',
-              description: 'Self-service onboarding',
-              features: formData.marketingGoals || [],
+              name: formData.selectedPackage?.name || 'Onboarded via Portal',
+              description: formData.selectedPackage?.description || 'Self-service onboarding',
+              features: formData.selectedPackage?.features || formData.marketingGoals || [],
             }
           };
         });

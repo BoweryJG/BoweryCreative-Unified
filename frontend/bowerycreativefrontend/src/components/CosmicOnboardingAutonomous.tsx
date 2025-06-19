@@ -209,56 +209,91 @@ export const CosmicOnboardingAutonomous: React.FC<CosmicOnboardingProps> = ({ on
       // Get selected campaign details
       const selectedPackage = availableCampaigns.find(c => c.id === formData.selectedCampaign);
       
-      // Create autonomous account (no access code needed)
-      const { data: accountData, error: accountError } = await supabase
-        .from('autonomous_accounts')
+      // Store all form data with package info
+      const submissionData = {
+        ...formData,
+        selectedPackage: selectedPackage,
+        monthlyBudget: selectedPackage?.price.toString() || '0',
+        completedAt: new Date().toISOString()
+      };
+
+      // Save to Supabase onboarding_submissions table (same as access code flow)
+      const { data: submission, error: submissionError } = await supabase
+        .from('onboarding_submissions')
         .insert([{
-          name: `${formData.firstName} ${formData.lastName}`,
+          form_data: submissionData,
           email: formData.email,
-          phone: formData.phone,
-          company: formData.practiceName,
-          industry: formData.practiceType,
-          selected_package: selectedPackage,
-          monthly_amount: selectedPackage?.price || 0,
+          practice_name: formData.practiceName,
           status: 'pending_payment',
-          onboarding_data: formData,
           created_at: new Date().toISOString()
         }])
         .select()
         .single();
 
-      if (accountError) throw accountError;
+      if (submissionError) {
+        console.error('Error saving submission:', submissionError);
+      }
 
-      // Save onboarding submission
-      const { error } = await supabase
-        .from('onboarding_submissions')
-        .insert([{
-          user_id: user?.id,
-          form_data: formData,
-          autonomous_account_id: accountData.id,
-          selected_package_id: formData.selectedCampaign,
-          completed_at: new Date().toISOString()
-        }]);
+      // Send notification email to admin
+      try {
+        const { error: emailError } = await supabase.functions.invoke('send-email', {
+          body: {
+            to: 'jgolden@bowerycreativeagency.com',
+            subject: 'New Package Selection - Cosmic Onboarding',
+            html: `
+              <h2>New Practice Selected a Package</h2>
+              <p><strong>Practice:</strong> ${formData.practiceName}</p>
+              <p><strong>Contact:</strong> ${formData.firstName} ${formData.lastName}</p>
+              <p><strong>Email:</strong> ${formData.email}</p>
+              <p><strong>Phone:</strong> ${formData.phone}</p>
+              <p><strong>Type:</strong> ${formData.practiceType}</p>
+              <p><strong>Selected Package:</strong> ${selectedPackage?.name} - $${selectedPackage?.price}/month</p>
+              <p><strong>Marketing Goals:</strong> ${formData.marketingGoals.join(', ')}</p>
+              <p><strong>Start Date:</strong> ${formData.startDate}</p>
+              <p><strong>Custom Requirements:</strong> ${formData.customRequirements || 'None'}</p>
+              <p><strong>Additional Notes:</strong> ${formData.additionalNotes || 'None'}</p>
+              <hr>
+              <p>This lead is pending payment completion.</p>
+            `
+          }
+        });
 
-      if (error) throw error;
+        if (emailError) {
+          console.error('Error sending notification:', emailError);
+        }
+      } catch (emailError) {
+        console.error('Email notification failed:', emailError);
+      }
 
       // Clear localStorage
       localStorage.removeItem('autonomousOnboardingData');
       
-      // Prepare welcome data
-      const welcomeData = {
+      // Prepare data for payment portal
+      const paymentData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         practiceName: formData.practiceName,
         email: formData.email,
         selectedPackage: selectedPackage,
-        accountId: accountData.id
+        formData: submissionData,
+        submissionId: submission?.id
       };
       
-      localStorage.setItem('welcomeData', JSON.stringify(welcomeData));
+      // Store data for payment portal
+      localStorage.setItem('paymentData', JSON.stringify(paymentData));
       
-      // Redirect to welcome page
-      window.location.href = '/welcome';
+      // Build URL with parameters
+      const params = new URLSearchParams();
+      params.append('amount', selectedPackage?.price.toString() || '0');
+      params.append('package', selectedPackage?.name || 'Custom Package');
+      if (formData.email) params.append('email', formData.email);
+      if (submission?.id) params.append('submissionId', submission.id);
+      
+      const queryString = params.toString();
+      
+      // Redirect to internal payment page (same as access code flow)
+      console.log('Redirecting to payment page...');
+      window.location.href = `/pay${queryString ? `?${queryString}` : ''}`;
     } catch (error) {
       console.error('Error submitting onboarding:', error);
       setIsSubmitting(false);
