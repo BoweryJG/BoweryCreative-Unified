@@ -25,6 +25,7 @@ import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import { InvoiceManagement } from './components/InvoiceManagement';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
 import { AuthCallback } from './components/auth/AuthCallback';
+import { AdminLayout } from './components/layout/AdminLayout';
 
 // Homepage component
 const Homepage = () => (
@@ -45,15 +46,6 @@ const Homepage = () => (
   </>
 );
 
-// Dashboard Layout
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => (
-  <>
-    <Navigation />
-    <main className="relative min-h-screen bg-obsidian">
-      {children}
-    </main>
-  </>
-);
 
 function App() {
   useEffect(() => {
@@ -95,30 +87,30 @@ function App() {
             {/* Protected admin routes */}
             <Route path="/admin" element={
               <ProtectedRoute>
-                <DashboardLayout>
+                <AdminLayout>
                   <ClientManagementEnhanced />
-                </DashboardLayout>
+                </AdminLayout>
               </ProtectedRoute>
             } />
             <Route path="/clients" element={
               <ProtectedRoute>
-                <DashboardLayout>
+                <AdminLayout>
                   <ClientManagementEnhanced />
-                </DashboardLayout>
+                </AdminLayout>
               </ProtectedRoute>
             } />
             <Route path="/invoices" element={
               <ProtectedRoute>
-                <DashboardLayout>
+                <AdminLayout>
                   <InvoiceManagement />
-                </DashboardLayout>
+                </AdminLayout>
               </ProtectedRoute>
             } />
             <Route path="/billing" element={
               <ProtectedRoute>
-                <DashboardLayout>
+                <AdminLayout>
                   <InvoiceManagement />
-                </DashboardLayout>
+                </AdminLayout>
               </ProtectedRoute>
             } />
             </Routes>
