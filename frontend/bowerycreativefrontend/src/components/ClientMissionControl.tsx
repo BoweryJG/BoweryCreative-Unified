@@ -20,16 +20,11 @@ import {
   Tab,
   TextField,
   Button,
-  IconButton,
   Avatar,
-  Badge,
-  Tooltip,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Switch,
-  FormControlLabel,
   FormControl,
   Snackbar,
 } from '@mui/material';
@@ -49,21 +44,11 @@ import {
   Save,
   Cancel,
   Add,
-  Delete,
-  CheckCircle,
-  Schedule,
   AttachMoney,
-  ContentPaste,
-  RocketLaunch,
-  Email,
-  Phone,
   LocationOn,
   TrendingUp,
   Visibility,
   ThumbUp,
-  Comment,
-  Share,
-  PhotoCamera,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -134,7 +119,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function ClientMissionControl() {
-  const { user, clientData } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(0);
   const [editMode, setEditMode] = useState(false);
@@ -721,7 +706,7 @@ export default function ClientMissionControl() {
         </Box>
       </Box>
 
-      <Tabs value={selectedTab} onChange={(e, v) => setSelectedTab(v)} sx={{ mb: 3 }}>
+      <Tabs value={selectedTab} onChange={(_, v) => setSelectedTab(v)} sx={{ mb: 3 }}>
         <Tab icon={<Dashboard />} label="Overview" />
         <Tab icon={<Person />} label="Profile" />
         <Tab icon={<Campaign />} label="Campaigns" />
