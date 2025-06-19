@@ -79,7 +79,7 @@ export const PaymentPage: React.FC = () => {
         invoice_number: 'CUSTOM-001'
       });
     }
-  }, [invoiceId, amount, code, email]);
+  }, [invoiceId, amount, code, email, packageName]);
 
   const handleCreateCheckout = async () => {
     if (!invoiceData) {

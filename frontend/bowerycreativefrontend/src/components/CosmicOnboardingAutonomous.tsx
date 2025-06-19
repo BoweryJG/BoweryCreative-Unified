@@ -5,7 +5,6 @@ import {
   Globe, Instagram, Facebook,
   Check, TrendingUp, Zap
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
 interface Campaign {
@@ -141,7 +140,6 @@ export const CosmicOnboardingAutonomous: React.FC<CosmicOnboardingProps> = ({ on
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user } = useAuth();
 
   const totalSteps = 6;
 
