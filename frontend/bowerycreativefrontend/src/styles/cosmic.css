@@ -1,0 +1,188 @@
+/* Cosmic Galaxy Styles */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.cosmic-gradient {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+}
+
+.cosmic-border {
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+  padding: 1px;
+}
+
+.cosmic-glow {
+  box-shadow: 0 0 40px rgba(251, 191, 36, 0.3), 
+              0 0 80px rgba(249, 115, 22, 0.2),
+              inset 0 0 20px rgba(251, 191, 36, 0.1);
+}
+
+.cosmic-text-gradient {
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated Galaxy Orb */
+.galaxy-orb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+  pointer-events: none;
+}
+
+.galaxy-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, 
+    rgba(251, 191, 36, 0.3) 0%, 
+    rgba(249, 115, 22, 0.2) 30%, 
+    rgba(239, 68, 68, 0.1) 60%, 
+    transparent 100%);
+  border-radius: 50%;
+  animation: rotate 20s linear infinite;
+}
+
+.galaxy-orb::after {
+  content: '';
+  position: absolute;
+  inset: -50px;
+  background: radial-gradient(circle at center, 
+    transparent 0%, 
+    rgba(251, 191, 36, 0.1) 40%, 
+    transparent 70%);
+  border-radius: 50%;
+  animation: rotate 30s linear infinite reverse;
+}
+
+/* Stars Background */
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 40px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 50px, white, transparent),
+    radial-gradient(1px 1px at 80px 10px, white, transparent),
+    radial-gradient(2px 2px at 130px 80px, white, transparent);
+  background-size: 200px 200px;
+  animation: float 10s ease-in-out infinite;
+  opacity: 0.3;
+}
+
+/* Glassmorphism Cards */
+.cosmic-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.cosmic-card-hover {
+  transition: all 0.3s ease;
+}
+
+.cosmic-card-hover:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(251, 191, 36, 0.3);
+  box-shadow: 0 8px 32px rgba(251, 191, 36, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Animated Gradient Border */
+.animated-border {
+  position: relative;
+  background: linear-gradient(0deg, transparent, transparent) padding-box,
+              linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ef4444 100%) border-box;
+  border: 2px solid transparent;
+  animation: gradient-rotate 3s ease infinite;
+}
+
+@keyframes gradient-rotate {
+  0% {
+    background: linear-gradient(0deg, transparent, transparent) padding-box,
+                linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ef4444 100%) border-box;
+  }
+  33% {
+    background: linear-gradient(0deg, transparent, transparent) padding-box,
+                linear-gradient(135deg, #f97316 0%, #ef4444 50%, #fbbf24 100%) border-box;
+  }
+  66% {
+    background: linear-gradient(0deg, transparent, transparent) padding-box,
+                linear-gradient(135deg, #ef4444 0%, #fbbf24 50%, #f97316 100%) border-box;
+  }
+  100% {
+    background: linear-gradient(0deg, transparent, transparent) padding-box,
+                linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ef4444 100%) border-box;
+  }
+}
+
+/* Neon Text */
+.neon-text {
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.8),
+               0 0 20px rgba(251, 191, 36, 0.6),
+               0 0 30px rgba(251, 191, 36, 0.4);
+}
+
+/* Floating Particles */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: particle-float 15s infinite;
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(100vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(100px);
+    opacity: 0;
+  }
+}

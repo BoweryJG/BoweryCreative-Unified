@@ -22,9 +22,11 @@ import { PaymentSuccess } from './components/payment/PaymentSuccess';
 import { PaymentCancel } from './components/payment/PaymentCancel';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import ClientManagementEnhanced from './components/ClientManagementEnhanced';
+import { ClientManagementCosmic } from './components/ClientManagementCosmic';
 import { InvoiceManagement } from './components/InvoiceManagement';
 import { Billing } from './components/Billing';
 import { Dashboard } from './components/Dashboard';
+import { DashboardCosmic } from './components/DashboardCosmic';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
 import { AuthCallback } from './components/auth/AuthCallback';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -90,14 +92,14 @@ function App() {
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AdminLayout>
-                  <Dashboard />
+                  <DashboardCosmic />
                 </AdminLayout>
               </ProtectedRoute>
             } />
             <Route path="/clients" element={
               <ProtectedRoute>
                 <AdminLayout>
-                  <ClientManagementEnhanced />
+                  <ClientManagementCosmic />
                 </AdminLayout>
               </ProtectedRoute>
             } />
