@@ -11,17 +11,8 @@ import {
   DollarSign,
   CheckCircle,
   AlertCircle,
-  Send,
-  Package,
   Sparkles,
-  Rocket,
-  Star,
-  Zap,
-  Edit,
   MoreVertical,
-  Globe,
-  Code,
-  Shield,
   X
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -55,7 +46,6 @@ export const ClientManagementCosmic: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<'overview' | 'all' | 'pending' | 'active'>('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<ClientAccount | null>(null);
-  const [showAddModal, setShowAddModal] = useState(false);
 
   // Hardcoded clients
   const drPedroClient: ClientAccount = {
@@ -371,7 +361,7 @@ export const ClientManagementCosmic: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowAddModal(true)}
+              onClick={() => console.log('Add client clicked')}
               className="cosmic-glow px-6 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />

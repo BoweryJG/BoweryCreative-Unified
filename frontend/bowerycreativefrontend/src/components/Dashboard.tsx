@@ -226,7 +226,7 @@ export const Dashboard: React.FC = () => {
           </h2>
           <div className="space-y-3">
             {metrics.recentSignups.length > 0 ? (
-              metrics.recentSignups.map((signup, index) => (
+              metrics.recentSignups.map((signup) => (
                 <div key={signup.id} className="flex items-center justify-between p-3 bg-obsidian rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className={`w-2 h-2 rounded-full ${
