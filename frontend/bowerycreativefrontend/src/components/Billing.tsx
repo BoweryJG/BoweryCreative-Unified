@@ -5,17 +5,13 @@ import {
   Calendar, 
   DollarSign, 
   Check, 
-  AlertCircle,
   Download,
   Settings,
-  ChevronRight,
   Shield,
   Zap,
-  Users,
   BarChart
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
 
 interface PaymentMethod {
   id: string;
@@ -37,12 +33,12 @@ interface Subscription {
 }
 
 export const Billing: React.FC = () => {
-  const { user, clientData } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'payment' | 'invoices'>('overview');
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [usage, setUsage] = useState({
+  const [usage] = useState({
     storage: { used: 2.3, limit: 10, unit: 'GB' },
     bandwidth: { used: 45, limit: 100, unit: 'GB' },
     apiCalls: { used: 12500, limit: 50000, unit: 'calls' }
