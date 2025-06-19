@@ -24,6 +24,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import { InvoiceManagement } from './components/InvoiceManagement';
 import { Billing } from './components/Billing';
+import { Dashboard } from './components/Dashboard';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
 import { AuthCallback } from './components/auth/AuthCallback';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -89,7 +90,7 @@ function App() {
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AdminLayout>
-                  <ClientManagementEnhanced />
+                  <Dashboard />
                 </AdminLayout>
               </ProtectedRoute>
             } />
