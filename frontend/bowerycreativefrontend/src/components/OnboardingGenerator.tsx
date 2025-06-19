@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Link2, 
   Copy, 
-  Settings,
   Save,
   Plus,
   X,
@@ -15,7 +14,6 @@ import {
   QrCode,
   MessageSquare
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import '../styles/cosmic.css';
 
 interface CampaignCode {
