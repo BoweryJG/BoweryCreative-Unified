@@ -55,12 +55,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Cosmic Backdrop with animated stars */}
+          {/* Enhanced Cosmic Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gradient-to-br from-purple-900/90 via-black to-blue-900/90 backdrop-blur-md z-50"
+            className="fixed inset-0 bg-gradient-to-br from-purple-900/95 via-indigo-900/90 via-black to-blue-900/95 backdrop-blur-xl z-50"
             onClick={onClose}
           >
             {/* Animated Stars */}
@@ -95,16 +95,28 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="bg-gradient-to-br from-purple-900/30 via-gray-900/50 to-blue-900/30 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-8 w-full max-w-md relative overflow-hidden shadow-2xl">
-              {/* Animated cosmic background orb */}
+            <div className="bg-gradient-to-br from-purple-900/40 via-indigo-900/30 via-gray-900/60 to-blue-900/40 backdrop-blur-2xl border-2 border-transparent rounded-[32px] p-8 w-full max-w-md relative overflow-hidden shadow-2xl before:absolute before:inset-0 before:rounded-[32px] before:p-[2px] before:bg-gradient-to-br before:from-yellow-400/60 before:via-purple-500/40 before:to-blue-400/60 before:-z-10 before:blur-sm after:absolute after:inset-0 after:rounded-[32px] after:bg-gradient-to-t after:from-purple-600/10 after:to-transparent after:-z-10">
+              {/* Multiple animated cosmic orbs */}
               <motion.div
-                className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-full blur-3xl"
+                className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-purple-600/30 via-pink-500/20 to-blue-600/30 rounded-full blur-3xl"
                 animate={{
-                  scale: [1, 1.2, 1],
+                  scale: [1, 1.3, 1],
                   rotate: [0, 180, 360],
                 }}
                 transition={{
                   duration: 10,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+              <motion.div
+                className="absolute -bottom-20 -left-20 w-48 h-48 bg-gradient-to-br from-yellow-400/20 via-orange-500/20 to-pink-500/20 rounded-full blur-3xl"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  rotate: [360, 180, 0],
+                }}
+                transition={{
+                  duration: 8,
                   repeat: Infinity,
                   ease: "linear",
                 }}
@@ -120,33 +132,41 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 <X className="w-5 h-5" />
               </motion.button>
 
-              {/* Spinning Galaxy Icon */}
+              {/* Enhanced Spinning Galaxy Icon */}
               <motion.div
-                className="w-20 h-20 mx-auto mb-6 relative"
+                className="w-24 h-24 mx-auto mb-6 relative"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full blur-lg opacity-50" />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                  <Sparkles className="w-10 h-10 text-white" />
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-purple-500 to-blue-500 rounded-full blur-xl opacity-60 animate-pulse" />
+                <div className="absolute inset-2 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
+                  <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Sparkles className="w-12 h-12 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.8)]" />
+                  </motion.div>
                 </div>
-                {/* Orbiting stars */}
-                {[...Array(3)].map((_, i) => (
+                {/* Enhanced orbiting stars */}
+                {[...Array(4)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+                    className="absolute w-3 h-3 rounded-full shadow-lg"
                     style={{
+                      background: `radial-gradient(circle at 30% 30%, ${['#fbbf24', '#f59e0b', '#10b981', '#3b82f6'][i]}, ${['#f59e0b', '#ef4444', '#059669', '#2563eb'][i]})`,
                       top: '50%',
                       left: '50%',
+                      boxShadow: `0 0 10px ${['#fbbf24', '#f59e0b', '#10b981', '#3b82f6'][i]}`,
                     }}
                     animate={{
-                      x: [0, 30 * Math.cos(i * 120 * Math.PI / 180), 0],
-                      y: [0, 30 * Math.sin(i * 120 * Math.PI / 180), 0],
+                      x: [0, 35 * Math.cos(i * 90 * Math.PI / 180), 0],
+                      y: [0, 35 * Math.sin(i * 90 * Math.PI / 180), 0],
                     }}
                     transition={{
-                      duration: 3,
+                      duration: 2.5,
                       repeat: Infinity,
-                      delay: i * 0.3,
+                      delay: i * 0.2,
+                      ease: "easeInOut",
                     }}
                   />
                 ))}
@@ -159,13 +179,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-2">
-                  {isUnauthorized ? 'Access Restricted' : 'Welcome to the Cosmos'}
+                <h2 className="text-4xl font-black bg-gradient-to-r from-yellow-400 via-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-2 animate-gradient-x bg-[length:200%_auto]">
+                  {isUnauthorized ? 'Access Restricted' : 'Welcome to Bowery'}
                 </h2>
-                <p className="text-gray-300 text-sm">
+                <p className="text-gray-200 text-base font-medium tracking-wide">
                   {isUnauthorized 
                     ? 'Your account does not have access to this platform'
-                    : 'Sign in to access your cosmic dashboard'
+                    : 'Enter the cosmic dashboard'
                   }
                 </p>
               </motion.div>
@@ -214,86 +234,87 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                     )}
                   </AnimatePresence>
 
-                  {/* Google Sign In */}
+                  {/* Enhanced Google Sign In */}
                   <motion.button
                     type="button"
                     onClick={handleGoogleSignIn}
                     disabled={loading}
-                    className="w-full bg-white/10 backdrop-blur-sm text-white font-medium py-3 px-4 rounded-xl border border-white/20 hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-bold py-4 px-4 rounded-2xl shadow-lg hover:shadow-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group relative overflow-hidden"
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <Chrome className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
-                    Sign in with Google
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Chrome className="w-6 h-6 group-hover:rotate-180 transition-transform duration-700 relative z-10" />
+                    <span className="relative z-10 text-lg">Sign in with Google</span>
                   </motion.button>
 
-                  <div className="flex items-center gap-4">
-                    <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent flex-1" />
-                    <span className="text-gray-400 text-sm">OR</span>
-                    <div className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent flex-1" />
+                  <div className="flex items-center gap-4 my-6">
+                    <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent flex-1" />
+                    <span className="text-yellow-400 text-sm font-semibold px-3 py-1 bg-yellow-400/10 rounded-full border border-yellow-400/30">OR</span>
+                    <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent flex-1" />
                   </div>
 
-                  {/* Email Input */}
+                  {/* Enhanced Email Input */}
                   <motion.div 
-                    className="relative"
+                    className="relative group"
                     whileHover={{ scale: 1.02 }}
                   >
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5 z-10" />
                     <input
                       type="email"
                       placeholder="Email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={loading}
-                      className="w-full bg-white/5 backdrop-blur-sm border border-purple-500/30 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all disabled:opacity-50"
+                      className="relative w-full bg-white/5 backdrop-blur-sm border-2 border-purple-500/30 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-300 focus:outline-none focus:border-yellow-400/50 focus:bg-white/10 transition-all disabled:opacity-50 font-medium"
                       required
                     />
                   </motion.div>
 
-                  {/* Password Input */}
+                  {/* Enhanced Password Input */}
                   <motion.div 
-                    className="relative"
+                    className="relative group"
                     whileHover={{ scale: 1.02 }}
                   >
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 w-5 h-5 z-10" />
                     <input
                       type="password"
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={loading}
-                      className="w-full bg-white/5 backdrop-blur-sm border border-purple-500/30 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all disabled:opacity-50"
+                      className="relative w-full bg-white/5 backdrop-blur-sm border-2 border-purple-500/30 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-300 focus:outline-none focus:border-yellow-400/50 focus:bg-white/10 transition-all disabled:opacity-50 font-medium"
                       required
                     />
                   </motion.div>
 
-                  {/* Sign In Button */}
+                  {/* Enhanced Sign In Button */}
                   <motion.button
                     type="submit"
                     disabled={loading || !email || !password}
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white font-bold py-4 px-4 rounded-2xl shadow-lg hover:shadow-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group mt-6"
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    <span className="relative z-10 flex items-center justify-center gap-2">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="relative z-10 flex items-center justify-center gap-3 text-lg">
                       {loading ? (
                         <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <Loader2 className="w-6 h-6 animate-spin" />
                           Entering the cosmos...
                         </>
                       ) : (
                         <>
-                          <Star className="w-5 h-5" />
-                          Sign In
+                          <Star className="w-6 h-6 animate-pulse" />
+                          Enter Dashboard
                         </>
                       )}
                     </span>
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400"
-                      initial={{ x: '-100%' }}
-                      whileHover={{ x: 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-48 h-48 bg-white/20 rounded-full blur-3xl opacity-0 group-hover:opacity-50 group-hover:scale-150 transition-all duration-500" />
+                    </div>
                   </motion.button>
                 </motion.form>
               )}
