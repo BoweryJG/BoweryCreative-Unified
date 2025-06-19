@@ -52,7 +52,9 @@ export const PaymentPage: React.FC = () => {
         client_name: 'Sarah Jones',
         amount: 5.00,
         description: 'Test Package - Monthly Subscription',
-        invoice_number: 'SARAH-TEST-001'
+        invoice_number: 'SARAH-TEST-001',
+        payment_link_title: 'Test Campaign Ready',
+        payment_link_message: 'Sarah, complete your test payment to activate your campaign'
       });
     } else if (invoiceId === 'test-flow') {
       setInvoiceData({
@@ -60,7 +62,9 @@ export const PaymentPage: React.FC = () => {
         client_name: 'Dr. Greg Pedro',
         amount: 1.00,
         description: 'Test Invoice - Payment Flow Test',
-        invoice_number: 'TEST-FLOW-001'
+        invoice_number: 'TEST-FLOW-001',
+        payment_link_title: 'Your campaign starts here',
+        payment_link_message: 'Complete this test payment to proceed'
       });
     } else if (invoiceId === 'pedro-monthly' || code === 'PEDRO') {
       setInvoiceData({
@@ -68,7 +72,9 @@ export const PaymentPage: React.FC = () => {
         client_name: 'Dr. Greg Pedro',
         amount: 2000.00,
         description: 'Premium AI Infrastructure - Monthly Marketing Services',
-        invoice_number: 'INV-2024-001'
+        invoice_number: 'INV-2024-001',
+        payment_link_title: 'Your Professional Campaign Awaits',
+        payment_link_message: 'Dr. Pedro, your medical practice transformation starts with this payment'
       });
     } else if (amount > 0) {
       setInvoiceData({
@@ -76,7 +82,9 @@ export const PaymentPage: React.FC = () => {
         client_name: email || 'Customer',
         amount: amount,
         description: packageName || 'Custom Payment',
-        invoice_number: 'CUSTOM-001'
+        invoice_number: 'CUSTOM-001',
+        payment_link_title: 'Your campaign starts here',
+        payment_link_message: `Complete your payment of $${amount.toFixed(2)} to begin`
       });
     }
   }, [invoiceId, amount, code, email, packageName]);
@@ -171,25 +179,36 @@ export const PaymentPage: React.FC = () => {
     }}>
       <Container maxWidth="sm">
         <Paper sx={{ 
-          p: 4,
+          p: { xs: 3, sm: 4 },
           background: 'rgba(255,255,255,0.98)',
           borderRadius: 2,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+          mx: { xs: 1, sm: 0 }
         }}>
-          {/* Header */}
+          {/* Header with Custom Title */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant="h4" sx={{ 
+            <Typography variant="h5" sx={{ 
               fontWeight: 'bold',
-              mb: 1,
+              mb: 2,
               background: 'linear-gradient(135deg, #fbbf24 0%, #f97316 100%)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               color: 'transparent'
             }}>
-              Bowery Creative
+              {invoiceData.payment_link_title || 'Your campaign starts here'}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Secure Payment Portal
+            {invoiceData.payment_link_message && (
+              <Typography variant="body1" sx={{ 
+                color: 'text.secondary',
+                mb: 2,
+                px: 2,
+                fontStyle: 'italic'
+              }}>
+                {invoiceData.payment_link_message}
+              </Typography>
+            )}
+            <Typography variant="caption" color="textSecondary">
+              Powered by Bowery Creative
             </Typography>
           </Box>
 

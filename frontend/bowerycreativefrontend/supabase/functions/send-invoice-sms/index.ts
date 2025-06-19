@@ -13,12 +13,27 @@ serve(async (req) => {
   }
 
   try {
-    const { to, message, invoiceId } = await req.json()
+    const requestBody = await req.json()
+    console.log('SMS Request received:', requestBody)
+    
+    const { to, message, invoiceId } = requestBody
 
     // Validate inputs
     if (!to || !message) {
       throw new Error('Phone number and message are required')
     }
+    
+    // Ensure phone number is in E.164 format
+    let formattedPhone = to.toString()
+    if (!formattedPhone.startsWith('+')) {
+      // Assume US number if no country code
+      if (formattedPhone.length === 10) {
+        formattedPhone = '+1' + formattedPhone
+      } else if (formattedPhone.length === 11 && formattedPhone.startsWith('1')) {
+        formattedPhone = '+' + formattedPhone
+      }
+    }
+    console.log('Formatted phone:', formattedPhone)
 
     // Create Supabase client
     const supabaseClient = createClient(
@@ -44,7 +59,7 @@ serve(async (req) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          To: to,
+          To: formattedPhone,
           From: twilioPhoneNumber,
           Body: message,
         }),
@@ -64,7 +79,7 @@ serve(async (req) => {
     } else {
       // Mock mode when Twilio is not configured
       console.log('Twilio not configured, using mock mode')
-      console.log(`Would send SMS to ${to}: ${message}`)
+      console.log(`Would send SMS to ${formattedPhone}: ${message}`)
       
       smsResult = {
         status: 'mock_sent',
@@ -77,7 +92,7 @@ serve(async (req) => {
       .from('sms_logs')
       .insert({
         invoice_id: invoiceId,
-        phone_number: to,
+        phone_number: formattedPhone,
         message: message,
         status: smsResult.status,
         twilio_sid: smsResult.twilio_sid,

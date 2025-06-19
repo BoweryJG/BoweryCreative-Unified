@@ -52,56 +52,84 @@ export const DashboardCosmic: React.FC = () => {
     try {
       setLoading(true);
 
-      // Load paid onboarding submissions
+      // Load invoices data
+      const { data: invoices, error: invoiceError } = await supabase
+        .from('invoices')
+        .select('*')
+        .order('invoice_date', { ascending: false });
+
+      let totalRev = 0;
+      let monthlyRev = 0;
+      let paidCount = 0;
+      let sentCount = 0;
+      let uniqueClients = new Set();
+
+      if (invoiceError) {
+        console.error('Error loading invoices:', invoiceError);
+        // Fall back to hardcoded data if table doesn't exist
+        if (invoiceError.message?.includes('relation "invoices" does not exist')) {
+          setMetrics({
+            totalClients: 2, // Dr. Pedro and Sarah
+            activeClients: 1, // Only Sarah is active (paid)
+            pendingPayments: 1, // Dr. Pedro's setup invoice
+            monthlyRevenue: 5, // Only Sarah's payment this month
+            totalRevenue: 5, // Only Sarah has paid so far
+            recentSignups: [],
+            clientsByPackage: {
+              'Access Code': 1,
+              'Foundation Elite': 0,
+              'Visionary Transformation': 0,
+              'Market Dominance': 0
+            }
+          });
+          return;
+        }
+      }
+
+      // Calculate metrics from invoices
+      if (invoices) {
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+
+        invoices.forEach(invoice => {
+          uniqueClients.add(invoice.client_email);
+          
+          if (invoice.status === 'paid') {
+            totalRev += parseFloat(invoice.amount);
+            paidCount++;
+            
+            // Check if invoice is from current month
+            const invoiceDate = new Date(invoice.invoice_date);
+            if (invoiceDate.getMonth() === currentMonth && invoiceDate.getFullYear() === currentYear) {
+              monthlyRev += parseFloat(invoice.amount);
+            }
+          } else if (invoice.status === 'sent') {
+            sentCount++;
+          }
+        });
+      }
+
+      // Load onboarding submissions for recent signups
       const { data: submissions } = await supabase
         .from('onboarding_submissions')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(5);
 
-      if (submissions) {
-        // Calculate metrics
-        const paidSubmissions = submissions.filter(s => s.status === 'paid');
-        const pendingSubmissions = submissions.filter(s => s.status === 'pending_payment');
-        
-        // Calculate revenue
-        let monthlyRev = 2000; // Dr. Pedro's hardcoded amount
-        let totalRev = 24000; // Dr. Pedro's total
-        
-        paidSubmissions.forEach(submission => {
-          const formData = submission.form_data || {};
-          const amount = parseFloat(formData.monthlyBudget) || 
-                        formData.selectedPackage?.price || 0;
-          monthlyRev += amount;
-          totalRev += amount;
-        });
-
-        // Count by package
-        const packageCounts: { [key: string]: number } = {
-          'Access Code': 1, // Dr. Pedro
+      setMetrics({
+        totalClients: uniqueClients.size,
+        activeClients: uniqueClients.size,
+        pendingPayments: sentCount,
+        monthlyRevenue: monthlyRev,
+        totalRevenue: totalRev,
+        recentSignups: submissions || [],
+        clientsByPackage: {
+          'Access Code': uniqueClients.size, // Update based on actual package data
           'Foundation Elite': 0,
           'Visionary Transformation': 0,
           'Market Dominance': 0
-        };
-
-        paidSubmissions.forEach(submission => {
-          const packageName = submission.form_data?.selectedPackage?.name;
-          if (packageName && packageCounts[packageName] !== undefined) {
-            packageCounts[packageName]++;
-          } else if (submission.form_data?.promoCode) {
-            packageCounts['Access Code']++;
-          }
-        });
-
-        setMetrics({
-          totalClients: paidSubmissions.length + 2, // +2 for Dr. Pedro and Sarah
-          activeClients: paidSubmissions.length + 1, // +1 for Dr. Pedro
-          pendingPayments: pendingSubmissions.length + 1, // +1 for Sarah
-          monthlyRevenue: monthlyRev,
-          totalRevenue: totalRev,
-          recentSignups: submissions.slice(0, 5),
-          clientsByPackage: packageCounts
-        });
-      }
+        }
+      });
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {

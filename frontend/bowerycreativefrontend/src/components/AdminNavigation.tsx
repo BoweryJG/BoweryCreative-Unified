@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, LayoutDashboard, CreditCard, Users, FileText, Settings, LogOut, ChevronDown, User } from 'lucide-react';
+import { Brain, LayoutDashboard, CreditCard, Users, FileText, Settings, LogOut, ChevronDown, User, Link2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -83,6 +83,13 @@ export const AdminNavigation: React.FC = () => {
               >
                 <FileText className="w-4 h-4" />
                 Invoices
+              </Link>
+              <Link
+                to="/onboarding-generator"
+                className="flex items-center gap-2 text-arctic hover:text-champagne transition-colors"
+              >
+                <Link2 className="w-4 h-4" />
+                Onboarding
               </Link>
             </nav>
           </div>

@@ -33,6 +33,8 @@ interface Invoice {
   dueDate: string;
   amount: number;
   status: 'draft' | 'sent' | 'paid' | 'overdue';
+  paymentLinkTitle?: string;
+  paymentLinkMessage?: string;
   items: {
     description: string;
     quantity: number;
@@ -62,84 +64,81 @@ export const InvoiceManagementCosmic: React.FC = () => {
     try {
       setLoading(true);
       
-      // Mock data for Dr. Pedro
-      const mockInvoices: Invoice[] = [
-        {
-          id: '1',
-          clientName: 'Dr. Greg Pedro',
-          clientEmail: 'greg@gregpedromd.com',
-          number: 'INV-2024-001',
-          date: '2024-01-01',
-          dueDate: '2024-01-15',
-          amount: 2000,
-          status: 'paid',
-          items: [
-            { description: 'Professional Plan - January 2024', quantity: 1, rate: 2000, amount: 2000 }
-          ]
-        },
-        {
-          id: '2',
-          clientName: 'Dr. Greg Pedro',
-          clientEmail: 'greg@gregpedromd.com',
-          number: 'INV-2023-012',
-          date: '2023-12-01',
-          dueDate: '2023-12-15',
-          amount: 2000,
-          status: 'paid',
-          items: [
-            { description: 'Professional Plan - December 2023', quantity: 1, rate: 2000, amount: 2000 }
-          ]
-        },
-        {
-          id: '3',
-          clientName: 'Sarah Jones',
-          clientEmail: 'sarah@example.com',
-          number: 'INV-2024-002',
-          date: '2024-01-15',
-          dueDate: '2024-01-30',
-          amount: 5,
-          status: 'sent',
-          items: [
-            { description: 'Test Package - Monthly', quantity: 1, rate: 5, amount: 5 }
-          ]
+      // Load invoices from Supabase
+      const { data: invoiceData, error: invoiceError } = await supabase
+        .from('invoices')
+        .select(`
+          *,
+          items:invoice_items(*)
+        `)
+        .order('invoice_date', { ascending: false });
+
+      if (invoiceError) {
+        console.error('Error loading invoices:', invoiceError);
+        
+        // If table doesn't exist, fall back to temporary data
+        if (invoiceError.message?.includes('relation "invoices" does not exist')) {
+          const tempInvoices: Invoice[] = [
+            {
+              id: '1',
+              clientName: 'Dr. Greg Pedro',
+              clientEmail: 'greg@gregpedromd.com',
+              number: 'INV-2024-001',
+              date: '2024-06-19',
+              dueDate: '2024-06-19',
+              amount: 2000,
+              status: 'sent',
+              paymentLinkTitle: 'Your Professional Campaign Awaits',
+              paymentLinkMessage: 'Dr. Pedro, your medical practice transformation starts with this payment',
+              items: [
+                { description: 'Professional Plan - Setup & First Month', quantity: 1, rate: 2000, amount: 2000 }
+              ]
+            },
+            {
+              id: '2',
+              clientName: 'Sarah Jones',
+              clientEmail: 'sarah@example.com',
+              number: 'INV-2024-002',
+              date: '2024-06-15',
+              dueDate: '2024-06-30',
+              amount: 5,
+              status: 'paid',
+              paymentLinkTitle: 'Test Campaign Ready',
+              paymentLinkMessage: 'Sarah, complete your test payment to activate your campaign',
+              items: [
+                { description: 'Test Invoice', quantity: 1, rate: 5, amount: 5 }
+              ]
+            }
+          ];
+          setInvoices(tempInvoices);
+          return;
         }
-      ];
-
-      // Load additional invoices from database
-      const { data: submissions } = await supabase
-        .from('onboarding_submissions')
-        .select('*')
-        .eq('status', 'paid')
-        .order('created_at', { ascending: false });
-
-      if (submissions) {
-        submissions.forEach((submission, index) => {
-          const date = new Date(submission.created_at);
-          const invoice: Invoice = {
-            id: `db-${submission.id}`,
-            clientName: submission.practice_name || 'Unknown Client',
-            clientEmail: submission.email,
-            number: `INV-${date.getFullYear()}-${String(index + 3).padStart(3, '0')}`,
-            date: date.toISOString().split('T')[0],
-            dueDate: new Date(date.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            amount: submission.form_data?.monthlyBudget || 0,
-            status: 'paid',
-            items: [
-              {
-                description: `${submission.form_data?.selectedPackage?.name || 'Custom Package'} - ${date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
-                quantity: 1,
-                rate: submission.form_data?.monthlyBudget || 0,
-                amount: submission.form_data?.monthlyBudget || 0
-              }
-            ]
-          };
-          mockInvoices.push(invoice);
-        });
       }
 
-      setInvoices(mockInvoices);
+      // Transform the data to match our Invoice interface
+      const transformedInvoices: Invoice[] = invoiceData?.map(inv => ({
+        id: inv.id,
+        clientName: inv.client_name,
+        clientEmail: inv.client_email,
+        number: inv.invoice_number,
+        date: inv.invoice_date,
+        dueDate: inv.due_date,
+        amount: parseFloat(inv.amount),
+        status: inv.status as 'draft' | 'sent' | 'paid' | 'overdue',
+        paymentLinkTitle: inv.payment_link_title || 'Your campaign starts here',
+        paymentLinkMessage: inv.payment_link_message || 'Complete your payment to activate your campaign',
+        items: inv.items?.map((item: any) => ({
+          description: item.description,
+          quantity: item.quantity,
+          rate: parseFloat(item.rate),
+          amount: parseFloat(item.amount)
+        })) || []
+      })) || [];
+
+      setInvoices(transformedInvoices);
     } catch (error) {
       console.error('Error loading invoices:', error);
+      setInvoices([]);
     } finally {
       setLoading(false);
     }
@@ -202,7 +201,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
     
     setSmsSending(true);
     const paymentLink = getPaymentLink(smsInvoice);
-    const message = `Hi ${smsInvoice.clientName}, \n\nYour invoice ${smsInvoice.number} for $${smsInvoice.amount.toFixed(2)} is ready. \n\nPay securely here: ${paymentLink}\n\n- Bowery Creative`;
+    const message = `${smsInvoice.paymentLinkTitle || 'Your campaign starts here'}\n\n${smsInvoice.paymentLinkMessage || `Hi ${smsInvoice.clientName}, your invoice ${smsInvoice.number} for $${smsInvoice.amount.toFixed(2)} is ready.`}\n\nPay now: ${paymentLink}\n\nReply STOP to opt out`;
     
     try {
       const { data, error } = await supabase.functions.invoke('send-invoice-sms', {
@@ -216,6 +215,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
       console.log('SMS Response:', { data, error });
       
       if (error) {
+        console.error('Function error:', error);
         throw new Error(error.message || 'Failed to send SMS');
       }
       
@@ -255,27 +255,55 @@ export const InvoiceManagementCosmic: React.FC = () => {
     if (!editingInvoice || !editForm) return;
 
     try {
+      // Update in Supabase first
+      const { error: updateError } = await supabase
+        .from('invoices')
+        .update({
+          client_name: editForm.clientName,
+          client_email: editForm.clientEmail,
+          amount: editForm.amount,
+          status: editForm.status,
+          invoice_date: editForm.date,
+          due_date: editForm.dueDate,
+          payment_link_title: editForm.paymentLinkTitle,
+          payment_link_message: editForm.paymentLinkMessage
+        })
+        .eq('id', editingInvoice.id);
+
+      if (updateError) {
+        // If invoices table doesn't exist yet, just update local state
+        if (!updateError.message?.includes('relation "invoices" does not exist')) {
+          throw updateError;
+        }
+      }
+
+      // Update invoice items if they exist
+      if (editForm.items && editForm.items.length > 0) {
+        // Delete existing items
+        await supabase
+          .from('invoice_items')
+          .delete()
+          .eq('invoice_id', editingInvoice.id);
+
+        // Insert new items
+        const itemsToInsert = editForm.items.map(item => ({
+          invoice_id: editingInvoice.id,
+          description: item.description,
+          quantity: item.quantity,
+          rate: item.rate,
+          amount: item.amount
+        }));
+
+        await supabase
+          .from('invoice_items')
+          .insert(itemsToInsert);
+      }
+
       // Update local state
       const updatedInvoices = invoices.map(inv => 
         inv.id === editingInvoice.id ? { ...inv, ...editForm } : inv
       );
       setInvoices(updatedInvoices);
-
-      // If it's a database invoice, update in Supabase
-      if (editingInvoice.id.startsWith('db-')) {
-        const submissionId = editingInvoice.id.replace('db-', '');
-        const { error } = await supabase
-          .from('onboarding_submissions')
-          .update({
-            form_data: {
-              ...((await supabase.from('onboarding_submissions').select('form_data').eq('id', submissionId).single()).data?.form_data || {}),
-              monthlyBudget: editForm.amount
-            }
-          })
-          .eq('id', submissionId);
-
-        if (error) throw error;
-      }
 
       // Show success notification
       const notification = document.createElement('div');
@@ -1050,6 +1078,52 @@ export const InvoiceManagementCosmic: React.FC = () => {
                     onChange={(e) => updateEditForm('dueDate', e.target.value)}
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
                   />
+                </div>
+              </div>
+
+              {/* Payment Link Customization */}
+              <div className="mb-6 p-4 cosmic-card rounded-xl bg-purple-500/10 border border-purple-500/30">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-400" />
+                  Payment Link Customization
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm text-gray-400 mb-2">Payment Link Title</label>
+                    <input
+                      type="text"
+                      value={editForm.paymentLinkTitle || 'Your campaign starts here'}
+                      onChange={(e) => updateEditForm('paymentLinkTitle', e.target.value)}
+                      placeholder="e.g. Your Professional Campaign Awaits"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-400/50 transition-colors"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">This appears as the main headline on the payment page</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm text-gray-400 mb-2">Payment Link Message</label>
+                    <textarea
+                      value={editForm.paymentLinkMessage || 'Complete your payment to activate your campaign'}
+                      onChange={(e) => updateEditForm('paymentLinkMessage', e.target.value)}
+                      placeholder="e.g. Dr. Pedro, your medical practice transformation starts with this payment"
+                      rows={3}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-purple-400/50 transition-colors resize-none"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Personalized message shown on payment page and in SMS</p>
+                  </div>
+                </div>
+                
+                {/* Preview */}
+                <div className="mt-4 p-4 bg-black/30 rounded-xl">
+                  <p className="text-xs text-gray-400 mb-2">SMS Preview:</p>
+                  <div className="text-sm text-gray-300 whitespace-pre-wrap">
+                    {editForm.paymentLinkTitle || 'Your campaign starts here'}
+                    {'\n\n'}
+                    {editForm.paymentLinkMessage || `Hi ${editForm.clientName || 'Client'}, your invoice ${editForm.number || '#'} for $${(editForm.amount || 0).toFixed(2)} is ready.`}
+                    {'\n\n'}
+                    Pay now: [payment link]
+                    {'\n\n'}
+                    Reply STOP to opt out
+                  </div>
                 </div>
               </div>
 

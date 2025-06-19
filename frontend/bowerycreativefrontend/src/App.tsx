@@ -28,6 +28,7 @@ import { DashboardCosmic } from './components/DashboardCosmic';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
 import { AuthCallback } from './components/auth/AuthCallback';
 import { AdminLayout } from './components/layout/AdminLayout';
+import { OnboardingGenerator } from './components/OnboardingGenerator';
 
 // Homepage component
 const Homepage = () => (
@@ -112,6 +113,13 @@ function App() {
               <ProtectedRoute>
                 <AdminLayout>
                   <BillingCosmic />
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/onboarding-generator" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <OnboardingGenerator />
                 </AdminLayout>
               </ProtectedRoute>
             } />
