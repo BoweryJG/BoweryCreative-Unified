@@ -16,11 +16,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EmailIcon from '@mui/icons-material/Email';
-import PaymentIcon from '@mui/icons-material/Payment';
-import { Visibility, VisibilityOff, Sparkle, AutoAwesome } from '@mui/icons-material';
+import { Visibility, VisibilityOff, AutoAwesome } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContextPayments';
 import { colors } from '../../theme/theme';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface GlobalAuthModalProps {
   open: boolean;
@@ -145,10 +143,8 @@ const GlobalAuthModal: React.FC<GlobalAuthModalProps> = ({ open, onClose, onSucc
             borderRadius: '32px',
             padding: '2px',
             background: `linear-gradient(135deg, ${colors.champagne}60, transparent 30%, ${colors.champagne}40 70%, transparent)`,
-            mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-            maskComposite: 'exclude',
             WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-            WebkitMaskComposite: 'xor',
+            WebkitMaskComposite: 'source-out',
             zIndex: -1,
           },
           '&::after': {
@@ -515,10 +511,8 @@ const GlobalAuthModal: React.FC<GlobalAuthModalProps> = ({ open, onClose, onSucc
                   borderRadius: '20px',
                   padding: '2px',
                   background: `linear-gradient(135deg, ${colors.champagne}, #ff6b6b, #4ecdc4)`,
-                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  maskComposite: 'exclude',
                   WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
+                  WebkitMaskComposite: 'source-out',
                   opacity: 0,
                   transition: 'opacity 0.3s',
                 },
