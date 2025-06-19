@@ -640,37 +640,35 @@ export const InvoiceManagementCosmic: React.FC = () => {
                           >
                             <Download className="w-4 h-4 text-gray-400" />
                           </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const paymentLink = getPaymentLink(invoice);
+                              navigator.clipboard.writeText(paymentLink);
+                              alert(`Payment link copied to clipboard:\n${paymentLink}`);
+                            }}
+                            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                            title="Copy payment link"
+                          >
+                            <Send className="w-4 h-4 text-yellow-400" />
+                          </motion.button>
                           {invoice.status === 'sent' && (
-                            <>
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const paymentLink = getPaymentLink(invoice);
-                                  navigator.clipboard.writeText(paymentLink);
-                                  alert(`Payment link copied to clipboard:\n${paymentLink}`);
-                                }}
-                                className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                                title="Copy payment link"
-                              >
-                                <Send className="w-4 h-4 text-yellow-400" />
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSmsInvoice(invoice);
-                                  setSmsPhone(invoice.clientName === 'Sarah Jones' ? '+12015231306' : '');
-                                  setShowSmsModal(true);
-                                }}
-                                className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                                title="Send SMS"
-                              >
-                                <MessageSquare className="w-4 h-4 text-blue-400" />
-                              </motion.button>
-                            </>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSmsInvoice(invoice);
+                                setSmsPhone(invoice.clientName === 'Sarah Jones' ? '+12015231306' : '');
+                                setShowSmsModal(true);
+                              }}
+                              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                              title="Send SMS"
+                            >
+                              <MessageSquare className="w-4 h-4 text-blue-400" />
+                            </motion.button>
                           )}
                         </div>
                       </td>
@@ -1095,6 +1093,14 @@ export const InvoiceManagementCosmic: React.FC = () => {
                 </button>
               </div>
 
+              {/* Help Text */}
+              <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                <p className="text-sm text-blue-400 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  <strong>Invoice Workflow:</strong> Create as Draft → Change to Sent → Copy payment link to share with client
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-sm text-gray-400 mb-2">Invoice Number</label>
@@ -1106,16 +1112,19 @@ export const InvoiceManagementCosmic: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">Status</label>
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Status <span className="text-yellow-400">*</span>
+                    <span className="text-xs text-gray-500 ml-2">(Change to 'Sent' to send to client)</span>
+                  </label>
                   <select
                     value={editForm.status || 'draft'}
                     onChange={(e) => updateEditForm('status', e.target.value as Invoice['status'])}
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
                   >
-                    <option value="draft">Draft</option>
-                    <option value="sent">Sent</option>
-                    <option value="paid">Paid</option>
-                    <option value="overdue">Overdue</option>
+                    <option value="draft">Draft - Not sent to client</option>
+                    <option value="sent">Sent - Ready for payment</option>
+                    <option value="paid">Paid - Payment received</option>
+                    <option value="overdue">Overdue - Past due date</option>
                   </select>
                 </div>
                 <div>
@@ -1286,30 +1295,45 @@ export const InvoiceManagementCosmic: React.FC = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-3">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    updateEditForm('amount', editForm.items?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0);
-                    saveEdit();
-                  }}
-                  className="flex-1 cosmic-glow px-6 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center gap-2"
-                >
-                  <Save className="w-4 h-4" />
-                  Save Changes
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    setEditingInvoice(null);
-                    setEditForm({});
-                  }}
-                  className="px-6 py-3 rounded-full border border-white/20 text-gray-400 font-semibold hover:bg-white/10"
-                >
-                  Cancel
-                </motion.button>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      updateEditForm('amount', editForm.items?.reduce((sum, item) => sum + (item.amount || 0), 0) || 0);
+                      saveEdit();
+                    }}
+                    className="flex-1 cosmic-glow px-6 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    Save Changes
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      const paymentLink = getPaymentLink(editingInvoice!);
+                      navigator.clipboard.writeText(paymentLink);
+                      alert(`Payment link copied to clipboard:\n${paymentLink}`);
+                    }}
+                    className="px-6 py-3 rounded-full bg-blue-500/20 text-blue-400 font-semibold hover:bg-blue-500/30 flex items-center gap-2"
+                  >
+                    <Send className="w-4 h-4" />
+                    Copy Link
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setEditingInvoice(null);
+                      setEditForm({});
+                    }}
+                    className="px-6 py-3 rounded-full border border-white/20 text-gray-400 font-semibold hover:bg-white/10"
+                  >
+                    Cancel
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
