@@ -25,6 +25,7 @@ import { SimpleAdminDashboard } from './components/admin/SimpleAdminDashboard';
 import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import { InvoiceManagement } from './components/InvoiceManagement';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
+import { AuthCallback } from './components/auth/AuthCallback';
 
 // Homepage component
 const Homepage = () => (
@@ -83,6 +84,9 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin-login" element={<LoginPage />} />
+            
+            {/* Auth callback route */}
+            <Route path="/auth/callback" element={<AuthCallback />} />
             
             {/* Payment routes */}
             <Route path="/pay" element={<PaymentPage />} />

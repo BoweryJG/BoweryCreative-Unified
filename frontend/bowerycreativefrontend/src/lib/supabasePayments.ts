@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Use the same Supabase instance as other RepSpheres apps
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://cbopynuvhcymbumjnvay.supabase.co';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNib3B5bnV2aGN5bWJ1bWpudmF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5OTUxNzMsImV4cCI6MjA1OTU3MTE3M30.UZElMkoHugIt984RtYWyfrRuv2rB67opQdCrFVPCfzU';
+// Use Bowery Creative's Supabase instance
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://fiozmyoedptukpkzuhqm.supabase.co';
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpb3pteW9lZHB0dWtwa3p1aHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMTk5MjQsImV4cCI6MjA2NTc5NTkyNH0.S96QUUyflHo9JmLEuXz72rqkqptGLI3nEJQRzQFSh34';
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables');
