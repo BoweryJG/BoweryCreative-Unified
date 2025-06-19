@@ -76,11 +76,11 @@ export const Navigation: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="flex items-center gap-3"
             >
-              <div className="relative">
-                <div className="w-10 h-10 border border-champagne rotate-45 flex items-center justify-center">
+              <a href="/admin-login" className="relative block">
+                <div className="w-10 h-10 border border-champagne rotate-45 flex items-center justify-center hover:bg-champagne/10 transition-colors cursor-pointer">
                   <Brain className="w-5 h-5 text-champagne -rotate-45" />
                 </div>
-              </div>
+              </a>
               <a 
                 href="/" 
                 className="font-sans text-xl font-medium tracking-wide text-arctic cursor-pointer hover:text-champagne transition-colors"
@@ -143,12 +143,6 @@ export const Navigation: React.FC = () => {
                   </a>
                 </>
               )}
-              <a 
-                href="/admin-login"
-                className="btn-ghost flex items-center gap-2"
-              >
-                Admin
-              </a>
               <div className="relative" ref={dropdownRef}>
                 <motion.button 
                   onClick={() => setShowStartDropdown(!showStartDropdown)}
