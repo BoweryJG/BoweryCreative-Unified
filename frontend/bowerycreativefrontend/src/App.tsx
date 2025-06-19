@@ -114,6 +114,13 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
+            <Route path="/billing" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <InvoiceManagement />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
             </Routes>
           </Router>
         </AuthProviderPayments>

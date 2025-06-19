@@ -133,9 +133,7 @@ export const Navigation: React.FC = () => {
                     </a>
                   )}
                   <a
-                    href="https://bowerycreativepayments.netlify.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="/billing"
                     className="btn-ghost flex items-center gap-2"
                   >
                     <CreditCard className="w-4 h-4" />
