@@ -213,7 +213,15 @@ export const InvoiceManagementCosmic: React.FC = () => {
         }
       });
 
-      if (error) throw error;
+      console.log('SMS Response:', { data, error });
+      
+      if (error) {
+        throw new Error(error.message || 'Failed to send SMS');
+      }
+      
+      if (!data?.success) {
+        throw new Error(data?.error || 'SMS sending failed');
+      }
 
       // Show success notification
       const notification = document.createElement('div');
