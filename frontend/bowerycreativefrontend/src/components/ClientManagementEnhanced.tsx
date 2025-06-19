@@ -169,19 +169,58 @@ export default function ClientManagementEnhanced() {
 
   const loadClients = async () => {
     try {
-      const { data, error } = await supabase
+      // Load from client_accounts table
+      const { data: accountsData, error: accountsError } = await supabase
         .from('client_accounts')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (accountsError) throw accountsError;
+      
+      // Load from onboarding_submissions table
+      const { data: submissionsData, error: submissionsError } = await supabase
+        .from('onboarding_submissions')
+        .select('*')
+        .eq('status', 'paid')
+        .order('created_at', { ascending: false });
+
+      if (submissionsError) throw submissionsError;
       
       // Always include Dr. Pedro and Sarah at the top
       const allClients = [drPedroClient, sarahJonesClient];
       
+      // Convert onboarding submissions to client format
+      if (submissionsData) {
+        const submissionClients = submissionsData.map(submission => {
+          const formData = submission.form_data || {};
+          return {
+            id: submission.id,
+            name: `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || submission.practice_name,
+            email: submission.email,
+            phone: formData.phone || '',
+            company: submission.practice_name || formData.practiceName || '',
+            industry: formData.practiceType || 'Medical Spa',
+            status: 'active' as const,
+            joinDate: submission.created_at,
+            totalSpent: formData.monthlyBudget ? parseFloat(formData.monthlyBudget) : 0,
+            monthlyAmount: formData.monthlyBudget ? parseFloat(formData.monthlyBudget) : 0,
+            accessCode: formData.promoCode || '',
+            codeUsed: true,
+            onboardingCompleted: true,
+            paymentCompleted: true,
+            customPackage: {
+              name: 'Onboarded via Portal',
+              description: 'Self-service onboarding',
+              features: formData.marketingGoals || [],
+            }
+          };
+        });
+        allClients.push(...submissionClients);
+      }
+      
       // Add other clients from database, but filter out any duplicates
-      if (data) {
-        const otherClients = data.filter(client => 
+      if (accountsData) {
+        const otherClients = accountsData.filter(client => 
           client.email !== 'greg@gregpedromd.com' && 
           client.email !== 'sarah@example.com' &&
           client.name !== 'Dr. Greg Pedro' &&

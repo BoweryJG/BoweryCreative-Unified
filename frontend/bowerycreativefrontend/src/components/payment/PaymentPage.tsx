@@ -32,6 +32,7 @@ export const PaymentPage: React.FC = () => {
   const amount = parseFloat(searchParams.get('amount') || '0');
   const code = searchParams.get('code');
   const email = searchParams.get('email');
+  const submissionId = searchParams.get('submissionId');
   
   // Debug logging
   console.log('Payment page URL params:', {
@@ -104,12 +105,14 @@ export const PaymentPage: React.FC = () => {
             },
             quantity: 1,
           }],
-          success_url: `${window.location.origin}/payment-success?invoice=${invoiceData.id}`,
+          success_url: `${window.location.origin}/payment-success?invoice=${invoiceData.id}${submissionId ? `&submissionId=${submissionId}` : ''}`,
           cancel_url: `${window.location.origin}/payment-cancel?invoice=${invoiceData.id}`,
           metadata: {
             invoice_id: invoiceData.id,
             invoice_number: invoiceData.invoice_number,
             client_name: invoiceData.client_name,
+            submission_id: submissionId || null,
+            email: email || null,
           }
         }
       });

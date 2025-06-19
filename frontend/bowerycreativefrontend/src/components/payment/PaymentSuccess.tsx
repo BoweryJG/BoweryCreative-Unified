@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -8,11 +8,74 @@ import {
   Button,
 } from '@mui/material';
 import { CheckCircle, Dashboard } from '@mui/icons-material';
+import { supabase } from '../../lib/supabase';
 
 export const PaymentSuccess: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const invoiceId = searchParams.get('invoice');
+  const submissionId = searchParams.get('submissionId');
+
+  useEffect(() => {
+    // Update submission status if submissionId is present
+    if (submissionId) {
+      updateSubmissionStatus();
+    }
+  }, [submissionId]);
+
+  const updateSubmissionStatus = async () => {
+    try {
+      // Update submission status to paid
+      const { error: updateError } = await supabase
+        .from('onboarding_submissions')
+        .update({ 
+          status: 'paid',
+          paid_at: new Date().toISOString()
+        })
+        .eq('id', submissionId);
+
+      if (updateError) {
+        console.error('Error updating submission:', updateError);
+      }
+
+      // Get submission data for notification
+      const { data: submission } = await supabase
+        .from('onboarding_submissions')
+        .select('*')
+        .eq('id', submissionId)
+        .single();
+
+      if (submission) {
+        // Send notification email to admin
+        try {
+          const { error: emailError } = await supabase.functions.invoke('send-email', {
+            body: {
+              to: 'jgolden@bowerycreativeagency.com',
+              subject: 'Payment Completed - New Client Onboarded',
+              html: `
+                <h2>Payment Completed Successfully!</h2>
+                <p><strong>Practice:</strong> ${submission.practice_name}</p>
+                <p><strong>Email:</strong> ${submission.email}</p>
+                <p><strong>Form Data:</strong></p>
+                <pre>${JSON.stringify(submission.form_data, null, 2)}</pre>
+                <hr>
+                <p>This client has completed payment and is ready for onboarding.</p>
+                <p><a href="https://bowerycreativeagency.com/admin">View in Dashboard</a></p>
+              `
+            }
+          });
+
+          if (emailError) {
+            console.error('Error sending notification:', emailError);
+          }
+        } catch (emailError) {
+          console.error('Email notification failed:', emailError);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating submission status:', error);
+    }
+  };
 
   return (
     <Box sx={{ 

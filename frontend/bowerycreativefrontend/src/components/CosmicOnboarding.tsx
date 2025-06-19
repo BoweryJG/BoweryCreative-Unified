@@ -6,7 +6,7 @@ import {
   Instagram, Facebook, Twitter, Linkedin,
   Check, AlertCircle
 } from 'lucide-react';
-// import { useAuth } from '../contexts/AuthContext'; // Not needed anymore
+import { supabase } from '../lib/supabase';
 
 interface CosmicOnboardingProps {
   onClose: () => void;
@@ -147,6 +147,51 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
         completedAt: new Date().toISOString()
       };
 
+      // Save to Supabase onboarding_submissions table
+      const { data: submission, error: submissionError } = await supabase
+        .from('onboarding_submissions')
+        .insert([{
+          form_data: submissionData,
+          email: formData.email,
+          practice_name: formData.practiceName,
+          status: 'pending_payment',
+          created_at: new Date().toISOString()
+        }])
+        .select()
+        .single();
+
+      if (submissionError) {
+        console.error('Error saving submission:', submissionError);
+      }
+
+      // Send notification email to admin
+      try {
+        const { error: emailError } = await supabase.functions.invoke('send-email', {
+          body: {
+            to: 'jgolden@bowerycreativeagency.com',
+            subject: 'New Cosmic Onboarding Submission',
+            html: `
+              <h2>New Practice Onboarding</h2>
+              <p><strong>Practice:</strong> ${formData.practiceName}</p>
+              <p><strong>Contact:</strong> ${formData.firstName} ${formData.lastName}</p>
+              <p><strong>Email:</strong> ${formData.email}</p>
+              <p><strong>Phone:</strong> ${formData.phone}</p>
+              <p><strong>Type:</strong> ${formData.practiceType}</p>
+              <p><strong>Promo Code:</strong> ${formData.promoCode || 'None'}</p>
+              <p><strong>Monthly Budget:</strong> $${formData.monthlyBudget}</p>
+              <hr>
+              <p>This lead is pending payment completion.</p>
+            `
+          }
+        });
+
+        if (emailError) {
+          console.error('Error sending notification:', emailError);
+        }
+      } catch (emailError) {
+        console.error('Email notification failed:', emailError);
+      }
+
       // Clear localStorage
       localStorage.removeItem('cosmicOnboardingData');
       
@@ -158,7 +203,8 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
         email: formData.email,
         promoCode: formData.promoCode,
         pricing: pricing,
-        formData: submissionData
+        formData: submissionData,
+        submissionId: submission?.id
       };
       
       // Store data for payment portal
@@ -169,10 +215,11 @@ export const CosmicOnboarding: React.FC<CosmicOnboardingProps> = ({ onClose }) =
       if (formData.promoCode) params.append('code', formData.promoCode);
       if (pricing?.amount) params.append('amount', pricing.amount.toString());
       if (formData.email) params.append('email', formData.email);
+      if (submission?.id) params.append('submissionId', submission.id);
       
       const queryString = params.toString();
       
-      // Redirect to payment page
+      // Redirect to internal payment page
       console.log('Redirecting to payment page...');
       window.location.href = `/pay${queryString ? `?${queryString}` : ''}`;
     } catch (error) {
