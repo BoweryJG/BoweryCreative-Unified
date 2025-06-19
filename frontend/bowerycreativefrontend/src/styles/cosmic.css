@@ -61,6 +61,16 @@
   pointer-events: none;
 }
 
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .galaxy-orb {
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    right: -50px;
+  }
+}
+
 .galaxy-orb::before {
   content: '';
   position: absolute;
@@ -155,6 +165,14 @@
                0 0 30px rgba(251, 191, 36, 0.4);
 }
 
+/* Mobile text adjustments */
+@media (max-width: 768px) {
+  .neon-text {
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.8),
+                 0 0 16px rgba(251, 191, 36, 0.6);
+  }
+}
+
 /* Floating Particles */
 .particles {
   position: absolute;
@@ -184,5 +202,21 @@
   100% {
     transform: translateY(-100vh) translateX(100px);
     opacity: 0;
+  }
+}
+
+/* Responsive cosmic cards */
+@media (max-width: 640px) {
+  .cosmic-card {
+    padding: 1rem;
+  }
+  
+  .cosmic-glow {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3), 
+                0 0 40px rgba(249, 115, 22, 0.2);
+  }
+  
+  .particles {
+    display: none; /* Hide particles on mobile for performance */
   }
 }
