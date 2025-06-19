@@ -9,8 +9,7 @@ import {
   TextField,
   Alert,
   CircularProgress,
-  keyframes,
-  Divider
+  keyframes
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import GoogleIcon from '@mui/icons-material/Google';
