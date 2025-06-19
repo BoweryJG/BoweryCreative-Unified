@@ -23,6 +23,7 @@ import { PaymentCancel } from './components/payment/PaymentCancel';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import ClientManagementEnhanced from './components/ClientManagementEnhanced';
 import { InvoiceManagement } from './components/InvoiceManagement';
+import { Billing } from './components/Billing';
 import { AuthProvider as AuthProviderPayments } from './contexts/AuthContextPayments';
 import { AuthCallback } from './components/auth/AuthCallback';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -109,7 +110,7 @@ function App() {
             <Route path="/billing" element={
               <ProtectedRoute>
                 <AdminLayout>
-                  <InvoiceManagement />
+                  <Billing />
                 </AdminLayout>
               </ProtectedRoute>
             } />
