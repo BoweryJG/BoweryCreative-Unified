@@ -14,7 +14,6 @@ import {
   Receipt,
   TrendingUp,
   Mail,
-  Printer,
   X
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -376,6 +375,24 @@ export const InvoiceManagementCosmic: React.FC = () => {
                           >
                             <Download className="w-4 h-4 text-gray-400" />
                           </motion.button>
+                          {invoice.status === 'sent' && (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const paymentLink = invoice.clientName === 'Sarah Jones' 
+                                  ? `${window.location.origin}/pay?code=SARAH`
+                                  : `${window.location.origin}/pay?invoice=${invoice.id}&amount=${invoice.amount}`;
+                                navigator.clipboard.writeText(paymentLink);
+                                alert(`Payment link copied to clipboard:\n${paymentLink}`);
+                              }}
+                              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                              title="Copy payment link"
+                            >
+                              <Send className="w-4 h-4 text-yellow-400" />
+                            </motion.button>
+                          )}
                         </div>
                       </td>
                     </motion.tr>
@@ -517,11 +534,57 @@ export const InvoiceManagementCosmic: React.FC = () => {
                 </table>
               </div>
 
+              {/* Payment Link Section for unpaid invoices */}
+              {selectedInvoice.status !== 'paid' && (
+                <div className="cosmic-card rounded-xl p-4 mb-6 bg-yellow-400/10 border border-yellow-400/30">
+                  <p className="text-sm text-yellow-400 mb-2 font-semibold">Payment Link:</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 p-2 bg-black/30 rounded text-xs text-gray-300 overflow-x-auto">
+                      {selectedInvoice.clientName === 'Sarah Jones' 
+                        ? `${window.location.origin}/pay?code=SARAH`
+                        : selectedInvoice.clientName === 'Dr. Greg Pedro'
+                        ? `${window.location.origin}/pay?code=PEDRO`
+                        : `${window.location.origin}/pay?invoice=${selectedInvoice.id}&amount=${selectedInvoice.amount}`}
+                    </code>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Send this link to {selectedInvoice.clientName} to collect payment
+                  </p>
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row items-center gap-3">
+                {selectedInvoice.status !== 'paid' && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      const paymentLink = selectedInvoice.clientName === 'Sarah Jones' 
+                        ? `${window.location.origin}/pay?code=SARAH`
+                        : selectedInvoice.clientName === 'Dr. Greg Pedro'
+                        ? `${window.location.origin}/pay?code=PEDRO`
+                        : `${window.location.origin}/pay?invoice=${selectedInvoice.id}&amount=${selectedInvoice.amount}`;
+                      
+                      // Copy to clipboard
+                      navigator.clipboard.writeText(paymentLink).then(() => {
+                        // Show a better notification
+                        const notification = document.createElement('div');
+                        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                        notification.textContent = 'Payment link copied to clipboard!';
+                        document.body.appendChild(notification);
+                        setTimeout(() => notification.remove(), 3000);
+                      });
+                    }}
+                    className="w-full sm:w-auto cosmic-glow px-6 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center gap-2"
+                  >
+                    <Send className="w-4 h-4" />
+                    Copy Payment Link
+                  </motion.button>
+                )}
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto cosmic-glow px-6 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-2 rounded-full border border-yellow-400/50 text-yellow-400 font-semibold flex items-center justify-center gap-2 hover:bg-yellow-400/10"
                 >
                   <Download className="w-4 h-4" />
                   Download PDF
@@ -529,18 +592,10 @@ export const InvoiceManagementCosmic: React.FC = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-6 py-2 rounded-full border border-yellow-400/50 text-yellow-400 font-semibold flex items-center justify-center gap-2 hover:bg-yellow-400/10"
+                  className="w-full sm:w-auto px-6 py-2 rounded-full border border-white/20 text-gray-400 font-semibold flex items-center justify-center gap-2 hover:bg-white/10"
                 >
                   <Mail className="w-4 h-4" />
                   Email Invoice
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-6 py-2 rounded-full border border-white/20 text-gray-400 font-semibold flex items-center justify-center gap-2 hover:bg-white/10"
-                >
-                  <Printer className="w-4 h-4" />
-                  Print
                 </motion.button>
               </div>
             </motion.div>
