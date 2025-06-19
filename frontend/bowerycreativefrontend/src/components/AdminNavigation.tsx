@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, LayoutDashboard, CreditCard, Users, FileText, Settings, LogOut, ChevronDown, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 export const AdminNavigation: React.FC = () => {
@@ -43,7 +43,7 @@ export const AdminNavigation: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-8">
-            <a href="/" className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-10 h-10 border border-champagne rotate-45 flex items-center justify-center">
                   <Brain className="w-5 h-5 text-champagne -rotate-45" />
@@ -52,38 +52,38 @@ export const AdminNavigation: React.FC = () => {
               <span className="font-sans text-xl font-medium tracking-wide text-arctic">
                 BOWERY
               </span>
-            </a>
+            </Link>
 
             {/* Admin Navigation Links */}
             <nav className="hidden md:flex items-center gap-6">
-              <a
-                href="/admin"
+              <Link
+                to="/admin"
                 className="flex items-center gap-2 text-arctic hover:text-champagne transition-colors"
               >
                 <LayoutDashboard className="w-4 h-4" />
                 Dashboard
-              </a>
-              <a
-                href="/clients"
+              </Link>
+              <Link
+                to="/clients"
                 className="flex items-center gap-2 text-arctic hover:text-champagne transition-colors"
               >
                 <Users className="w-4 h-4" />
                 Clients
-              </a>
-              <a
-                href="/billing"
+              </Link>
+              <Link
+                to="/billing"
                 className="flex items-center gap-2 text-arctic hover:text-champagne transition-colors"
               >
                 <CreditCard className="w-4 h-4" />
                 Billing
-              </a>
-              <a
-                href="/invoices"
+              </Link>
+              <Link
+                to="/invoices"
                 className="flex items-center gap-2 text-arctic hover:text-champagne transition-colors"
               >
                 <FileText className="w-4 h-4" />
                 Invoices
-              </a>
+              </Link>
             </nav>
           </div>
 
@@ -110,13 +110,13 @@ export const AdminNavigation: React.FC = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="absolute right-0 mt-2 w-48 bg-graphite border border-graphite rounded-lg shadow-xl overflow-hidden"
                 >
-                  <a
-                    href="/settings"
+                  <Link
+                    to="/settings"
                     className="flex items-center gap-2 px-4 py-3 hover:bg-graphite/50 transition-colors text-arctic"
                   >
                     <Settings className="w-4 h-4" />
                     Settings
-                  </a>
+                  </Link>
                   <div className="border-t border-obsidian" />
                   <button
                     onClick={handleSignOut}
