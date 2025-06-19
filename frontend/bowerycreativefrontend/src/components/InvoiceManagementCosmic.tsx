@@ -55,6 +55,19 @@ export const InvoiceManagementCosmic: React.FC = () => {
   const [smsSending, setSmsSending] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
   const [editForm, setEditForm] = useState<Partial<Invoice>>({});
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createForm, setCreateForm] = useState<Partial<Invoice>>({
+    clientName: '',
+    clientEmail: '',
+    number: '',
+    date: new Date().toISOString().split('T')[0],
+    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    amount: 0,
+    status: 'draft',
+    paymentLinkTitle: 'Your campaign starts here',
+    paymentLinkMessage: '',
+    items: []
+  });
 
   useEffect(() => {
     loadInvoices();
@@ -67,10 +80,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
       // Load invoices from Supabase
       const { data: invoiceData, error: invoiceError } = await supabase
         .from('invoices')
-        .select(`
-          *,
-          items:invoice_items(*)
-        `)
+        .select('*')
         .order('invoice_date', { ascending: false });
 
       if (invoiceError) {
@@ -127,12 +137,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
         status: inv.status as 'draft' | 'sent' | 'paid' | 'overdue',
         paymentLinkTitle: inv.payment_link_title || 'Your campaign starts here',
         paymentLinkMessage: inv.payment_link_message || 'Complete your payment to activate your campaign',
-        items: inv.items?.map((item: any) => ({
-          description: item.description,
-          quantity: item.quantity,
-          rate: parseFloat(item.rate),
-          amount: parseFloat(item.amount)
-        })) || []
+        items: [] // Will load items separately if needed
       })) || [];
 
       setInvoices(transformedInvoices);
@@ -249,6 +254,76 @@ export const InvoiceManagementCosmic: React.FC = () => {
       ...invoice,
       items: [...invoice.items]
     });
+  };
+
+  const createInvoice = async () => {
+    if (!createForm.clientName || !createForm.clientEmail || !createForm.amount) return;
+
+    try {
+      // Generate invoice number
+      const invoiceNumber = `INV-${new Date().getFullYear()}-${String(invoices.length + 1).padStart(3, '0')}`;
+      
+      // Create invoice in Supabase
+      const { data: newInvoice, error } = await supabase
+        .from('invoices')
+        .insert({
+          client_name: createForm.clientName,
+          client_email: createForm.clientEmail,
+          invoice_number: invoiceNumber,
+          invoice_date: createForm.date,
+          due_date: createForm.dueDate,
+          amount: createForm.amount,
+          status: createForm.status,
+          payment_link_title: createForm.paymentLinkTitle,
+          payment_link_message: createForm.paymentLinkMessage || `${createForm.clientName}, your invoice for $${createForm.amount} is ready.`
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Add to local state
+      const newInvoiceLocal: Invoice = {
+        id: newInvoice.id,
+        clientName: createForm.clientName!,
+        clientEmail: createForm.clientEmail!,
+        number: invoiceNumber,
+        date: createForm.date!,
+        dueDate: createForm.dueDate!,
+        amount: createForm.amount!,
+        status: createForm.status as Invoice['status'],
+        paymentLinkTitle: createForm.paymentLinkTitle,
+        paymentLinkMessage: createForm.paymentLinkMessage,
+        items: []
+      };
+
+      setInvoices([newInvoiceLocal, ...invoices]);
+      setShowCreateModal(false);
+      
+      // Reset form
+      setCreateForm({
+        clientName: '',
+        clientEmail: '',
+        number: '',
+        date: new Date().toISOString().split('T')[0],
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        amount: 0,
+        status: 'draft',
+        paymentLinkTitle: 'Your campaign starts here',
+        paymentLinkMessage: '',
+        items: []
+      });
+
+      // Show success notification
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      notification.textContent = 'Invoice created successfully!';
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    } catch (error) {
+      console.error('Error creating invoice:', error);
+      alert('Failed to create invoice: ' + (error as any).message);
+    }
   };
 
   const saveEdit = async () => {
@@ -394,7 +469,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => console.log('Create invoice clicked')}
+            onClick={() => setShowCreateModal(true)}
             className="cosmic-glow px-6 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
@@ -706,7 +781,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => console.log('Create invoice clicked')}
+              onClick={() => setShowCreateModal(true)}
               className="cosmic-glow px-6 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold"
             >
               Create Your First Invoice
@@ -1231,6 +1306,171 @@ export const InvoiceManagementCosmic: React.FC = () => {
                     setEditingInvoice(null);
                     setEditForm({});
                   }}
+                  className="px-6 py-3 rounded-full border border-white/20 text-gray-400 font-semibold hover:bg-white/10"
+                >
+                  Cancel
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Create Invoice Modal */}
+      <AnimatePresence>
+        {showCreateModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowCreateModal(false)}
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-2xl w-full cosmic-card rounded-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto"
+            >
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold cosmic-text-gradient mb-2 flex items-center gap-2">
+                  <Plus className="w-6 h-6" />
+                  Create New Invoice
+                </h2>
+                <p className="text-gray-400">Generate a new invoice for your client</p>
+              </div>
+
+              <div className="space-y-6">
+                {/* Client Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Client Name *</label>
+                    <input
+                      type="text"
+                      value={createForm.clientName || ''}
+                      onChange={(e) => setCreateForm({ ...createForm, clientName: e.target.value })}
+                      placeholder="e.g. Dr. John Smith"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Client Email *</label>
+                    <input
+                      type="email"
+                      value={createForm.clientEmail || ''}
+                      onChange={(e) => setCreateForm({ ...createForm, clientEmail: e.target.value })}
+                      placeholder="e.g. john@example.com"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Invoice Details */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Amount *</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                      <input
+                        type="number"
+                        value={createForm.amount || ''}
+                        onChange={(e) => setCreateForm({ ...createForm, amount: parseFloat(e.target.value) || 0 })}
+                        placeholder="0.00"
+                        className="w-full pl-8 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Invoice Date</label>
+                    <input
+                      type="date"
+                      value={createForm.date || ''}
+                      onChange={(e) => setCreateForm({ ...createForm, date: e.target.value })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Due Date</label>
+                    <input
+                      type="date"
+                      value={createForm.dueDate || ''}
+                      onChange={(e) => setCreateForm({ ...createForm, dueDate: e.target.value })}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">Status</label>
+                  <div className="flex items-center gap-2 p-1 cosmic-card rounded-full">
+                    {['draft', 'sent'].map((status) => (
+                      <button
+                        key={status}
+                        onClick={() => setCreateForm({ ...createForm, status: status as Invoice['status'] })}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                          createForm.status === status
+                            ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black'
+                            : 'text-gray-400 hover:text-white hover:bg-white/10'
+                        }`}
+                      >
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Payment Link Customization */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-white">Payment Link Customization</h3>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Payment Link Title</label>
+                    <input
+                      type="text"
+                      value={createForm.paymentLinkTitle || ''}
+                      onChange={(e) => setCreateForm({ ...createForm, paymentLinkTitle: e.target.value })}
+                      placeholder="Your campaign starts here"
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-2">Payment Link Message</label>
+                    <textarea
+                      value={createForm.paymentLinkMessage || ''}
+                      onChange={(e) => setCreateForm({ ...createForm, paymentLinkMessage: e.target.value })}
+                      placeholder="Custom message for the payment page..."
+                      rows={3}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-yellow-400/50 transition-colors resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 mt-8">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={createInvoice}
+                  disabled={!createForm.clientName || !createForm.clientEmail || !createForm.amount}
+                  className="flex-1 cosmic-glow px-6 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create Invoice
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowCreateModal(false)}
                   className="px-6 py-3 rounded-full border border-white/20 text-gray-400 font-semibold hover:bg-white/10"
                 >
                   Cancel
