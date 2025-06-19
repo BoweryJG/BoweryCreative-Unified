@@ -551,7 +551,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setSmsInvoice(invoice);
-                                  setSmsPhone(invoice.clientName === 'Sarah Jones' ? '+1234567890' : '');
+                                  setSmsPhone(invoice.clientName === 'Sarah Jones' ? '+12015231306' : '');
                                   setShowSmsModal(true);
                                 }}
                                 className="p-2 rounded-lg hover:bg-white/10 transition-colors"
@@ -623,7 +623,7 @@ export const InvoiceManagementCosmic: React.FC = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             setSmsInvoice(invoice);
-                            setSmsPhone(invoice.clientName === 'Sarah Jones' ? '+1234567890' : '');
+                            setSmsPhone(invoice.clientName === 'Sarah Jones' ? '+12015231306' : '');
                             setShowSmsModal(true);
                           }}
                           className="flex-1 py-2 rounded-lg bg-blue-400/20 text-blue-400 text-xs font-semibold flex items-center justify-center gap-1"
