@@ -14,7 +14,13 @@ import {
   ListItemText,
 } from '@mui/material';
 import { CreditCard, ArrowBack } from '@mui/icons-material';
-import { supabase } from '../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Create a fresh Supabase client for payments to avoid auth conflicts
+const paymentSupabase = createClient(
+  'https://fiozmyoedptukpkzuhqm.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpb3pteW9lZHB0dWtwa3p1aHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MTUxODcsImV4cCI6MjA2NTM5MTE4N30.XrzLFbtoOKcX0kU5K7MSPQKwTDNm6cFtefUGxSJzm-o'
+);
 
 export const PaymentPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -50,7 +56,7 @@ export const PaymentPage: React.FC = () => {
       if (invoiceId && invoiceId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
         try {
           // Try to load from database
-          const { data, error } = await supabase
+          const { data, error } = await paymentSupabase
             .from('invoices')
             .select('*')
             .eq('id', invoiceId)
@@ -175,7 +181,7 @@ export const PaymentPage: React.FC = () => {
         
         console.log('Request body:', requestBody);
         
-        const result = await supabase.functions.invoke('create-checkout-session', {
+        const result = await paymentSupabase.functions.invoke('create-checkout-session', {
           body: requestBody
         });
         
