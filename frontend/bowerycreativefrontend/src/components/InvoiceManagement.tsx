@@ -41,6 +41,8 @@ import {
   CheckCircle,
   Cancel,
   Pending,
+  Link as LinkIcon,
+  ContentCopy as ContentCopyIcon,
 } from '@mui/icons-material';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
@@ -86,7 +88,8 @@ const SMSDialog: React.FC<SMSDialogProps> = ({ open, onClose, invoice, onSend })
   useEffect(() => {
     if (invoice) {
       if (messageType === 'invoice') {
-        const defaultMessage = `Hi ${invoice.client_name || 'there'}, your invoice ${invoice.invoice_number} for $${invoice.amount_due.toFixed(2)} is ready. Pay securely here: ${invoice.payment_link || `${window.location.origin}/pay/${invoice.id}`}`;
+        const paymentUrl = invoice.payment_link || `https://bowerycreativeagency.com/quick-pay.html?amount=${invoice.amount_due}&invoice=${invoice.invoice_number}`;
+        const defaultMessage = `Hi ${invoice.client_name || 'there'}, your invoice ${invoice.invoice_number} for $${invoice.amount_due.toFixed(2)} is ready. Pay securely here: ${paymentUrl}`;
         setMessage(defaultMessage);
       } else {
         const onboardingMessage = `Hi ${invoice.client_name || 'there'}, welcome to Bowery Creative! Get started with our cosmic onboarding experience: https://start.bowerycreativeagency.com`;
@@ -166,6 +169,7 @@ export const InvoiceManagement: React.FC = () => {
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     loadInvoices();
@@ -383,6 +387,32 @@ export const InvoiceManagement: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
+  const generatePaymentLink = async (invoice: Invoice) => {
+    try {
+      setError(null);
+      const { data, error } = await supabase.functions.invoke('create-payment-link', {
+        body: {
+          invoice_id: invoice.id,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.payment_link) {
+        // Reload invoices to show the new payment link
+        await loadInvoices();
+        setSuccessMessage(`Payment link generated for invoice ${invoice.invoice_number}`);
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(data.payment_link);
+        setSuccessMessage(`Payment link copied to clipboard!`);
+      }
+    } catch (err: any) {
+      console.error('Error generating payment link:', err);
+      setError('Failed to generate payment link');
+    }
+  };
+
   const handleSendSMS = async (phone: string, message: string) => {
     try {
       setError(null);
@@ -432,6 +462,12 @@ export const InvoiceManagement: React.FC = () => {
       {success && (
         <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
           {success}
+        </Alert>
+      )}
+
+      {successMessage && (
+        <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccessMessage(null)}>
+          {successMessage}
         </Alert>
       )}
 
@@ -620,6 +656,24 @@ export const InvoiceManagement: React.FC = () => {
                         </IconButton>
                       </Tooltip>
                       
+                      <Tooltip title={invoice.payment_link ? "Copy Payment Link" : "Generate Payment Link"}>
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            if (invoice.payment_link) {
+                              navigator.clipboard.writeText(invoice.payment_link);
+                              setSuccessMessage('Payment link copied to clipboard!');
+                            } else {
+                              generatePaymentLink(invoice);
+                            }
+                          }}
+                          disabled={invoice.status === 'paid'}
+                          color={invoice.payment_link ? "primary" : "default"}
+                        >
+                          {invoice.payment_link ? <ContentCopyIcon /> : <LinkIcon />}
+                        </IconButton>
+                      </Tooltip>
+                      
                       <Tooltip title="Send via Email">
                         <IconButton size="small" disabled={invoice.status === 'paid'}>
                           <SendIcon />
@@ -696,6 +750,35 @@ export const InvoiceManagement: React.FC = () => {
                   </Typography>
                 </Grid>
               </Grid>
+
+              {selectedInvoice.payment_link && (
+                <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Payment Link
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TextField
+                      value={selectedInvoice.payment_link}
+                      fullWidth
+                      size="small"
+                      InputProps={{
+                        readOnly: true,
+                        endAdornment: (
+                          <IconButton
+                            size="small"
+                            onClick={() => {
+                              navigator.clipboard.writeText(selectedInvoice.payment_link!);
+                              setSuccessMessage('Payment link copied!');
+                            }}
+                          >
+                            <ContentCopyIcon />
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </Box>
+              )}
 
               <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>Line Items</Typography>
               <TableContainer>
