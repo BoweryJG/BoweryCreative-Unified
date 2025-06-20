@@ -13,7 +13,10 @@ import {
   AlertCircle,
   Sparkles,
   MoreVertical,
-  X
+  X,
+  Edit2,
+  Save,
+  XCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import '../styles/cosmic.css';
@@ -46,6 +49,9 @@ export const ClientManagementCosmic: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<'overview' | 'all' | 'pending' | 'active'>('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClient, setSelectedClient] = useState<ClientAccount | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedClient, setEditedClient] = useState<ClientAccount | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Hardcoded clients
   const drPedroClient: ClientAccount = {
@@ -154,6 +160,79 @@ export const ClientManagementCosmic: React.FC = () => {
     if (selectedTab === 'pending') return matchesSearch && client.status === 'pending';
     return matchesSearch;
   });
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditedClient(selectedClient);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedClient(null);
+  };
+
+  const handleSave = async () => {
+    if (!editedClient) return;
+    
+    setIsSaving(true);
+    try {
+      // Update hardcoded clients in state
+      if (editedClient.id === 'dr-pedro-001' || editedClient.id === 'sarah-jones-001') {
+        // For hardcoded clients, just update the local state
+        const updatedClients = clients.map(client => 
+          client.id === editedClient.id ? editedClient : client
+        );
+        setClients(updatedClients);
+        setSelectedClient(editedClient);
+      } else {
+        // For database clients, update in Supabase
+        const updates = {
+          email: editedClient.email,
+          practice_name: editedClient.company,
+          form_data: {
+            ...((await supabase.from('onboarding_submissions').select('form_data').eq('id', editedClient.id).single()).data?.form_data || {}),
+            firstName: editedClient.name.split(' ')[0],
+            lastName: editedClient.name.split(' ').slice(1).join(' '),
+            phone: editedClient.phone,
+            practiceName: editedClient.company,
+            practiceType: editedClient.industry,
+            monthlyBudget: editedClient.monthlyAmount.toString(),
+          }
+        };
+
+        const { error } = await supabase
+          .from('onboarding_submissions')
+          .update(updates)
+          .eq('id', editedClient.id);
+
+        if (error) throw error;
+
+        // Update local state
+        const updatedClients = clients.map(client => 
+          client.id === editedClient.id ? editedClient : client
+        );
+        setClients(updatedClients);
+        setSelectedClient(editedClient);
+      }
+
+      setIsEditing(false);
+      setEditedClient(null);
+    } catch (error) {
+      console.error('Error saving client:', error);
+      alert('Failed to save changes. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleFieldChange = (field: keyof ClientAccount, value: any) => {
+    if (!editedClient) return;
+    
+    setEditedClient({
+      ...editedClient,
+      [field]: value
+    });
+  };
 
   const ClientCard = ({ client, delay = 0 }: { client: ClientAccount; delay?: number }) => (
     <motion.div
@@ -418,7 +497,11 @@ export const ClientManagementCosmic: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedClient(null)}
+            onClick={() => {
+              setSelectedClient(null);
+              setIsEditing(false);
+              setEditedClient(null);
+            }}
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
@@ -428,12 +511,48 @@ export const ClientManagementCosmic: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="relative max-w-2xl w-full cosmic-card rounded-2xl p-8 max-h-[90vh] overflow-y-auto"
             >
-              <button
-                onClick={() => setSelectedClient(null)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                {!isEditing ? (
+                  <>
+                    <button
+                      onClick={handleEdit}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
+                      title="Edit client"
+                    >
+                      <Edit2 className="w-5 h-5 text-gray-400 group-hover:text-yellow-400 transition-colors" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setSelectedClient(null);
+                        setIsEditing(false);
+                        setEditedClient(null);
+                      }}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="p-2 rounded-lg hover:bg-green-400/20 transition-colors group disabled:opacity-50"
+                      title="Save changes"
+                    >
+                      <Save className="w-5 h-5 text-green-400 group-hover:text-green-300 transition-colors" />
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      disabled={isSaving}
+                      className="p-2 rounded-lg hover:bg-red-400/20 transition-colors group disabled:opacity-50"
+                      title="Cancel editing"
+                    >
+                      <XCircle className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" />
+                    </button>
+                  </>
+                )}
+              </div>
 
               <div className="text-center mb-8">
                 <div className={`w-20 h-20 rounded-full cosmic-border mx-auto mb-4 flex items-center justify-center ${
@@ -443,46 +562,132 @@ export const ClientManagementCosmic: React.FC = () => {
                     selectedClient.status === 'active' ? 'text-green-400' : 'text-orange-400'
                   }`} />
                 </div>
-                <h2 className="text-3xl font-bold cosmic-text-gradient mb-2">{selectedClient.name}</h2>
-                <p className="text-gray-400">{selectedClient.company}</p>
+                <h2 className="text-3xl font-bold cosmic-text-gradient mb-2">
+                  {isEditing && editedClient ? (
+                    <input
+                      type="text"
+                      value={editedClient.name}
+                      onChange={(e) => handleFieldChange('name', e.target.value)}
+                      className="bg-transparent text-center border-b border-yellow-400/50 focus:border-yellow-400 outline-none"
+                    />
+                  ) : (
+                    selectedClient.name
+                  )}
+                </h2>
+                <p className="text-gray-400">
+                  {isEditing && editedClient ? (
+                    <input
+                      type="text"
+                      value={editedClient.company}
+                      onChange={(e) => handleFieldChange('company', e.target.value)}
+                      className="bg-transparent text-center border-b border-gray-600 focus:border-yellow-400 outline-none"
+                    />
+                  ) : (
+                    selectedClient.company
+                  )}
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Email</p>
-                    <p className="text-white">{selectedClient.email}</p>
+                    {isEditing && editedClient ? (
+                      <input
+                        type="email"
+                        value={editedClient.email}
+                        onChange={(e) => handleFieldChange('email', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                      />
+                    ) : (
+                      <p className="text-white">{selectedClient.email}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Phone</p>
-                    <p className="text-white">{selectedClient.phone}</p>
+                    {isEditing && editedClient ? (
+                      <input
+                        type="tel"
+                        value={editedClient.phone}
+                        onChange={(e) => handleFieldChange('phone', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                      />
+                    ) : (
+                      <p className="text-white">{selectedClient.phone}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Industry</p>
-                    <p className="text-white">{selectedClient.industry}</p>
+                    {isEditing && editedClient ? (
+                      <input
+                        type="text"
+                        value={editedClient.industry}
+                        onChange={(e) => handleFieldChange('industry', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                      />
+                    ) : (
+                      <p className="text-white">{selectedClient.industry}</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Monthly Amount</p>
-                    <p className="text-2xl font-bold cosmic-text-gradient">
-                      ${selectedClient.monthlyAmount.toLocaleString()}
-                    </p>
+                    {isEditing && editedClient ? (
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold text-gray-400 mr-1">$</span>
+                        <input
+                          type="number"
+                          value={editedClient.monthlyAmount}
+                          onChange={(e) => handleFieldChange('monthlyAmount', parseFloat(e.target.value) || 0)}
+                          className="text-2xl font-bold bg-transparent border-b-2 border-yellow-400/50 focus:border-yellow-400 outline-none cosmic-text-gradient"
+                          style={{ width: `${editedClient.monthlyAmount.toString().length + 2}ch` }}
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-2xl font-bold cosmic-text-gradient">
+                        ${selectedClient.monthlyAmount.toLocaleString()}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Total Spent</p>
-                    <p className="text-white">${selectedClient.totalSpent.toLocaleString()}</p>
+                    {isEditing && editedClient ? (
+                      <div className="flex items-center">
+                        <span className="text-white mr-1">$</span>
+                        <input
+                          type="number"
+                          value={editedClient.totalSpent}
+                          onChange={(e) => handleFieldChange('totalSpent', parseFloat(e.target.value) || 0)}
+                          className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-white">${selectedClient.totalSpent.toLocaleString()}</p>
+                    )}
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Status</p>
-                    <span className={`px-3 py-1 rounded-full text-sm ${
-                      selectedClient.status === 'active' 
-                        ? 'bg-green-400/20 text-green-400' 
-                        : 'bg-orange-400/20 text-orange-400'
-                    }`}>
-                      {selectedClient.status}
-                    </span>
+                    {isEditing && editedClient ? (
+                      <select
+                        value={editedClient.status}
+                        onChange={(e) => handleFieldChange('status', e.target.value)}
+                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                      >
+                        <option value="active" className="bg-gray-900">Active</option>
+                        <option value="pending" className="bg-gray-900">Pending</option>
+                        <option value="inactive" className="bg-gray-900">Inactive</option>
+                      </select>
+                    ) : (
+                      <span className={`px-3 py-1 rounded-full text-sm ${
+                        selectedClient.status === 'active' 
+                          ? 'bg-green-400/20 text-green-400' 
+                          : 'bg-orange-400/20 text-orange-400'
+                      }`}>
+                        {selectedClient.status}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -501,6 +706,15 @@ export const ClientManagementCosmic: React.FC = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {isEditing && (
+                <div className="mt-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
+                  <p className="text-sm text-yellow-400 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    Editing client information. Click save to apply changes or cancel to discard.
+                  </p>
                 </div>
               )}
             </motion.div>
