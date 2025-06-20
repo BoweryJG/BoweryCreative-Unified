@@ -4,6 +4,7 @@ import { Menu, X, Cpu, Brain, Code2, Database, LayoutDashboard, CreditCard, Rock
 import { useAuth } from '../contexts/AuthContext';
 import { CosmicOnboarding } from './CosmicOnboarding';
 import { CosmicOnboardingAutonomous } from './CosmicOnboardingAutonomous';
+import audioManager from '../utils/audioManager';
 
 const navItems = [
   { label: 'Capabilities', href: '#capabilities' },
@@ -76,7 +77,12 @@ export const Navigation: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="flex items-center gap-3"
             >
-              <a href="/admin-login" className="relative block">
+              <a 
+                href="/admin-login" 
+                className="relative block"
+                onClick={() => audioManager.playClickSound()}
+                onMouseEnter={() => audioManager.playHoverSound(523.25)} // C5 note for admin icon
+              >
                 <div className="w-10 h-10 border border-champagne rotate-45 flex items-center justify-center hover:bg-champagne/10 transition-colors cursor-pointer">
                   <Brain className="w-5 h-5 text-champagne -rotate-45" />
                 </div>
