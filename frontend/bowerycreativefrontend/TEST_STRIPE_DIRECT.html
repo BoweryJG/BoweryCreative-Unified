@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct Stripe Test</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Direct Stripe Checkout Test</h1>
+    <p>This bypasses all the app logic and goes straight to Stripe</p>
+    
+    <button id="checkout-button">Pay $1.00 Test</button>
+
+    <script>
+        const stripe = Stripe('pk_test_51PNwP6RuBqx4KHEuEJxDZGKfn0LJcqg4gfhFnYRgMF0WBSbaLDMLTjrFmY5LoMb0RcPnPqFAGpLM6vslCcfZPApD00FGOJmoWD');
+        
+        document.getElementById('checkout-button').addEventListener('click', async () => {
+            // This creates a test checkout session directly
+            // In production, this would be done server-side
+            alert('This test requires a server-side endpoint. The Edge Function "create-checkout-session" must be deployed to Supabase.');
+            
+            // For now, let's at least test if Stripe loads
+            console.log('Stripe loaded:', stripe);
+        });
+    </script>
+</body>
+</html>

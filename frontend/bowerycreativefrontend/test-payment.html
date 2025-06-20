@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Payment</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Test Payment</h1>
+    <button id="testBtn">Test Supabase Function</button>
+    <div id="result"></div>
+    
+    <script>
+        const { createClient } = supabase;
+        const supabaseUrl = 'https://fiozmyoedptukpkzuhqm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpb3pteW9lZHB0dWtwa3p1aHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MTUxODcsImV4cCI6MjA2NTM5MTE4N30.XrzLFbtoOKcX0kU5K7MSPQKwTDNm6cFtefUGxSJzm-o';
+        const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+        
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                console.log('Starting test...');
+                const { data, error } = await supabaseClient.functions.invoke('create-checkout-session', {
+                    body: {
+                        mode: 'payment',
+                        line_items: [{
+                            price_data: {
+                                currency: 'usd',
+                                product_data: {
+                                    name: 'Test Payment'
+                                },
+                                unit_amount: 1000
+                            },
+                            quantity: 1
+                        }],
+                        success_url: 'https://bowerycreativeagency.com/payment-success',
+                        cancel_url: 'https://bowerycreativeagency.com/payment-cancelled'
+                    }
+                });
+                
+                console.log('Result:', { data, error });
+                
+                if (error) {
+                    resultDiv.innerHTML = `Error: ${JSON.stringify(error)}`;
+                } else if (data?.url) {
+                    resultDiv.innerHTML = `Success! <a href="${data.url}" target="_blank">Click here to pay</a>`;
+                } else {
+                    resultDiv.innerHTML = `Response: ${JSON.stringify(data)}`;
+                }
+            } catch (err) {
+                console.error('Caught error:', err);
+                resultDiv.innerHTML = `Caught error: ${err.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

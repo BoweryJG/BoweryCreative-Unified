@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-// import { loadStripe } from '@stripe/stripe-js';
 import {
   Box,
   Container,
@@ -17,13 +16,11 @@ import {
 import { CreditCard, ArrowBack } from '@mui/icons-material';
 import { supabase } from '../../lib/supabase';
 
-// Initialize Stripe
-// const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_51PNwP6RuBqx4KHEuEJxDZGKfn0LJcqg4gfhFnYRgMF0WBSbaLDMLTjrFmY5LoMb0RcPnPqFAGpLM6vslCcfZPApD00FGOJmoWD');
-
 export const PaymentPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [loadingInvoice, setLoadingInvoice] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [invoiceData, setInvoiceData] = useState<any>(null);
 
@@ -44,52 +41,93 @@ export const PaymentPage: React.FC = () => {
     fullURL: window.location.href
   });
 
-  // Map invoice IDs to test data
+  // Load invoice data
   useEffect(() => {
-    if (invoiceId === 'sarah-test' || code === 'SARAH') {
-      setInvoiceData({
-        id: 'sarah-invoice-001',
-        client_name: 'Sarah Jones',
-        amount: 5.00,
-        description: 'Test Package - Monthly Subscription',
-        invoice_number: 'SARAH-TEST-001',
-        payment_link_title: 'Test Campaign Ready',
-        payment_link_message: 'Sarah, complete your test payment to activate your campaign'
-      });
-    } else if (invoiceId === 'test-flow') {
-      setInvoiceData({
-        id: 'test-pedro-001',
-        client_name: 'Dr. Greg Pedro',
-        amount: 1.00,
-        description: 'Test Invoice - Payment Flow Test',
-        invoice_number: 'TEST-FLOW-001',
-        payment_link_title: 'Your campaign starts here',
-        payment_link_message: 'Complete this test payment to proceed'
-      });
-    } else if (invoiceId === 'pedro-monthly' || code === 'PEDRO') {
-      setInvoiceData({
-        id: 'pedro-invoice-001',
-        client_name: 'Dr. Greg Pedro',
-        amount: 2000.00,
-        description: 'Premium AI Infrastructure - Monthly Marketing Services',
-        invoice_number: 'INV-2024-001',
-        payment_link_title: 'Your Professional Campaign Awaits',
-        payment_link_message: 'Dr. Pedro, your medical practice transformation starts with this payment'
-      });
-    } else if (amount > 0) {
-      setInvoiceData({
-        id: 'custom-payment',
-        client_name: email || 'Customer',
-        amount: amount,
-        description: packageName || 'Custom Payment',
-        invoice_number: 'CUSTOM-001',
-        payment_link_title: 'Your campaign starts here',
-        payment_link_message: `Complete your payment of $${amount.toFixed(2)} to begin`
-      });
-    }
+    const loadInvoice = async () => {
+      setLoadingInvoice(true);
+      
+      // First check if we have a real invoice ID (UUID format)
+      if (invoiceId && invoiceId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        try {
+          // Try to load from database
+          const { data, error } = await supabase
+            .from('invoices')
+            .select('*')
+            .eq('id', invoiceId)
+            .single();
+          
+          if (data && !error) {
+            setInvoiceData({
+              id: data.id,
+              client_name: data.client_name,
+              amount: parseFloat(data.amount),
+              description: 'Custom Payment',
+              invoice_number: data.invoice_number,
+              payment_link_title: data.payment_link_title || 'Your campaign starts here',
+              payment_link_message: data.payment_link_message || `Complete your payment of $${parseFloat(data.amount).toFixed(2)} to begin`
+            });
+            setLoadingInvoice(false);
+            return;
+          }
+        } catch (err) {
+          console.error('Error loading invoice:', err);
+        }
+      }
+      
+      // Fall back to test data
+      if (invoiceId === 'sarah-test' || code === 'SARAH') {
+        setInvoiceData({
+          id: 'sarah-invoice-001',
+          client_name: 'Sarah Jones',
+          amount: 5.00,
+          description: 'Test Package - Monthly Subscription',
+          invoice_number: 'SARAH-TEST-001',
+          payment_link_title: 'Test Campaign Ready',
+          payment_link_message: 'Sarah, complete your test payment to activate your campaign'
+        });
+      } else if (invoiceId === 'test-flow') {
+        setInvoiceData({
+          id: 'test-pedro-001',
+          client_name: 'Dr. Greg Pedro',
+          amount: 1.00,
+          description: 'Test Invoice - Payment Flow Test',
+          invoice_number: 'TEST-FLOW-001',
+          payment_link_title: 'Your campaign starts here',
+          payment_link_message: 'Complete this test payment to proceed'
+        });
+      } else if (invoiceId === 'pedro-monthly' || code === 'PEDRO') {
+        setInvoiceData({
+          id: 'pedro-invoice-001',
+          client_name: 'Dr. Greg Pedro',
+          amount: 2000.00,
+          description: 'Premium AI Infrastructure - Monthly Marketing Services',
+          invoice_number: 'INV-2024-001',
+          payment_link_title: 'Your Professional Campaign Awaits',
+          payment_link_message: 'Dr. Pedro, your medical practice transformation starts with this payment'
+        });
+      } else if (amount > 0) {
+        setInvoiceData({
+          id: 'custom-payment',
+          client_name: email || 'Customer',
+          amount: amount,
+          description: packageName || 'Custom Payment',
+          invoice_number: 'CUSTOM-001',
+          payment_link_title: 'Your campaign starts here',
+          payment_link_message: `Complete your payment of $${amount.toFixed(2)} to begin`
+        });
+      }
+      
+      setLoadingInvoice(false);
+    };
+    
+    loadInvoice();
   }, [invoiceId, amount, code, email, packageName]);
 
+  // Removed auto-trigger - user must click button to proceed to checkout
+
   const handleCreateCheckout = async () => {
+    console.log('Button clicked!'); // Debug log
+    
     if (!invoiceData) {
       setError('No invoice data found');
       return;
@@ -99,9 +137,19 @@ export const PaymentPage: React.FC = () => {
     setError(null);
 
     try {
+      console.log('Starting checkout with data:', {
+        amount: invoiceData.amount,
+        description: invoiceData.description,
+        invoice_number: invoiceData.invoice_number
+      });
+
       // Create checkout session via Supabase Edge Function
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-        body: {
+      console.log('About to call supabase.functions.invoke...');
+      console.log('Starting Stripe checkout creation...');
+      
+      let data, error;
+      try {
+        const requestBody = {
           mode: 'payment',
           line_items: [{
             price_data: {
@@ -123,23 +171,71 @@ export const PaymentPage: React.FC = () => {
             submission_id: submissionId || null,
             email: email || null,
           }
-        }
-      });
+        };
+        
+        console.log('Request body:', requestBody);
+        
+        const result = await supabase.functions.invoke('create-checkout-session', {
+          body: requestBody
+        });
+        
+        console.log('Function result:', result);
+        data = result.data;
+        error = result.error;
+      } catch (err) {
+        console.error('Caught error calling supabase function:', err);
+        error = err;
+      }
 
-      if (error) throw error;
+      console.log('Supabase function response:', { data, error });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('No response data from checkout function');
+      }
+
+      if (data.error) {
+        console.error('Function returned error:', data.error);
+        throw new Error(data.error);
+      }
 
       if (data?.url) {
+        console.log('Redirecting to Stripe checkout:', data.url);
         // Redirect to Stripe Checkout
         window.location.href = data.url;
       } else {
-        throw new Error('No checkout URL returned');
+        console.error('No URL in response. Full response:', data);
+        throw new Error('No checkout URL returned from Stripe');
       }
     } catch (err: any) {
       console.error('Error creating checkout session:', err);
+      console.error('Error details:', {
+        message: err.message,
+        stack: err.stack,
+        response: err.response
+      });
       setError(err.message || 'Failed to create checkout session');
       setLoading(false);
     }
   };
+
+  if (loadingInvoice) {
+    return (
+      <Box sx={{ 
+        minHeight: '100vh', 
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <CircularProgress sx={{ color: '#fbbf24' }} />
+      </Box>
+    );
+  }
 
   if (!invoiceData) {
     return (
@@ -266,7 +362,10 @@ export const PaymentPage: React.FC = () => {
             size="large"
             fullWidth
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CreditCard />}
-            onClick={handleCreateCheckout}
+            onClick={() => {
+              console.log('Button onClick fired!');
+              handleCreateCheckout();
+            }}
             disabled={loading}
             sx={{
               py: 2,
