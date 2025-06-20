@@ -45,6 +45,8 @@
         async function getPaymentLink() {
             const button = document.querySelector('button');
             const resultDiv = document.getElementById('result');
+            const params = new URLSearchParams(window.location.search);
+            const amount = params.get('amount') || '10';
             
             button.disabled = true;
             button.textContent = 'Getting link...';
@@ -62,9 +64,9 @@
                             price_data: {
                                 currency: 'usd',
                                 product_data: {
-                                    name: 'Quick Test Payment'
+                                    name: 'Payment - $' + amount
                                 },
-                                unit_amount: 1000
+                                unit_amount: parseInt(amount) * 100
                             },
                             quantity: 1
                         }],
