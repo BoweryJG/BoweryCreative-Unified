@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing Payment...</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .loader {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #fbbf24;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <h2>Processing payment...</h2>
+        <p id="status">Please wait...</p>
+    </div>
+    
+    <script>
+        const { createClient } = supabase;
+        const supabaseUrl = 'https://fiozmyoedptukpkzuhqm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpb3pteW9lZHB0dWtwa3p1aHFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4MTUxODcsImV4cCI6MjA2NTM5MTE4N30.XrzLFbtoOKcX0kU5K7MSPQKwTDNm6cFtefUGxSJzm-o';
+        const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+        
+        // Get URL parameters
+        const params = new URLSearchParams(window.location.search);
+        const amount = parseFloat(params.get('amount')) || 10;
+        const invoice = params.get('invoice') || 'test';
+        
+        async function processPayment() {
+            try {
+                const { data, error } = await supabaseClient.functions.invoke('create-checkout-session', {
+                    body: {
+                        mode: 'payment',
+                        line_items: [{
+                            price_data: {
+                                currency: 'usd',
+                                product_data: {
+                                    name: 'Payment',
+                                    description: `Invoice: ${invoice}`
+                                },
+                                unit_amount: Math.round(amount * 100)
+                            },
+                            quantity: 1
+                        }],
+                        success_url: 'https://bowerycreativeagency.com/payment-success',
+                        cancel_url: 'https://bowerycreativeagency.com/payment-cancelled'
+                    }
+                });
+                
+                if (error) {
+                    document.getElementById('status').innerHTML = `Error: ${error.message}`;
+                } else if (data?.url) {
+                    window.location.href = data.url;
+                } else {
+                    document.getElementById('status').innerHTML = 'Error: No checkout URL received';
+                }
+            } catch (err) {
+                document.getElementById('status').innerHTML = `Error: ${err.message}`;
+            }
+        }
+        
+        // Start processing immediately
+        processPayment();
+    </script>
+</body>
+</html>
