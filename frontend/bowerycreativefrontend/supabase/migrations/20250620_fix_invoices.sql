@@ -17,6 +17,7 @@ BEGIN
     invoice_number,
     client_id,
     client_name,
+    client_email,
     amount_due,
     amount_paid,
     currency,
@@ -28,6 +29,7 @@ BEGIN
     'INV-2025-001',
     pedro_client_id,
     'Dr. Greg Pedro',
+    'greg@gregpedromd.com',
     2000.00,
     0.00,
     'USD',
@@ -46,6 +48,7 @@ BEGIN
   DO UPDATE SET
     client_id = EXCLUDED.client_id,
     client_name = EXCLUDED.client_name,
+    client_email = EXCLUDED.client_email,
     amount_due = EXCLUDED.amount_due,
     status = EXCLUDED.status,
     line_items = EXCLUDED.line_items,
