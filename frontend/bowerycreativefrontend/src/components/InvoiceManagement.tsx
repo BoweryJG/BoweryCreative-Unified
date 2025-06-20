@@ -348,6 +348,55 @@ export const InvoiceManagement: React.FC = () => {
     }
   };
 
+  const handleSendEmail = async (invoice: Invoice) => {
+    try {
+      setLoading(true);
+      
+      // Call the Supabase Edge Function to send email
+      const { data, error } = await supabase.functions.invoke('send-invoice-email', {
+        body: {
+          invoice: {
+            invoice_number: invoice.invoice_number,
+            client_name: invoice.client_name || 'Valued Client',
+            client_email: invoice.client_email,
+            amount_due: invoice.amount_due,
+            due_date: invoice.due_date,
+            payment_link: invoice.payment_link || `https://bowerycreativeagency.com/pay?invoice=${invoice.invoice_number}&amount=${invoice.amount_due}`,
+            line_items: invoice.line_items || [{
+              description: 'Services',
+              amount: invoice.amount_due
+            }]
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      // Update invoice status to 'sent' if it was 'draft'
+      if (invoice.status === 'draft') {
+        const { error: updateError } = await supabase
+          .from('invoices')
+          .update({ status: 'sent' })
+          .eq('id', invoice.id);
+        
+        if (!updateError) {
+          // Update local state
+          const updatedInvoices = invoices.map(inv => 
+            inv.id === invoice.id ? { ...inv, status: 'sent' } : inv
+          );
+          setInvoices(updatedInvoices);
+        }
+      }
+
+      setSuccessMessage(`Invoice email sent to ${invoice.client_email}`);
+    } catch (error) {
+      console.error('Error sending invoice email:', error);
+      alert('Failed to send invoice email. Please check your email configuration.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const stats = {
     total: invoices.length,
     totalAmount: invoices.reduce((sum, inv) => sum + inv.amount_due, 0),
@@ -587,7 +636,11 @@ export const InvoiceManagement: React.FC = () => {
                       </Tooltip>
                       
                       <Tooltip title="Send via Email">
-                        <IconButton size="small" disabled={invoice.status === 'paid'}>
+                        <IconButton 
+                          size="small" 
+                          onClick={() => handleSendEmail(invoice)}
+                          disabled={invoice.status === 'paid'}
+                        >
                           <SendIcon />
                         </IconButton>
                       </Tooltip>
