@@ -67,7 +67,7 @@ export const LoginPage: React.FC = () => {
             sx={{
               background: `linear-gradient(135deg, ${colors.carbon} 0%, ${colors.graphite} 100%)`,
               p: { xs: 3, sm: 4 },
-              pt: { xs: 5, sm: 6 }, // Adjusted padding since atom is positioned lower
+              pt: { xs: 7, sm: 8 }, // Increased padding for larger atom animation
               textAlign: 'center',
               borderBottom: `1px solid ${colors.graphite}`,
               position: 'relative',
@@ -87,6 +87,11 @@ export const LoginPage: React.FC = () => {
               <div className="cosmic-electron-orbit cosmic-orbit-3">
                 <div className="cosmic-electron cosmic-electron-3"></div>
               </div>
+              {/* Energy particles */}
+              <div className="cosmic-particle cosmic-particle-1"></div>
+              <div className="cosmic-particle cosmic-particle-2"></div>
+              <div className="cosmic-particle cosmic-particle-3"></div>
+              <div className="cosmic-particle cosmic-particle-4"></div>
             </div>
             <Box sx={{ mb: 3 }}>
               <Box
