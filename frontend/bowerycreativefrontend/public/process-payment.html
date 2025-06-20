@@ -84,7 +84,10 @@
         }
         
         // Start processing immediately
-        processPayment();
+        processPayment().catch(err => {
+            console.error('Fatal error:', err);
+            document.getElementById('status').innerHTML = `Fatal error: ${err.message}<br>Check console for details`;
+        });
     </script>
 </body>
 </html>
