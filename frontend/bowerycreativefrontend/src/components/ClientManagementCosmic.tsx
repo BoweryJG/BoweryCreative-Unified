@@ -54,51 +54,12 @@ export const ClientManagementCosmic: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedClient, setEditedClient] = useState<ClientAccount | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-
-  // Hardcoded clients
-  const drPedroClient: ClientAccount = {
-    id: 'dr-pedro-001',
-    name: 'Dr. Greg Pedro',
-    email: 'greg@gregpedromd.com',
-    phone: '+1234567890',
-    company: 'Greg Pedro MD',
-    industry: 'Medical Spa',
-    status: 'active',
-    joinDate: '2024-01-01T00:00:00Z',
-    totalSpent: 24000,
-    monthlyAmount: 2000,
-    accessCode: 'PEDRO',
-    codeUsed: true,
-    onboardingCompleted: true,
-    paymentCompleted: true,
-    customPackage: {
-      name: 'Premium AI Infrastructure',
-      description: 'Complete marketing automation with AI-powered insights',
-      features: ['AI Marketing', 'Automated Campaigns', 'Real-time Analytics', 'Custom Integrations'],
-    }
-  };
-
-  const sarahJonesClient: ClientAccount = {
-    id: 'sarah-jones-001',
-    name: 'Sarah Jones',
-    email: 'sarah@example.com',
-    phone: '+1234567890',
-    company: 'Sarah Jones Test',
-    industry: 'Medical Spa',
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newClient, setNewClient] = useState<Partial<ClientAccount>>({
     status: 'pending',
-    joinDate: new Date().toISOString(),
-    totalSpent: 0,
-    monthlyAmount: 5,
-    accessCode: 'SARAH',
-    codeUsed: false,
-    onboardingCompleted: false,
-    paymentCompleted: false,
-    customPackage: {
-      name: 'Test Package',
-      description: 'Test flow for $5/month',
-      features: ['Basic Features'],
-    }
-  };
+    monthlyAmount: 0,
+    totalSpent: 0
+  });
 
   useEffect(() => {
     loadClients();
@@ -106,47 +67,39 @@ export const ClientManagementCosmic: React.FC = () => {
 
   const loadClients = async () => {
     try {
-      // Load from onboarding_submissions table
-      const { data: submissionsData } = await supabase
-        .from('onboarding_submissions')
+      // Load from real clients table
+      const { data: clientsData, error } = await supabase
+        .from('clients')
         .select('*')
-        .eq('status', 'paid')
         .order('created_at', { ascending: false });
 
-      const allClients = [drPedroClient, sarahJonesClient];
-      
-      if (submissionsData) {
-        const submissionClients = submissionsData.map(submission => {
-          const formData = submission.form_data || {};
-          return {
-            id: submission.id,
-            name: `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || submission.practice_name,
-            email: submission.email,
-            phone: formData.phone || '',
-            company: submission.practice_name || formData.practiceName || '',
-            industry: formData.practiceType || 'Medical Spa',
-            status: 'active' as const,
-            joinDate: submission.created_at,
-            totalSpent: formData.monthlyBudget ? parseFloat(formData.monthlyBudget) : 0,
-            monthlyAmount: formData.monthlyBudget ? parseFloat(formData.monthlyBudget) : 0,
-            accessCode: formData.promoCode || '',
-            codeUsed: true,
-            onboardingCompleted: true,
-            paymentCompleted: true,
-            customPackage: {
-              name: formData.selectedPackage?.name || 'Onboarded via Portal',
-              description: formData.selectedPackage?.description || 'Self-service onboarding',
-              features: formData.selectedPackage?.features || formData.marketingGoals || [],
-            }
-          };
-        });
-        allClients.push(...submissionClients);
+      if (error) throw error;
+
+      if (clientsData) {
+        const mappedClients = clientsData.map(client => ({
+          id: client.id,
+          name: client.name,
+          email: client.email,
+          phone: client.phone || '',
+          company: client.company,
+          industry: client.industry || 'Not specified',
+          status: client.status as 'active' | 'pending' | 'inactive',
+          joinDate: client.join_date || client.created_at,
+          totalSpent: parseFloat(client.total_spent || '0'),
+          monthlyAmount: parseFloat(client.monthly_amount || '0'),
+          accessCode: client.access_code || '',
+          codeUsed: client.code_used || false,
+          onboardingCompleted: client.onboarding_completed || false,
+          paymentCompleted: client.payment_completed || false,
+          subscriptionPlan: client.subscription_plan || '',
+          customPackage: client.custom_package || null
+        }));
+        
+        setClients(mappedClients);
       }
-      
-      setClients(allClients);
     } catch (error) {
       console.error('Error loading clients:', error);
-      setClients([drPedroClient, sarahJonesClient]);
+      setClients([]);
     } finally {
       setLoading(false);
     }
@@ -178,48 +131,25 @@ export const ClientManagementCosmic: React.FC = () => {
     
     setIsSaving(true);
     try {
-      // Create or update in profiles table
-      const profileData = {
-        full_name: editedClient.name,
-        email: editedClient.email,
-        company_name: editedClient.company,
-        phone: editedClient.phone,
-        subscription_level: editedClient.subscriptionPlan,
-        monthly_billing: editedClient.monthlyAmount,
-        is_active: editedClient.status === 'active',
-        metadata: {
+      // Update in the real clients table
+      const { error } = await supabase
+        .from('clients')
+        .update({
+          name: editedClient.name,
+          email: editedClient.email,
+          phone: editedClient.phone,
+          company: editedClient.company,
           industry: editedClient.industry,
+          status: editedClient.status,
+          monthly_amount: editedClient.monthlyAmount,
           total_spent: editedClient.totalSpent,
-          status: editedClient.status
-        }
-      };
+          subscription_plan: editedClient.subscriptionPlan,
+          custom_package: editedClient.customPackage,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', editedClient.id);
 
-      // Check if profile exists
-      const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', editedClient.email)
-        .single();
-
-      if (existingProfile) {
-        // Update existing profile
-        const { error } = await supabase
-          .from('profiles')
-          .update(profileData)
-          .eq('id', existingProfile.id);
-
-        if (error) throw error;
-      } else {
-        // Create new profile
-        const { error } = await supabase
-          .from('profiles')
-          .insert({
-            ...profileData,
-            id: crypto.randomUUID()
-          });
-
-        if (error) throw error;
-      }
+      if (error) throw error;
 
       // Update local state
       const updatedClients = clients.map(client => 
@@ -251,22 +181,13 @@ export const ClientManagementCosmic: React.FC = () => {
     
     setIsSaving(true);
     try {
-      // Check if profile exists in database
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', selectedClient.email)
-        .single();
+      // Delete from the real clients table
+      const { error } = await supabase
+        .from('clients')
+        .delete()
+        .eq('id', selectedClient.id);
 
-      if (profile) {
-        // Delete from profiles table
-        const { error } = await supabase
-          .from('profiles')
-          .delete()
-          .eq('id', profile.id);
-
-        if (error) throw error;
-      }
+      if (error) throw error;
       
       // Remove from local state
       setClients(clients.filter(c => c.id !== selectedClient.id));
@@ -287,6 +208,86 @@ export const ClientManagementCosmic: React.FC = () => {
     
     setEditedClient({
       ...editedClient,
+      [field]: value
+    });
+  };
+
+  const handleAddClient = async () => {
+    if (!newClient.name || !newClient.email || !newClient.company) {
+      alert('Please fill in all required fields: Name, Email, and Company');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // Generate a unique access code
+      const accessCode = newClient.company?.toUpperCase().slice(0, 5) + Math.random().toString(36).substring(2, 7).toUpperCase();
+      
+      const { data, error } = await supabase
+        .from('clients')
+        .insert({
+          name: newClient.name,
+          email: newClient.email,
+          phone: newClient.phone || '',
+          company: newClient.company,
+          industry: newClient.industry || 'Not specified',
+          business_type: newClient.industry || 'Not specified',
+          status: newClient.status || 'pending',
+          monthly_amount: newClient.monthlyAmount || 0,
+          total_spent: 0,
+          access_code: accessCode,
+          code_used: false,
+          onboarding_completed: false,
+          payment_completed: false,
+          subscription_plan: newClient.subscriptionPlan || '',
+          join_date: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        // Map the returned data to ClientAccount format
+        const newClientAccount: ClientAccount = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone || '',
+          company: data.company,
+          industry: data.industry || 'Not specified',
+          status: data.status as 'active' | 'pending' | 'inactive',
+          joinDate: data.join_date || data.created_at,
+          totalSpent: parseFloat(data.total_spent || '0'),
+          monthlyAmount: parseFloat(data.monthly_amount || '0'),
+          accessCode: data.access_code || '',
+          codeUsed: data.code_used || false,
+          onboardingCompleted: data.onboarding_completed || false,
+          paymentCompleted: data.payment_completed || false,
+          subscriptionPlan: data.subscription_plan || '',
+          customPackage: data.custom_package || null
+        };
+
+        // Add to local state
+        setClients([newClientAccount, ...clients]);
+        
+        // Reset form and close modal
+        setNewClient({ status: 'pending', monthlyAmount: 0, totalSpent: 0 });
+        setIsAddModalOpen(false);
+        
+        alert(`Client ${data.name} added successfully! Access code: ${accessCode}`);
+      }
+    } catch (error) {
+      console.error('Error adding client:', error);
+      alert('Failed to add client. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleNewClientFieldChange = (field: keyof ClientAccount, value: any) => {
+    setNewClient({
+      ...newClient,
       [field]: value
     });
   };
@@ -497,7 +498,7 @@ export const ClientManagementCosmic: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => console.log('Add client clicked')}
+              onClick={() => setIsAddModalOpen(true)}
               className="cosmic-glow px-6 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
@@ -511,10 +512,9 @@ export const ClientManagementCosmic: React.FC = () => {
           {selectedTab === 'overview' ? (
             // Show featured clients in overview
             <>
-              {[drPedroClient, ...filteredClients.filter(c => c.id !== drPedroClient.id).slice(0, 5)]
-                .map((client, index) => (
-                  <ClientCard key={client.id} client={client} delay={0.5 + index * 0.1} />
-                ))}
+              {filteredClients.slice(0, 6).map((client, index) => (
+                <ClientCard key={client.id} client={client} delay={0.5 + index * 0.1} />
+              ))}
               {filteredClients.length > 6 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -782,6 +782,167 @@ export const ClientManagementCosmic: React.FC = () => {
                   </p>
                 </div>
               )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add Client Modal */}
+      <AnimatePresence>
+        {isAddModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => {
+              setIsAddModalOpen(false);
+              setNewClient({ status: 'pending', monthlyAmount: 0, totalSpent: 0 });
+            }}
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-2xl w-full cosmic-card rounded-2xl p-8 max-h-[90vh] overflow-y-auto"
+            >
+              <div className="absolute top-4 right-4">
+                <button
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    setNewClient({ status: 'pending', monthlyAmount: 0, totalSpent: 0 });
+                  }}
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <h2 className="text-3xl font-bold cosmic-text-gradient mb-6">Add New Client</h2>
+
+              <div className="space-y-6">
+                {/* Basic Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">Basic Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Name *</label>
+                      <input
+                        type="text"
+                        value={newClient.name || ''}
+                        onChange={(e) => handleNewClientFieldChange('name', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="Client Name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Email *</label>
+                      <input
+                        type="email"
+                        value={newClient.email || ''}
+                        onChange={(e) => handleNewClientFieldChange('email', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="client@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Phone</label>
+                      <input
+                        type="tel"
+                        value={newClient.phone || ''}
+                        onChange={(e) => handleNewClientFieldChange('phone', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Company *</label>
+                      <input
+                        type="text"
+                        value={newClient.company || ''}
+                        onChange={(e) => handleNewClientFieldChange('company', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="Company Name"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-xs text-gray-500 mb-1">Industry</label>
+                      <input
+                        type="text"
+                        value={newClient.industry || ''}
+                        onChange={(e) => handleNewClientFieldChange('industry', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="e.g., Technology, Healthcare, Retail"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Subscription Details */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">Subscription Details</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Monthly Amount ($)</label>
+                      <input
+                        type="number"
+                        value={newClient.monthlyAmount || 0}
+                        onChange={(e) => handleNewClientFieldChange('monthlyAmount', parseFloat(e.target.value) || 0)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">Status</label>
+                      <select
+                        value={newClient.status || 'pending'}
+                        onChange={(e) => handleNewClientFieldChange('status', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                      >
+                        <option value="pending" className="bg-gray-900">Pending</option>
+                        <option value="active" className="bg-gray-900">Active</option>
+                        <option value="inactive" className="bg-gray-900">Inactive</option>
+                      </select>
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-xs text-gray-500 mb-1">Subscription Plan</label>
+                      <input
+                        type="text"
+                        value={newClient.subscriptionPlan || ''}
+                        onChange={(e) => handleNewClientFieldChange('subscriptionPlan', e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:border-yellow-400/50 outline-none"
+                        placeholder="e.g., Premium AI Infrastructure"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-end gap-4 pt-4">
+                  <button
+                    onClick={() => {
+                      setIsAddModalOpen(false);
+                      setNewClient({ status: 'pending', monthlyAmount: 0, totalSpent: 0 });
+                    }}
+                    className="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:bg-white/10 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAddClient}
+                    disabled={isSaving}
+                    className="cosmic-glow px-6 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSaving ? 'Adding...' : 'Add Client'}
+                  </motion.button>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
