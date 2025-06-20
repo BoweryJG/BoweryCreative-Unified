@@ -67,7 +67,7 @@ export const LoginPage: React.FC = () => {
             sx={{
               background: `linear-gradient(135deg, ${colors.carbon} 0%, ${colors.graphite} 100%)`,
               p: { xs: 3, sm: 4 },
-              pt: { xs: 8, sm: 10 }, // Extra padding to accommodate atom animation
+              pt: { xs: 5, sm: 6 }, // Adjusted padding since atom is positioned lower
               textAlign: 'center',
               borderBottom: `1px solid ${colors.graphite}`,
               position: 'relative',
