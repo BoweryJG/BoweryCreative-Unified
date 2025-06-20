@@ -266,25 +266,42 @@
 /* Atomic Animation */
 .cosmic-atom {
   position: absolute;
-  top: -60px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   z-index: 10;
+}
+
+/* Mobile adjustments for atom */
+@media (max-width: 768px) {
+  .cosmic-atom {
+    top: -30px;
+    width: 80px;
+    height: 80px;
+  }
 }
 
 .cosmic-nucleus {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   background: linear-gradient(135deg, #f59e0b, #fbbf24);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
   animation: atomPulse 2s infinite;
+}
+
+@media (max-width: 768px) {
+  .cosmic-nucleus {
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+  }
 }
 
 .cosmic-electron-orbit {
@@ -297,54 +314,80 @@
 }
 
 .cosmic-orbit-1 {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   transform: translate(-50%, -50%) rotateX(60deg) rotateY(0deg);
   animation: orbitRotate1 8s linear infinite;
 }
 
 .cosmic-orbit-2 {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   transform: translate(-50%, -50%) rotateX(60deg) rotateY(60deg);
   animation: orbitRotate2 12s linear infinite;
 }
 
 .cosmic-orbit-3 {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   transform: translate(-50%, -50%) rotateX(60deg) rotateY(120deg);
   animation: orbitRotate3 16s linear infinite;
 }
 
+/* Mobile adjustments for orbits */
+@media (max-width: 768px) {
+  .cosmic-orbit-1,
+  .cosmic-orbit-2,
+  .cosmic-orbit-3 {
+    width: 55px;
+    height: 55px;
+  }
+}
+
 .cosmic-electron {
   position: absolute;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: #f59e0b;
   border-radius: 50%;
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
 }
 
+@media (max-width: 768px) {
+  .cosmic-electron {
+    width: 4px;
+    height: 4px;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+  }
+}
+
 .cosmic-electron-1 {
-  top: -3px;
+  top: -2.5px;
   left: 50%;
   transform: translateX(-50%);
   animation: electronGlow 2s infinite;
 }
 
 .cosmic-electron-2 {
-  top: -3px;
+  top: -2.5px;
   left: 50%;
   transform: translateX(-50%);
   animation: electronGlow 2s infinite 0.66s;
 }
 
 .cosmic-electron-3 {
-  top: -3px;
+  top: -2.5px;
   left: 50%;
   transform: translateX(-50%);
   animation: electronGlow 2s infinite 1.33s;
+}
+
+@media (max-width: 768px) {
+  .cosmic-electron-1,
+  .cosmic-electron-2,
+  .cosmic-electron-3 {
+    top: -2px;
+  }
 }
 
 @keyframes orbitRotate1 {

@@ -16,7 +16,8 @@ import {
   X,
   Edit2,
   Save,
-  XCircle
+  XCircle,
+  Trash2
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import '../styles/cosmic.css';
@@ -36,6 +37,7 @@ interface ClientAccount {
   codeUsed?: boolean;
   onboardingCompleted?: boolean;
   paymentCompleted?: boolean;
+  subscriptionPlan?: string;
   customPackage?: {
     name: string;
     description: string;
@@ -176,50 +178,105 @@ export const ClientManagementCosmic: React.FC = () => {
     
     setIsSaving(true);
     try {
-      // Update hardcoded clients in state
-      if (editedClient.id === 'dr-pedro-001' || editedClient.id === 'sarah-jones-001') {
-        // For hardcoded clients, just update the local state
-        const updatedClients = clients.map(client => 
-          client.id === editedClient.id ? editedClient : client
-        );
-        setClients(updatedClients);
-        setSelectedClient(editedClient);
-      } else {
-        // For database clients, update in Supabase
-        const updates = {
-          email: editedClient.email,
-          practice_name: editedClient.company,
-          form_data: {
-            ...((await supabase.from('onboarding_submissions').select('form_data').eq('id', editedClient.id).single()).data?.form_data || {}),
-            firstName: editedClient.name.split(' ')[0],
-            lastName: editedClient.name.split(' ').slice(1).join(' '),
-            phone: editedClient.phone,
-            practiceName: editedClient.company,
-            practiceType: editedClient.industry,
-            monthlyBudget: editedClient.monthlyAmount.toString(),
-          }
-        };
+      // Create or update in profiles table
+      const profileData = {
+        full_name: editedClient.name,
+        email: editedClient.email,
+        company_name: editedClient.company,
+        phone: editedClient.phone,
+        subscription_level: editedClient.subscriptionPlan,
+        monthly_billing: editedClient.monthlyAmount,
+        is_active: editedClient.status === 'active',
+        metadata: {
+          industry: editedClient.industry,
+          total_spent: editedClient.totalSpent,
+          status: editedClient.status
+        }
+      };
 
+      // Check if profile exists
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', editedClient.email)
+        .single();
+
+      if (existingProfile) {
+        // Update existing profile
         const { error } = await supabase
-          .from('onboarding_submissions')
-          .update(updates)
-          .eq('id', editedClient.id);
+          .from('profiles')
+          .update(profileData)
+          .eq('id', existingProfile.id);
 
         if (error) throw error;
+      } else {
+        // Create new profile
+        const { error } = await supabase
+          .from('profiles')
+          .insert({
+            ...profileData,
+            id: crypto.randomUUID()
+          });
 
-        // Update local state
-        const updatedClients = clients.map(client => 
-          client.id === editedClient.id ? editedClient : client
-        );
-        setClients(updatedClients);
-        setSelectedClient(editedClient);
+        if (error) throw error;
       }
 
+      // Update local state
+      const updatedClients = clients.map(client => 
+        client.id === editedClient.id ? editedClient : client
+      );
+      setClients(updatedClients);
+      setSelectedClient(editedClient);
       setIsEditing(false);
       setEditedClient(null);
+      
+      // Show success message
+      alert('Client updated successfully!');
     } catch (error) {
       console.error('Error saving client:', error);
       alert('Failed to save changes. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedClient) return;
+    
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${selectedClient.name}? This action cannot be undone.`
+    );
+    
+    if (!confirmDelete) return;
+    
+    setIsSaving(true);
+    try {
+      // Check if profile exists in database
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', selectedClient.email)
+        .single();
+
+      if (profile) {
+        // Delete from profiles table
+        const { error } = await supabase
+          .from('profiles')
+          .delete()
+          .eq('id', profile.id);
+
+        if (error) throw error;
+      }
+      
+      // Remove from local state
+      setClients(clients.filter(c => c.id !== selectedClient.id));
+      
+      // Close modal and show success
+      setSelectedClient(null);
+      alert('Client deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      alert('Failed to delete client. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -522,12 +579,20 @@ export const ClientManagementCosmic: React.FC = () => {
                       <Edit2 className="w-5 h-5 text-gray-400 group-hover:text-yellow-400 transition-colors" />
                     </button>
                     <button
+                      onClick={handleDelete}
+                      className="p-2 rounded-lg hover:bg-white/10 transition-colors group"
+                      title="Delete client"
+                    >
+                      <Trash2 className="w-5 h-5 text-gray-400 group-hover:text-red-400 transition-colors" />
+                    </button>
+                    <button
                       onClick={() => {
                         setSelectedClient(null);
                         setIsEditing(false);
                         setEditedClient(null);
                       }}
                       className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                      title="Close"
                     >
                       <X className="w-5 h-5" />
                     </button>

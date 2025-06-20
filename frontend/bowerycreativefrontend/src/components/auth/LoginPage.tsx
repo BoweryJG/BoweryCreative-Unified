@@ -13,9 +13,16 @@ import { Login } from '@mui/icons-material';
 import { colors } from '../../theme/theme';
 import GlobalAuthModal from './GlobalAuthModal';
 import { useAuthModal } from '../../hooks/useAuthModal';
+import audioManager from '../../utils/audioManager';
 
 export const LoginPage: React.FC = () => {
   const { isAuthModalOpen, openAuthModal, closeAuthModal, handleAuthSuccess } = useAuthModal();
+
+  const handleLoginClick = async () => {
+    // Play click sound with a luxurious frequency
+    await audioManager.playClickSound();
+    openAuthModal();
+  };
 
   return (
     <Box
@@ -50,8 +57,9 @@ export const LoginPage: React.FC = () => {
             background: colors.carbon,
             border: `1px solid ${colors.graphite}`,
             borderRadius: 3,
-            overflow: 'hidden',
+            overflow: 'visible', // Changed to visible to prevent clipping
             position: 'relative',
+            mt: { xs: 6, sm: 8 }, // Add margin to accommodate atom animation
           }}
         >
           {/* Header */}
@@ -59,10 +67,12 @@ export const LoginPage: React.FC = () => {
             sx={{
               background: `linear-gradient(135deg, ${colors.carbon} 0%, ${colors.graphite} 100%)`,
               p: { xs: 3, sm: 4 },
+              pt: { xs: 8, sm: 10 }, // Extra padding to accommodate atom animation
               textAlign: 'center',
               borderBottom: `1px solid ${colors.graphite}`,
               position: 'relative',
               overflow: 'visible',
+              minHeight: { xs: '280px', sm: '320px' }, // Ensure minimum height
             }}
           >
             {/* Atomic animation */}
@@ -182,7 +192,8 @@ export const LoginPage: React.FC = () => {
               size="large"
               fullWidth
               startIcon={<Login />}
-              onClick={openAuthModal}
+              onClick={handleLoginClick}
+              onMouseEnter={() => audioManager.playHoverSound(440)} // A4 note for hover
               sx={{
                 py: 1.5,
                 background: colors.champagne,
