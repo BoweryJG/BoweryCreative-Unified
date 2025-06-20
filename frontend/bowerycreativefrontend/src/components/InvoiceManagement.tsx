@@ -182,11 +182,12 @@ export const InvoiceManagement: React.FC = () => {
         .from('invoices')
         .select(`
           *,
-          profiles!invoices_client_id_fkey (
+          clients!invoices_client_id_fkey (
             id,
-            full_name,
+            name,
             email,
-            company_name
+            phone,
+            company
           )
         `)
         .order('created_at', { ascending: false });
@@ -195,101 +196,12 @@ export const InvoiceManagement: React.FC = () => {
 
       const mappedInvoices = invoicesData?.map(invoice => ({
         ...invoice,
-        client_name: invoice.profiles?.full_name || 'Unknown Client',
-        client_email: invoice.profiles?.email || '',
-        client_phone: invoice.profiles?.phone || '',
+        client_name: invoice.clients?.name || 'Unknown Client',
+        client_email: invoice.clients?.email || '',
+        client_phone: invoice.clients?.phone || '',
       })) || [];
 
-      // Always add both invoices for Dr. Pedro
-      const hasPedroMonthly = mappedInvoices.some(inv => 
-        inv.invoice_number === 'INV-2024-001' || inv.amount_due === 2000
-      );
-      
-      const hasPedroTest = mappedInvoices.some(inv => 
-        inv.invoice_number === 'TEST-FLOW-001' || inv.amount_due === 1
-      );
-      
-      // Add the $2000 monthly invoice
-      if (!hasPedroMonthly) {
-        mappedInvoices.unshift({
-          id: 'pedro-invoice-001',
-          invoice_number: 'INV-2024-001',
-          client_id: 'dr-pedro-001',
-          client_name: 'Dr. Greg Pedro',
-          client_email: 'greg@gregpedromd.com',
-          client_phone: '+1234567890',
-          amount_due: 2000.00,
-          amount_paid: 0,
-          currency: 'USD',
-          status: 'sent',
-          due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          line_items: [{
-            id: '1',
-            description: 'Premium AI Infrastructure - Monthly Marketing Services',
-            quantity: 1,
-            unit_price: 2000.00,
-            amount: 2000.00,
-          }],
-          created_at: new Date().toISOString(),
-          payment_link: `https://start.bowerycreativeagency.com/pay/pedro-monthly`
-        } as Invoice);
-      }
-      
-      // Add the $1 test invoice  
-      if (!hasPedroTest) {
-        mappedInvoices.push({
-          id: 'test-pedro-001',
-          invoice_number: 'TEST-FLOW-001',
-          client_id: 'dr-pedro-001',
-          client_name: 'Dr. Greg Pedro',
-          client_email: 'greg@gregpedromd.com',
-          client_phone: '+1234567890',
-          amount_due: 1.00,
-          amount_paid: 0,
-          currency: 'USD',
-          status: 'sent',
-          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          line_items: [{
-            id: '1',
-            description: 'Test Invoice - Payment Flow Test',
-            quantity: 1,
-            unit_price: 1.00,
-            amount: 1.00,
-          }],
-          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          payment_link: `https://start.bowerycreativeagency.com/pay/test-flow`
-        } as Invoice);
-      }
-
-      // Add Sarah Jones $5 test invoice
-      const hasSarahInvoice = mappedInvoices.some(inv => 
-        inv.client_name === 'Sarah Jones' || inv.invoice_number === 'SARAH-TEST-001'
-      );
-      
-      if (!hasSarahInvoice) {
-        mappedInvoices.push({
-          id: 'sarah-invoice-001',
-          invoice_number: 'SARAH-TEST-001',
-          client_id: 'sarah-jones-001',
-          client_name: 'Sarah Jones',
-          client_email: 'sarah@example.com',
-          client_phone: '+1234567890', // Update with your phone
-          amount_due: 5.00,
-          amount_paid: 0,
-          currency: 'USD',
-          status: 'sent',
-          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          line_items: [{
-            id: '1',
-            description: 'Test Package - Monthly Subscription',
-            quantity: 1,
-            unit_price: 5.00,
-            amount: 5.00,
-          }],
-          created_at: new Date().toISOString(),
-          payment_link: `https://start.bowerycreativeagency.com/pay/sarah-test`
-        } as Invoice);
-      }
+      // No more hardcoded invoices - all invoices come from the database
 
       setInvoices(mappedInvoices);
 
