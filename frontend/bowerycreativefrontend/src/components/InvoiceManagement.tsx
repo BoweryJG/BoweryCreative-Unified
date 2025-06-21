@@ -353,7 +353,7 @@ export const InvoiceManagement: React.FC = () => {
       setLoading(true);
       
       // Call the Supabase Edge Function to send email
-      const { data, error } = await supabase.functions.invoke('send-invoice-email', {
+      const { error } = await supabase.functions.invoke('send-invoice-email', {
         body: {
           invoice: {
             invoice_number: invoice.invoice_number,
@@ -382,7 +382,7 @@ export const InvoiceManagement: React.FC = () => {
         if (!updateError) {
           // Update local state
           const updatedInvoices = invoices.map(inv => 
-            inv.id === invoice.id ? { ...inv, status: 'sent' } : inv
+            inv.id === invoice.id ? { ...inv, status: 'sent' as const } : inv
           );
           setInvoices(updatedInvoices);
         }
