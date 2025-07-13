@@ -146,7 +146,7 @@ BEGIN
                     "unit_price": 2000,
                     "amount": 2000
                 }]'::jsonb,
-                'https://start.bowerycreativeagency.com/pay/SVC-2025-001',
+                'https://pay.bowerycreative.com/pay/SVC-2025-001',
                 now()
             );
         END IF;

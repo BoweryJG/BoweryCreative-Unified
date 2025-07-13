@@ -56,7 +56,7 @@ INSERT INTO public.invoices (
         "unit_price": 1.00,
         "amount": 1.00
     }]'::jsonb,
-    'https://start.bowerycreativeagency.com/pay/TEST-FLOW-001',
+    'https://pay.bowerycreative.com/pay/TEST-FLOW-001',
     now()
 ) ON CONFLICT (invoice_number) DO UPDATE SET
     amount_due = EXCLUDED.amount_due,
