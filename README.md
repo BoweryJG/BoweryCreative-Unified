@@ -6,12 +6,13 @@ All BoweryCreative projects organized in one place.
 
 ```
 BoweryCreative-Unified/
-├── frontend/         → Main website (bowerycreativeagency.com)
-├── backend/          → API & backend services  
-├── payments/         → Payment portal (start.bowerycreativeagency.com)
-├── dashboard/        → Admin dashboard (bowerycreative-dashboard.netlify.app)
-├── social-manager/   → AI-powered social media manager (NEW)
-└── docs/            → Shared documentation
+├── frontend/              → Main website (bowerycreativeagency.com)
+├── backend/               → API & backend services  
+├── payment-portal/        → Client payment processing ONLY (pay.bowerycreative.com)
+├── mission-control/       → Internal agency management - ALL tools (app.bowerycreative.com)
+├── social-manager/        → AI-powered social media manager
+├── ai-intelligence-dashboard/ → AI industry intelligence aggregation (NEW)
+└── docs/                  → Shared documentation
 ```
 
 ## 🚀 Quick Links
@@ -20,9 +21,10 @@ BoweryCreative-Unified/
 |---------|-----------|------------|---------|
 | Frontend | localhost:5173 | [bowerycreativeagency.com](https://bowerycreativeagency.com) | [GitHub](https://github.com/BoweryJG/BoweryCreative) |
 | Backend | localhost:3000 | TBD | [GitHub](https://github.com/BoweryJG/BoweryCreative-backend) |
-| Payments | localhost:5174 | [start.bowerycreativeagency.com](https://start.bowerycreativeagency.com) | TBD |
-| Dashboard | localhost:5175 | [bowerycreative-dashboard.netlify.app](https://bowerycreative-dashboard.netlify.app) | [GitHub](https://github.com/BoweryJG/missioncontrolbowerycreative) |
+| Payment Portal | localhost:5174 | [pay.bowerycreative.com](https://pay.bowerycreative.com) | This Repo |
+| Mission Control | localhost:5175 | [app.bowerycreative.com](https://app.bowerycreative.com) | This Repo |
 | Social Manager | localhost:8080 | Coming Soon | TBD |
+| AI Intelligence | localhost:5176 | Coming Soon | This Repo |
 
 ## 🛠️ Development Setup
 
